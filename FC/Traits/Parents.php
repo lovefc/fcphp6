@@ -1,32 +1,8 @@
 <?php
 
-namespace fcphp\traits;
+namespace FC\Traits;
 
-/**
- * 缓存一些常用的数据
- */
-class CacheVars
-{
-    //保存例实例在此属性中
-    private static $_instance;
-    public $P_Configs;
-    public $P_PublicConfig;
-    public $P_ArrayConfig;
-
-    //构造函数声明为private,防止直接创建对象
-    private function __construct()
-    { }
-
-    //单例方法
-    public static function singleton()
-    {
-        if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c;
-        }
-        return self::$_instance;
-    }
-}
+use FC\Config\CacheVars;
 
 /*
  * 继承父类
@@ -45,9 +21,10 @@ trait Parents
 
     //访问配置选项
     public $P_ConfigType = false;
+    
 
     //注册的类变量
-    public $P_RegVar = array();
+    public $P_RegVar = [];
 
     /*
      * 构造器 开始执行
@@ -55,7 +32,6 @@ trait Parents
     public function __construct()
     {
         self::$P_CacheVars = CacheVars::singleton(); //获取单例
-
 
         self::$P_CacheVars->P_Configs = self::$P_CacheVars->P_PublicConfig;
 
@@ -65,9 +41,8 @@ trait Parents
             $this->P_Config = self::$P_CacheVars->P_Configs[$this->P_ClassName];
         } else {
             $this->P_DefaultArrayConfig();
-            $this->P_Config = self::$P_CacheVars->P_Configs[$this->P_ClassName] = self::P_receive($this->P_ClassName);
+            $this->P_Config = self::$P_CacheVars->P_Configs[$this->P_ClassName] = self::P_Receive($this->P_ClassName);
         }
-        //if (count($this->P_Config) != 0) {
         if (method_exists($this, 'init')) {
             $this->init();
         }
@@ -76,11 +51,10 @@ trait Parents
         } else {
             $this->P_RegVar = array_keys($this->P_Config[$this->P_ConfigType]);
         }
-        $this->ObjStart();
+        $this->P_Start();
         if (method_exists($this, 'start')) {
             $this->start();
         }
-        //}
     }
 
     /*
@@ -103,7 +77,7 @@ trait Parents
     }
 
     //初始化
-    public function ObjStart()
+    public function P_Start()
     {
         foreach ($this->P_RegVar as $value) {
             unset($this->$value);
@@ -113,12 +87,12 @@ trait Parents
 
 
     //设置访问的配置
-    public function ctype($type)
+    public function P_Read($type)
     {
         if (isset($type)) {
             $this->P_ConfigType = $type;
         }
-        $this->ObjStart(); //初始化
+        $this->P_Start(); //初始化
         return $this;
     }
 
@@ -166,7 +140,7 @@ trait Parents
             $config = self::P_GetConfig($file, $file2);
             return $config;
         }
-        return array();
+        return [];
     }
 
     //读取一个配置文件
@@ -178,17 +152,17 @@ trait Parents
                 self::$P_CacheVars->P_PublicConfig[$ckey] = $re;
                 return $re;
             } else {
-                return array();
+                return [];
             }
         } else {
             self::$P_CacheVars->P_PublicConfig[$ckey] = self::P_ReadConfigFile($file);
             return self::$P_CacheVars->P_PublicConfig[$ckey];
         }
-        return array();
+        return [];
     }
 
     //读取配置,$conf代表类名
-    final public static function P_receive($conf)
+    final public static function P_Receive($conf)
     {
         if (!$conf) {
             return false;
@@ -197,7 +171,7 @@ trait Parents
         if (isset(self::$P_CacheVars->P_PublicConfig[$ckey])) {
             return self::$P_CacheVars->P_PublicConfig[$ckey];
         }
-        $jian = $arr = array(); //初始化变量
+        $jian = $arr = []; //初始化变量
         if (array_key_exists($conf, self::$P_CacheVars->P_ArrayConfig)) {
             $conf = self::$P_CacheVars->P_ArrayConfig[$conf];
         } else {
@@ -206,12 +180,12 @@ trait Parents
                 $conf = $conf::SetConfigName();
             }
         }
+        
         //在方法中检查
         if ($conf) {
             if (is_array($conf)) {
                 return $conf;
             }
-
             //是数组直接返回
             if (strpos($conf, '::')) {
                 $arr = explode('::', $conf); //分割字符串
@@ -230,7 +204,7 @@ trait Parents
 
             return $re;
         }
-        return array();
+        return [];
     }
 
     //配置关联
