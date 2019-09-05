@@ -3,8 +3,8 @@
 /**
  * session 操作类
  * 因为sowwle中没有session，需要自己写
- */ 
- 
+ */
+
 namespace swoole;
 
 class Session
@@ -14,8 +14,8 @@ class Session
     private $storeDir;
     private $file;
     private $isStart;
-    
-	//初始化
+
+    //初始化
     public function __construct()
     {
         $this->cookieKey = 'PHPSESSID';
@@ -23,15 +23,15 @@ class Session
         $this->isStart = false;
     }
 
-	//启动写入
-    public function start($request,$response)
+    //启动写入
+    public function start($request, $response)
     {
-		if(empty($request) || empty($response)){
-		    return false;
-		}
+        if (empty($request) || empty($response)) {
+            return false;
+        }
         $this->isStart = true;
         $sessionId = $request->cookie[$this->cookieKey];
-        if (empty($sessionId)){
+        if (empty($sessionId)) {
             $sessionId = uniqid();
             $response->cookie($this->cookieKey, $sessionId);
         }
@@ -44,13 +44,13 @@ class Session
         $_SESSION = $session;
     }
 
-	
+
     public function end()
     {
         $this->save();
     }
 
-	//自动保存
+    //自动保存
     private function save()
     {
         if ($this->isStart) {
@@ -66,11 +66,11 @@ class Session
         }
     }
 
-	//获取解析文件内容
+    //获取解析文件内容
     private function get($fileName)
     {
         $this->file = fopen($fileName, 'c+b');
-        if(flock($this->file, LOCK_EX | LOCK_NB)) {
+        if (flock($this->file, LOCK_EX | LOCK_NB)) {
             $data = [];
             clearstatcache();
             if (filesize($fileName) > 0) {
