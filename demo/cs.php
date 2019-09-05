@@ -160,7 +160,9 @@ class Container
 
 $c = new Container();
 
-$c->Request = 'Request';
+$c->Request = function(){
+    return new Request();
+};
 
 print_r($c->Request->is_ajax);
 
