@@ -1,4 +1,11 @@
 <?php
+/* 
+ * 容器类实现
+ * @Author: lovefc 
+ * @Date: 2019-09-06 08:54:09 
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-09-06 08:59:35
+ */
 
 class Container
 {
@@ -15,6 +22,7 @@ class Container
     {
         return $this->build($this->s[$k]);
     }
+
     /**
      * 自动绑定（Autowiring）自动解析（Automatic Resolution）
      *
@@ -54,6 +62,7 @@ class Container
 
         return $reflector->newInstanceArgs($dependencies);
     }
+
     /**
      * @param array $parameters
      * @return array
@@ -76,6 +85,7 @@ class Container
         }
         return $dependencies;
     }
+    
     /**
      * @param ReflectionParameter $parameter
      * @return mixed

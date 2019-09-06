@@ -164,7 +164,9 @@ class WebServer{
 		$_SERVER['REMOTE_PORT']     = $this->getRemotePort();//用户端口	
 		
 		$_SERVER['PATH_INFO']       = $this->getPathInfo();
-		$_SERVER['REQUEST_URI']     = $this->getRequestUri();		
+
+		$_SERVER['REQUEST_URI']     = $this->getRequestUri();	
+			
 	    $_SERVER['QUERY_STRING']    = $this->getQueryString();
 		
 	    $_SERVER['SERVER_HOST']     = $this->getServerAddr();
