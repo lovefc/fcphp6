@@ -3,7 +3,6 @@
 namespace FC\Traits;
 
 use FC\Config\CacheVars;
-
 /*
  * 继承父类
  */
@@ -12,17 +11,12 @@ trait Parents
 {
     //配置数组
     public $P_Config;
-
     //保存当前的类名
     public $P_ClassName;
-
+    // 保存单例
     public static $P_CacheVars;
-
-
     //访问配置选项
     public $P_ConfigType = false;
-    
-
     //注册的类变量
     public $P_RegVar = [];
 
@@ -180,7 +174,7 @@ trait Parents
                 $conf = $conf::SetConfigName();
             }
         }
-        
+
         //在方法中检查
         if ($conf) {
             if (is_array($conf)) {

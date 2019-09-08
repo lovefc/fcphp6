@@ -1,4 +1,5 @@
 <?php
+
 namespace swoole;
 
 /**
@@ -41,7 +42,6 @@ class Route extends Execs
             } else {
                 return true;
             }
-
         } else {
             return false;
         }
@@ -72,7 +72,7 @@ class Route extends Execs
         if (!$url) {
             $url = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
         }
-        if(self::$route != '#^([\w\W]*)#'){
+        if (self::$route != '#^([\w\W]*)#') {
             $url = self::str_replace_limit('&', '?', $url, 1);
         }
         return ltrim($url, '/');
@@ -250,10 +250,10 @@ class Route extends Execs
         $url = self::get_query();
         if (self::isRewrite($url) !== true) {
             $m = explode(self::$cutting, $url);
-		    $end = end($m);
+            $end = end($m);
             $purl = parse_url($end);
-		    $key = key($m);
-		    $key2 = $key + 1;
+            $key = key($m);
+            $key2 = $key + 1;
             if (isset($purl['path']) && $purl['path'] != $end) {
                 $m[$key] = isset($purl['path']) ? $purl['path'] : $m[$key];
             }
@@ -275,7 +275,8 @@ class Route extends Execs
                         self::$query = isset($m[1]) ? $m[1] : null;
                         $var = trim($_vatr);
                         $len = strlen($var) - 1;
-                        if ($var{$len} == '\\') {
+                        if ($var{
+                        $len} == '\\') {
                             self::$query2 = isset($m[2]) ? $m[2] : null;
                             unset($m[2]);
                         }
@@ -319,10 +320,10 @@ class Route extends Execs
         } else {
             if (array_key_exists('default', $pz)) {
                 self::$route = '#^([\w\W]*)#';
-                if(strpos(self::$rvar, '=')){
-                    parse_str(self::$rvar,$GET);
+                if (strpos(self::$rvar, '=')) {
+                    parse_str(self::$rvar, $GET);
                     $_GET = $GET + $_GET;
-                }else{
+                } else {
                     array_unshift($_GET, self::$rvar);
                 }
                 array_filter($_GET);
