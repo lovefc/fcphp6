@@ -1,5 +1,6 @@
 <?php
-namespace swoole;
+
+namespace FC\Route;
 
 /**
  * 类与函数执行处理，参数判断类
@@ -8,8 +9,17 @@ namespace swoole;
 class Execs
 {
 
-    public static $rulearr = array(), $errors = array(); //错误数组
-    public static $errorStatus = false, $errorShow = false; //错误显示
+    public static $rulearr = [], $errors = []; //错误数组
+    
+    public static $showError = true;
+
+    public static function errShow(){
+        if(self::$showError == true){
+           throw new \Exception('function does not exist');
+        }else{
+           die();   
+        }
+    }
 
     //判读字符串是否为一个可以实例化类
     public static function isClass($class)
@@ -56,7 +66,7 @@ class Execs
                 $arg = is_array($arg) ? $arg : $r->getParameters();
                 return call_user_func_array($func, static::getMethodVar($arg));
             } else {
-                throw new \Exception('function does not exist');
+                self::errShow('function does not exist');
             }
         }
     }
@@ -65,7 +75,7 @@ class Execs
     public static function method($func, $arg = null)
     {
         if (empty($func[0]) || empty($func[1])) {
-            throw new \Exception('Parameter values cannot be null');
+            self::errShow('Parameter values cannot be null');
         }
 
         try {
@@ -84,23 +94,22 @@ class Execs
                 $arg = is_array($arg) ? $arg : $r->getParameters();
                 return call_user_func_array($func, static::getMethodVar($arg));
             } else {
-                throw new \Exception('Object cannot be instantiated');
+                self::errShow('Object cannot be instantiated');
             }
         } catch (\Exception $e) {
             $func[0] = self::constructor($func[0]); //实例化
             if (!is_object($func[0])) {
-                throw new \Exception('Object:' . $func[0] . ' cannot be instantiated');
+                self::errShow('Object:' . $func[0] . ' cannot be instantiated');
             }
-            /*
-              if(!method_exists($func[0],$func[1])){
-              throw new \Exception('method:'. $func[1] .' does not exist');
-              }
-             */
+            // 验证方法是否存在
+            if(!method_exists($func[0],$func[1])){
+               self::errShow('method:'. $func[1] .' does not exist');
+            }
             $func = array(
                 $func[0],
                 $func[1]
             );
-            return call_user_func_array($func, (array)$arg);
+            return call_user_func_array($func, (array) $arg);
         }
     }
 
@@ -158,61 +167,63 @@ class Execs
      *   )
      *  $str 要检测的参数
      */
-    public static function regularHandle($preg, $str)
+    public static function regularHandles($preg, $str)
     {
+        $str = trim($str); //过滤字符串  
+        if(empty($str)){
+            return '';
+        }            
         if (!$preg) {
             return $str;
         }
-        $str = trim($str); //过滤字符串
         $default = (isset($preg[1]) && !is_array($preg[1])) ? $preg[1] : null;
         $errormsg = (isset($preg[2]) && !is_array($preg[2])) ? $preg[2] : null;
         //如果preg是数组
         if (is_array($preg)) {
             //$preg[0]不是数组
             if (!is_array($preg[0]) || is_object($preg[0][0]) || self::getMaxdim($preg[0]) <= 1) {
-                $values = array();
+                $values = [];
                 $values[0] = $preg[0];
                 $values[1] = $default;
                 $values[2] = $errormsg;
-                $val = self::regularHandles($values, $str);
+                $val = self::regularHandle($values, $str);
                 return $val;
             } else {
                 foreach ($preg[0] as $k => $v) {
                     $val = '';
-                    $values = array();
+                    $values = [];
                     $values[0] = $v;
                     $values[1] = isset($preg[1][$k]) ? $preg[1][$k] : $default;
                     $values[2] = isset($preg[2][$k]) ? $preg[2][$k] : $errormsg;
-                    $val = self::regularHandles($values, $str);
+                    $val = self::regularHandle($values, $str);
                     unset($values);
                 }
 
                 return $val;
             }
         } else {
-            return self::regularHandles($preg, $str);
+            return self::regularHandle($preg, $str);
         }
     }
 
     //单一处理
-    public static function regularHandles($preg, $str)
+    public static function regularHandle($preg, $str)
     {
         $default = $errormsg = $pregs = null;
-
         if (is_array($preg)) {
             $default = $preg[1]; //获取默认值
             $errormsg = $preg[2]; //获取错误消息
             $preg = $preg[0]; //获取验证规则
         }
         if (is_array($preg)) {
-            $str = self::method($preg, (array)$str);
+            $str = self::method($preg, (array) $str);
             if (!empty($str)) {
                 return $str;
             } else {
                 return self::returnError($errormsg, $default);
             }
         } elseif (self::isFunc($preg)) {
-            if ($str = self::func($preg, (array)$str)) {
+            if ($str = self::func($preg, (array) $str)) {
                 return $str;
             } else {
                 return self::returnError($errormsg, $default);
@@ -221,8 +232,15 @@ class Execs
             if (empty($preg)) {
                 return $default;
             }
-            $preg = self::ruleArrs($preg);
+            $preg2 = self::ruleArrs($preg);
 
+            if (is_array($preg2)) {
+                $preg = $preg2[0]; //获取验证规则
+                $default = $preg2[1]; //获取默认值
+                $errormsg = $preg2[2]; //获取错误消息
+            }else{
+                $preg = $preg2;
+            }
             if ($preg == 'empty') {
                 return empty($str) ? $default : $str;
             } elseif ($preg == 'isset') {
@@ -239,17 +257,12 @@ class Execs
     //返回错误
     public static function returnError($errormsg, $default)
     {
-        self::$errorStatus = false;
+        empty($errormsg) && $errormsg = '';
         self::$errors[] = $errormsg;
         if (!empty($default)) {
             return $default;
         } else {
-            if (self::$errorShow == false) {
-                empty($errormsg) && $errormsg = 'Parameter error';
-                throw new \Exception($errormsg);
-            } else {
-                return empty($errormsg) ? self::$errorStatus : $errormsg;
-            }
+            return $errormsg;
         }
     }
 
@@ -284,5 +297,4 @@ class Execs
         $preg = isset(self::$rulearr[$rule]) ? self::$rulearr[$rule] : $rule;
         return $preg;
     }
-
 }

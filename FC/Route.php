@@ -1,11 +1,15 @@
 <?php
 
-namespace swoole;
+namespace FC;
+
+use FC\Route\Execs;
 
 /**
  * 通用路由处理类
- * 作者:lovefc
- * 创建时间：2017/1/3 0:27
+ * @Author: lovefc 
+ * @Date: 2017/1/3 00:27
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-09-16 13:37:24
  * *
  */
 
@@ -15,14 +19,15 @@ class Route extends Execs
     public static $route, $mode, $rvar;
     public static $counters = false, $handleStatus = false;
     public static $counter = 0, $jsq = 0;
-    public static $routeval = array();
-    public static $parameters = array(), $rule = array(), $returnback = array();
+    public static $routeval = [];
+    public static $parameters = [], $rule = [], $returnback = [];
     public static $reback = true;
     public static $query, $query2;
 
     /*
      * 路由配置
-     * @param $value 访问名称 规则
+     * @param $name 访问名称
+     * @param $value 访问值
      * @param $array 过滤数组
      */
     public static function set($name, $value, $array = null)
@@ -33,7 +38,7 @@ class Route extends Execs
         }
     }
 
-    //判断是否是cgi模式
+    // 判断是否是cgi模式
     public static function isCli()
     {
         if (PHP_SAPI === 'cli') {
@@ -47,7 +52,7 @@ class Route extends Execs
         }
     }
 
-    //判断swoole
+    // 判断swoole
     public static function IsSwooleHttp()
     {
         if (isset($_SERVER['SERVER_SOFTWARE']) && $_SERVER['SERVER_SOFTWARE'] === 'swoole-http-server') {
@@ -56,16 +61,16 @@ class Route extends Execs
         return false;
     }
 
-    //获取query
-    public static function get_query()
+    // 获取query
+    public static function getQuery()
     {
+        $url = '';
         if (self::isCli() === true) {
             $url = isset($_SERVER['argv'][1]) ? strtr($_SERVER['argv'][1], '#', '&') : null;
             if ($url) {
                 return ltrim($url, '/');
             }
         }
-        $url = '';
         $path_info = empty($_SERVER['PATH_INFO']) ? '' : $_SERVER['PATH_INFO'];
         $orig_path_info = empty($_SERVER['ORIG_PATH_INFO']) ? '' : $_SERVER['ORIG_PATH_INFO'];
         $url = $path_info ? $path_info : $orig_path_info;
@@ -73,13 +78,13 @@ class Route extends Execs
             $url = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
         }
         if (self::$route != '#^([\w\W]*)#') {
-            $url = self::str_replace_limit('&', '?', $url, 1);
+            $url = self::strReplaceLimit('&', '?', $url, 1);
         }
         return ltrim($url, '/');
     }
 
     // 指定字符串替换次数并且过滤字符串
-    public static function str_replace_limit($search, $replace, $subject, $limit = 1)
+    public static function strReplaceLimit($search, $replace, $subject, $limit = 1)
     {
         if (is_array($search)) {
             foreach ($search as $k => $v) {
@@ -91,12 +96,12 @@ class Route extends Execs
         return preg_replace($search, $replace, $subject, $limit);
     }
 
-    //获取变量的值
-    public static function get_var($Input)
+    // 获取变量的值
+    public static function getVar($Input)
     {
         $keys = explode('__', $Input);
         if (!is_array($_GET)) {
-            $_GET = array();
+            $_GET = [];
         }
         if (count($keys) == 1) {
             self::$mode = 'GET';
@@ -152,12 +157,12 @@ class Route extends Execs
         );
     }
 
-    //解析参数
+    // 解析参数
     public static function analy_var($value, $keys)
     {
         if (self::$jsq == 0) {
-            $_GET = array();
-            $re = array();
+            $_GET = [];
+            $re = [];
         }
         parse_str(ltrim($value, '?'), $s);
         foreach ($s as $key => $values) {
@@ -173,20 +178,20 @@ class Route extends Execs
         }
     }
 
-    //转义字符串
+    // 转义字符串
     protected static function _quote($val)
     {
         return preg_quote($val, '/');
     }
 
-    //按照键名高低进行排序后重置键名
+    // 按照键名高低进行排序后重置键名
     public static function _arrValues($arr)
     {
         ksort($arr);
         return array_values($arr);
     }
 
-    //设置键值获取
+    // 设置键值获取
     protected static function _counters($_vatr = null)
     {
         $_vatr = empty($_vatr) ? self::$routeval[self::$route] : $_vatr;
@@ -201,7 +206,7 @@ class Route extends Execs
                     return $v;
                 }, self::$counters);
 
-                $arr = array();
+                $arr = [];
                 foreach (self::$counters as $key => $value) {
                     $value = (int) $value;
                     $arr[$value] = isset($_GET[$key]) ? $_GET[$key] : null;
@@ -211,7 +216,7 @@ class Route extends Execs
         }
     }
 
-    //检测是否为伪静态模式
+    // 检测是否为伪静态模式
     public static function isRewrite($url)
     {
         foreach (self::$routeval as $key => $value) {
@@ -234,20 +239,20 @@ class Route extends Execs
                         return true;
                     }
                 } catch (\Exception $e) {
-                    throw new \Exception('Regular Expression Error');
+                    parent::errShow('Regular Expression Error');
                 }
             }
         }
         return false;
     }
 
-    //解析query
+    // 解析query
     public static function queryHandle()
     {
         if (self::$handleStatus == true) {
             return false;
         }
-        $url = self::get_query();
+        $url = self::getQuery();
         if (self::isRewrite($url) !== true) {
             $m = explode(self::$cutting, $url);
             $end = end($m);
@@ -265,7 +270,7 @@ class Route extends Execs
                 if (isset(self::$routeval[self::$route])) {
                     $_vatr = self::$routeval[self::$route];
                 } else {
-                    $a1 = $a2 = array();
+                    $a1 = $a2 = [];
                     self::$route && parse_str(self::$route, $a1);
                     $m && parse_str($url, $a2);
                     $_GET = array_merge($a1, $a2);
@@ -276,7 +281,7 @@ class Route extends Execs
                         $var = trim($_vatr);
                         $len = strlen($var) - 1;
                         if ($var{
-                        $len} == '\\') {
+                            $len} == '\\') {
                             self::$query2 = isset($m[2]) ? $m[2] : null;
                             unset($m[2]);
                         }
@@ -308,7 +313,7 @@ class Route extends Execs
         self::$handleStatus == true;
     }
 
-    //执行代码
+    // 执行代码
     public static function run()
     {
         self::queryHandle();
@@ -334,7 +339,7 @@ class Route extends Execs
         }
     }
 
-    //返回值处理
+    // 返回值处理
     public static function reback($reback)
     {
         if (self::$reback == true) {
@@ -346,7 +351,7 @@ class Route extends Execs
                 }
             } else {
                 if (is_object($reback)) {
-                    throw new \Exception('method: does not exist');
+                    parent::errShow('method: does not exist');
                 } else {
                     echo $reback;
                 }
@@ -356,7 +361,7 @@ class Route extends Execs
         }
     }
 
-    //判断解析
+    // 判断解析
     public static function funcHandle($func)
     {
         if (is_array($func)) {
@@ -382,16 +387,16 @@ class Route extends Execs
         }
     }
 
-    //获取方法参数
+    // 获取方法参数
     public static function getMethodVar($Parameters)
     {
-        $vars = array();
+        $vars = [];
         if (is_array($Parameters) && count($Parameters) > 0) {
             $Parameters = array_values($Parameters);
             foreach ($Parameters as $js => $value) {
                 if (is_object($value)) {
                     $getname = $value->getname();
-                    $re = self::get_var($getname);
+                    $re = self::getVar($getname);
                     $var = $re['var'];
                     $key = $re['key'];
                     if (!is_array($key) && !isset($var[$key])) {
@@ -422,10 +427,10 @@ class Route extends Execs
         return $vars;
     }
 
-    //判断参数
+    // 判断参数
     public static function varHandle($name, $str)
     {
         $preg = isset(self::$rule[self::$route][$name]) ? self::$rule[self::$route][$name] : false;
-        return parent::regularHandle($preg, $str);
+        return parent::regularHandles($preg, $str);
     }
 }

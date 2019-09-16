@@ -1,6 +1,6 @@
 <?php
 
-namespace FC\Config;
+namespace FC\Traits;
 
 /**
  * 缓存一些常用的数据

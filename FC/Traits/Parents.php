@@ -2,22 +2,25 @@
 
 namespace FC\Traits;
 
-use FC\Config\CacheVars;
 /*
- * 继承父类
+ * 配置多继承父类
+ * @Author: lovefc 
+ * @Date: 2016/8/29 10:51:27 
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-09-16 16:41:58
  */
 
 trait Parents
 {
-    //配置数组
+    // 配置数组
     public $P_Config;
-    //保存当前的类名
+    // 保存当前的类名
     public $P_ClassName;
     // 保存单例
     public static $P_CacheVars;
-    //访问配置选项
+    // 访问配置选项
     public $P_ConfigType = false;
-    //注册的类变量
+    // 注册的类变量
     public $P_RegVar = [];
 
     /*
@@ -25,18 +28,17 @@ trait Parents
      */
     public function __construct()
     {
-        self::$P_CacheVars = CacheVars::singleton(); //获取单例
-
+        //获取单例
+        self::$P_CacheVars = CacheVars::singleton();
         self::$P_CacheVars->P_Configs = self::$P_CacheVars->P_PublicConfig;
-
         $this->P_ClassName = get_class($this); //获取类名
-
         if (isset(self::$P_CacheVars->P_Configs[$this->P_ClassName])) {
             $this->P_Config = self::$P_CacheVars->P_Configs[$this->P_ClassName];
         } else {
             $this->P_DefaultArrayConfig();
             $this->P_Config = self::$P_CacheVars->P_Configs[$this->P_ClassName] = self::P_Receive($this->P_ClassName);
         }
+        // init初始化，应用于父类
         if (method_exists($this, 'init')) {
             $this->init();
         }
@@ -46,6 +48,7 @@ trait Parents
             $this->P_RegVar = array_keys($this->P_Config[$this->P_ConfigType]);
         }
         $this->P_Start();
+        // start初始化，应用于子类
         if (method_exists($this, 'start')) {
             $this->start();
         }
@@ -56,10 +59,11 @@ trait Parents
      */
     public function __destruct()
     {
-        unset($this->P_Config);
+        // 脚本结束就自动释放，没必要
+        //unset($this->P_Config);
     }
 
-    //__get()方法用来获取私有属性
+    // __get()方法用来获取私有属性
     public function __get($name)
     {
         $this->P_RegVar[] = $name;
@@ -70,7 +74,7 @@ trait Parents
         }
     }
 
-    //初始化
+    // 初始化
     public function P_Start()
     {
         foreach ($this->P_RegVar as $value) {
@@ -80,17 +84,18 @@ trait Parents
     }
 
 
-    //设置访问的配置
+    // 设置访问的配置
     public function P_Read($type)
     {
         if (isset($type)) {
             $this->P_ConfigType = $type;
         }
-        $this->P_Start(); //初始化
+        // 初始化
+        $this->P_Start();
         return $this;
     }
 
-    //魔术方法，用来创建方法
+    // 魔术方法，用来创建方法
     public function __call($method, $args)
     {
         $perfix = substr($method, 0, 3);
@@ -122,15 +127,17 @@ trait Parents
     {
         $config = self::P_GetConfigFile($file);
         $config2 = self::P_GetConfigFile($file2);
-        return array_replace_recursive($config, $config2); //组合配置
+        // 组合配置
+        return array_replace_recursive($config, $config2);
     }
 
     //读取配置目录以及工作目录里的配置文件
     final public static function P_ReadConfigFile($conf)
     {
-        $file = CONFIG_DIR . '/' . $conf;
+        $dir = SERVER['FC_CONFIG_PATH'];
+        $file = $dir . '/' . $conf;
         if (is_file($file)) {
-            $file2 = CONFIG_APP_DIR . '/' . $conf;
+            $file2 = SERVER['NOW_CONFIG_PATH'] . '/' . $conf;
             $config = self::P_GetConfig($file, $file2);
             return $config;
         }
@@ -165,7 +172,7 @@ trait Parents
         if (isset(self::$P_CacheVars->P_PublicConfig[$ckey])) {
             return self::$P_CacheVars->P_PublicConfig[$ckey];
         }
-        $jian = $arr = []; //初始化变量
+        $keys = $arr = []; //初始化变量
         if (array_key_exists($conf, self::$P_CacheVars->P_ArrayConfig)) {
             $conf = self::$P_CacheVars->P_ArrayConfig[$conf];
         } else {
@@ -186,14 +193,14 @@ trait Parents
                 $conf = $arr[0]; //取得第一个值
                 if ($conf) {
                     array_shift($arr);
-                    $jian = $arr; //获取键名
+                    $keys = $arr; //获取键名
                 } else {
                     array_shift($arr);
                     $conf = $arr; //键值
                 }
             }
             $config = self::P_GetConfigFile($conf, $ckey);
-            $config2 = self::P_ImpArray($config, $jian);
+            $config2 = self::P_ImpArray($config, $keys);
             $re = $config2 ? $config2 : $config;
 
             return $re;
