@@ -12,6 +12,10 @@ header("X-Powered-By: FC/6.0");
 
 header("Server: node/8.8.8");
 
-print_r(headers_list());
+//print_r(headers_list());
+$browser = get_browser();
+
+print_r($browser);
+
 
 ?>

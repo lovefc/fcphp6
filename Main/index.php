@@ -23,6 +23,6 @@ $Stime = $_SERVER['REQUEST_TIME_FLOAT'];
 
 $Etime = microtime(true);
 
-echo '<br />';
+echo FC_EOL;
 
 echo round($Etime - $Stime, 5);

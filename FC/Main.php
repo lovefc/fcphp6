@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-16 17:23:57
+ * @Last Modified time: 2019-09-16 18:06:59
  */
 
 // 判断运行版本
@@ -60,6 +60,17 @@ $FC_PATH = strtr(__DIR__, '\\', '/');
 // 获取当前目录
 $NOW_PATH = isset($_SERVER['SCRIPT_FILENAME']) ? strtr(dirname($_SERVER['SCRIPT_FILENAME']), '\\', '/') : '';
 
+// 在CLI，CGI模式下的一些设置和兼容
+if(PHP_SAPI === 'cli'){
+    define('FC_EOL', PHP_EOL);
+    $CLI = true;
+    $METHOD = 'CLI';
+}else{
+    define('FC_EOL','<br />');
+    $CLI = true;
+    $METHOD  = $_SERVER['REQUEST_METHOD'] ?? '';
+}
+
 // 虽然有$_SERVER全局变量,但不可太过于依赖它，这里用于兼容判断取值
 define('SERVER', [
     // 服务器ip
@@ -70,10 +81,12 @@ define('SERVER', [
     'HOST' => $_SERVER['HTTP_HOST'] ?? '',
     //请求开始的时间戳
     'TIME' => $_SERVER['REQUEST_TIME'] ?? '',
+    // 服务器类型
+    'TYPE' => (PATH_SEPARATOR === ':') ? 'linux' : 'windows',
     // 协议头，https或者http
     'SCHEMA' => $_SERVER['REQUEST_SCHEME'] ?? '',
     // 请求方式
-    'METHOD' => $_SERVER['REQUEST_METHOD'] ?? '',
+    'METHOD' => $METHOD,
     // 是否为ajax请求
     'AJAX' => $IS_AJAX,
     // 当前执行脚本的绝对路径
@@ -85,7 +98,7 @@ define('SERVER', [
     // 请求开始的时间戳
     'TIME_FLOAT' => $_SERVER['REQUEST_TIME_FLOAT'] ?? '',
     // 是否为cli模式
-    'CLI' => (PHP_SAPI === 'cli') ? true : false,
+    'CLI' => $CLI,
     // 查询字符串
     'QUERY_STRING' => $_SERVER['QUERY_STRING'] ?? '',
     // 框架目录
