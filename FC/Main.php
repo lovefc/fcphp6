@@ -5,20 +5,25 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-16 16:41:13
+ * @Last Modified time: 2019-09-16 17:23:57
  */
 
 // 判断运行版本
+
+// 定义版本信息，用于覆盖原来的php版本
+header("X-Powered-By: FC/6.0");
+
 version_compare(PHP_VERSION, '7.0.0', '<=') && exit("FC框架只能运行在php7版本或以上的环境中,敬请见谅!\n");
 
 // 屏蔽PHP启动过程中的错误信息，不建议显示
 ini_set('display_startup_errors', 0);
 
 // 定义时区
-//!defined('TIMEZONE') ? date_default_timezone_set('PRC') : date_default_timezone_set(TIMEZONE);
+!defined('TIMEZONE') ? date_default_timezone_set('PRC') : date_default_timezone_set(TIMEZONE);
 
 // 定义编码
-//!defined('CHARSET') ? header("Content-type:text/html; charset=utf-8") : header('Content-type: text/html; charset=' . CHARSET);
+!defined('CHARSET') ? header("Content-type:text/html; charset=utf-8") : header('Content-type: text/html; charset=' . CHARSET);
+
 
 // 检测是否定义fastcgi_finish_request
 if (!function_exists("fastcgi_finish_request")) {
@@ -34,7 +39,7 @@ if (function_exists('get_magic_quotes_gpc')) {
 }
 
 // 判断web运行的绝对目录，在ng和ap中，这个值是不同的
-$ROOT_PATH = $_SERVER['CONTEXT_DOCUMENT_ROOT'] ?? '' || isset($_SERVER['HOME']) ? $_SERVER['HOME'] : '';
+$ROOT_PATH = ($_SERVER['CONTEXT_DOCUMENT_ROOT'] ?? '') || ($_SERVER['HOME'] ?? '');
 
 // 是否为AJAX请求 
 // jquery.js发起的请求，会包含HTTP_X_REQUESTED_WITH字段，如果自定义请求，需要这样定义请求来判断
@@ -53,7 +58,7 @@ isset($_SERVER['PATH_INFO']) ? $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'] : 
 $FC_PATH = strtr(__DIR__, '\\', '/');
 
 // 获取当前目录
-$NOW_PATH = isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']) : '';
+$NOW_PATH = isset($_SERVER['SCRIPT_FILENAME']) ? strtr(dirname($_SERVER['SCRIPT_FILENAME']), '\\', '/') : '';
 
 // 虽然有$_SERVER全局变量,但不可太过于依赖它，这里用于兼容判断取值
 define('SERVER', [
@@ -74,7 +79,7 @@ define('SERVER', [
     // 当前执行脚本的绝对路径
     'NOW_PATH'   => $NOW_PATH, // 当前路径
     // 当前配置目录
-    'NOW_CONFIG_PATH' => $NOW_PATH . '/Config',    
+    'NOW_CONFIG_PATH' => $NOW_PATH . '/Config',
     // web运行的绝对目录
     'ROOT_PATH'  => $ROOT_PATH,
     // 请求开始的时间戳
