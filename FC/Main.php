@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-16 18:06:59
+ * @Last Modified time: 2019-09-17 09:03:28
  */
 
 // 判断运行版本
@@ -50,6 +50,8 @@ $ROOT_PATH = ($_SERVER['CONTEXT_DOCUMENT_ROOT'] ?? '') || ($_SERVER['HOME'] ?? '
  * xmlhttp.send();
  */
 $IS_AJAX = ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false;
+// 是否为ajax请求
+define('AJAX', $IS_AJAX);
 
 // pathinfo下对于PHP_SELF的兼容，避免出现不必要的值和安全问题,如果要获取本页面地址，推荐使用$_SERVER['SCRIPT_NAME']
 isset($_SERVER['PATH_INFO']) ? $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'] : '';
@@ -63,15 +65,17 @@ $NOW_PATH = isset($_SERVER['SCRIPT_FILENAME']) ? strtr(dirname($_SERVER['SCRIPT_
 // 在CLI，CGI模式下的一些设置和兼容
 if(PHP_SAPI === 'cli'){
     define('FC_EOL', PHP_EOL);
+    define('IS_CLI', true);
     $CLI = true;
-    $METHOD = 'CLI';
 }else{
     define('FC_EOL','<br />');
+    define('IS_CLI', false);
     $CLI = true;
-    $METHOD  = $_SERVER['REQUEST_METHOD'] ?? '';
 }
 
+
 // 虽然有$_SERVER全局变量,但不可太过于依赖它，这里用于兼容判断取值
+/*
 define('SERVER', [
     // 服务器ip
     'IP'   =>  $_SERVER['SERVER_ADDR'] ?? '',
@@ -85,30 +89,31 @@ define('SERVER', [
     'TYPE' => (PATH_SEPARATOR === ':') ? 'linux' : 'windows',
     // 协议头，https或者http
     'SCHEMA' => $_SERVER['REQUEST_SCHEME'] ?? '',
-    // 请求方式
-    'METHOD' => $METHOD,
-    // 是否为ajax请求
-    'AJAX' => $IS_AJAX,
-    // 当前执行脚本的绝对路径
-    'NOW_PATH'   => $NOW_PATH, // 当前路径
-    // 当前配置目录
-    'NOW_CONFIG_PATH' => $NOW_PATH . '/Config',
-    // web运行的绝对目录
-    'ROOT_PATH'  => $ROOT_PATH,
     // 请求开始的时间戳
     'TIME_FLOAT' => $_SERVER['REQUEST_TIME_FLOAT'] ?? '',
-    // 是否为cli模式
-    'CLI' => $CLI,
     // 查询字符串
     'QUERY_STRING' => $_SERVER['QUERY_STRING'] ?? '',
+]);
+*/
+
+define('PATH',[
     // 框架目录
-    'FC_PATH' => $FC_PATH,
+    'FC' => $FC_PATH,    
+    // web运行的绝对目录
+    'ROOT'  => $ROOT_PATH,   
     // 框架配置目录
-    'FC_CONFIG_PATH' => $FC_PATH . '/Config',
+    'FC_CONFIG' => $FC_PATH . '/Config',
+    // 当前执行脚本的绝对路径
+    'NOW'   => $NOW_PATH, // 当前路径
+    // 当前配置目录
+    'NOW_CONFIG' => $NOW_PATH . '/Config',
 ]);
 
 // 引入加载类
 require $FC_PATH . '/Load/LoaderClass.php';
+
+// 引入函数库
+require $FC_PATH . '/Function.php';
 
 // 加载框架类库
 FC\Load\LoaderClass::AddPsr4('FC', __DIR__);

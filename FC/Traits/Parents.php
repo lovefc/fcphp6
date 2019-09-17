@@ -7,7 +7,7 @@ namespace FC\Traits;
  * @Author: lovefc 
  * @Date: 2016/8/29 10:51:27 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-16 16:41:58
+ * @Last Modified time: 2019-09-17 08:54:39
  */
 
 trait Parents
@@ -134,10 +134,10 @@ trait Parents
     //读取配置目录以及工作目录里的配置文件
     final public static function P_ReadConfigFile($conf)
     {
-        $dir = SERVER['FC_CONFIG_PATH'];
+        $dir = PATH['FC_CONFIG'];
         $file = $dir . '/' . $conf;
         if (is_file($file)) {
-            $file2 = SERVER['NOW_CONFIG_PATH'] . '/' . $conf;
+            $file2 = PATH['FC_CONFIG'] . '/' . $conf;
             $config = self::P_GetConfig($file, $file2);
             return $config;
         }
