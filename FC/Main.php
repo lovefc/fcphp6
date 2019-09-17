@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-17 15:38:39
+ * @Last Modified time: 2019-09-17 17:36:04
  */
 
 // 判断运行版本
@@ -73,6 +73,8 @@ if(PHP_SAPI === 'cli'){
     $CLI = true;
 }
 
+// 判断是不是win系统
+define('IS_WIN', (PATH_SEPARATOR === ':')? false : true);
 
 // 虽然有$_SERVER全局变量,但不可太过于依赖它，这里用于兼容判断取值
 /*
