@@ -9,7 +9,7 @@ use FC\Route\Execs;
  * @Author: lovefc 
  * @Date: 2017/1/3 00:27
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-16 13:37:24
+ * @Last Modified time: 2019-09-17 16:43:42
  * *
  */
 
@@ -122,14 +122,6 @@ class Route extends Execs
                 $Main = $_POST;
                 self::$mode = 'POST';
                 break;
-            case 'REQUEST':
-                $Main = $_REQUEST;
-                self::$mode = 'REQUEST';
-                break;
-            case 'SERVER':
-                $Main = $_SERVER;
-                self::$mode = 'SERVER';
-                break;
             case 'COOKIE':
                 $Main = $_COOKIE;
                 self::$mode = 'COOKIE';
@@ -158,7 +150,7 @@ class Route extends Execs
     }
 
     // 解析参数
-    public static function analy_var($value, $keys)
+    public static function analyVar($value, $keys)
     {
         if (self::$jsq == 0) {
             $_GET = [];
@@ -231,7 +223,7 @@ class Route extends Execs
                         array_shift($strs);
                         array_walk($strs, array(
                             'self',
-                            'analy_var',
+                            'analyVar',
                         ));
                         $get = $_GET;
                         self::_counters();
@@ -289,13 +281,13 @@ class Route extends Execs
                         unset($m[0]);
                         array_walk($m, array(
                             'self',
-                            'analy_var',
+                            'analyVar',
                         ));
                     } else {
                         unset($m[0]);
                         array_walk($m, array(
                             'self',
-                            'analy_var',
+                            'analyVar',
                         ));
                         self::_counters($_vatr);
                     }
@@ -304,7 +296,7 @@ class Route extends Execs
                     unset($m[0]);
                     array_walk($m, array(
                         'self',
-                        'analy_var',
+                        'analyVar',
                     ));
                 }
             }

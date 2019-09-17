@@ -7,7 +7,7 @@ namespace FC\Traits;
  * @Author: lovefc 
  * @Date: 2016/8/29 10:51:27 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-17 08:54:39
+ * @Last Modified time: 2019-09-17 16:30:30
  */
 
 trait Parents
@@ -137,7 +137,7 @@ trait Parents
         $dir = PATH['FC_CONFIG'];
         $file = $dir . '/' . $conf;
         if (is_file($file)) {
-            $file2 = PATH['FC_CONFIG'] . '/' . $conf;
+            $file2 = PATH['NOW_CONFIG'] . '/' . $conf;
             $config = self::P_GetConfig($file, $file2);
             return $config;
         }

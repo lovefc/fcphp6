@@ -1,26 +1,42 @@
 <?php
+
+namespace FC;
+
 /* 
  * 容器类实现
  * @Author: lovefc 
  * @Date: 2019-09-06 08:54:09 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-06 08:59:35
+ * @Last Modified time: 2019-09-17 15:56:15
  */
 
 class Container
 {
     private $s = array();
 
-    // 创建值
-    public function __set($k, $c)
+    /**
+     * 创建值
+     *
+     * @param [type] $k
+     * @param [type] $c
+     * @return void
+     */
+    public function set($k, $c)
     {
         $this->s[$k] = $c;
     }
-    
-    // 获取值
+
+    /**
+     * 获取值
+     *
+     * @param [type] $k
+     * @return void
+     */ 
     public function __get($k)
     {
-        return $this->build($this->s[$k]);
+        $obj =  $this->build($this->s[$k]);
+        $this->$k = $obj;
+        return $obj;
     }
 
     /**
@@ -28,7 +44,6 @@ class Container
      *
      * @param string $className
      * @return object
-     * @throws Exception
      */
     public function build($className)
     {
@@ -39,12 +54,11 @@ class Container
         }
 
         /*通过反射获取类的内部结构，实例化类*/
-        $reflector = new ReflectionClass($className);
+        $reflector = new \ReflectionClass($className);
         // 检查类是否可实例化, 排除抽象类abstract和对象接口interface
         if (!$reflector->isInstantiable()) {
-            throw new Exception("Can't instantiate this.");
+            throw new \Exception("Can't instantiate this.");
         }
-
         /** @var ReflectionMethod $constructor 获取类的构造函数 */
         $constructor = $reflector->getConstructor();
         // 若无构造函数，直接实例化并返回
@@ -53,17 +67,15 @@ class Container
         }
         // 取构造函数参数,通过 ReflectionParameter 数组返回参数列表
         $parameters = $constructor->getParameters();
-
         // 递归解析构造函数的参数
-
         $dependencies = $this->getDependencies($parameters);
-
         // 创建一个类的新实例，给出的参数将传递到类的构造函数。
-
         return $reflector->newInstanceArgs($dependencies);
     }
 
     /**
+     * 获取构造方法里面的默认值
+     * 
      * @param array $parameters
      * @return array
      * @throws Exception
@@ -71,9 +83,7 @@ class Container
     public function getDependencies($parameters)
     {
         $dependencies = [];
-        /** @var ReflectionParameter $parameter */
         foreach ($parameters as $parameter) {
-            /** @var ReflectionClass $dependency */
             $dependency = $parameter->getClass();
             if (is_null($dependency)) {
                 // 是变量,有默认值则设置默认值
@@ -85,8 +95,10 @@ class Container
         }
         return $dependencies;
     }
-    
+
     /**
+     * 检测并获取默认值
+     * 
      * @param ReflectionParameter $parameter
      * @return mixed
      * @throws Exception
@@ -97,6 +109,5 @@ class Container
         if ($parameter->isDefaultValueAvailable()) {
             return $parameter->getDefaultValue();
         }
-        throw new Exception('I have no idea what to do here.');
     }
 }

@@ -4,11 +4,14 @@
 require dirname(__DIR__) . '/FC/Main.php';
 
 try {
-    $obj = FC\S('FC\Glue\Routes');
+    $obj = FC\Obj('FC\Glue\Routes');
     $obj::run();
 } catch (\Exception $e) {
     die($e->getMessage());
 }
+
+
+echo FC\GET('a');
 
 echo FC_EOL;
 

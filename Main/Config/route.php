@@ -9,8 +9,8 @@
  */
 
 return [
-    'default' => function(){
-        echo 'hello world222';
+    'default' => function($get__FC){
+        echo "{$get__FC}";
     },
     
     '1' => function(){
