@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 14:45:23
+ * @Last Modified time: 2019-09-18 15:17:28
  */
 
 // 开启错误
@@ -65,7 +65,7 @@ isset($_SERVER['PATH_INFO']) ? $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'] : 
 $FC_PATH = strtr(__DIR__, '\\', '/');
 
 // 获取当前目录
-$NOW_PATH = isset($_SERVER['SCRIPT_FILENAME']) ? strtr(dirname($_SERVER['SCRIPT_FILENAME']), '\\', '/') : '';
+$NOW_PATH =  strtr(getcwd(), '\\', '/');
 
 // 时间常量,避免多次使用函数
 define('TIME',time());
@@ -74,11 +74,9 @@ define('TIME',time());
 if(PHP_SAPI === 'cli'){
     define('FC_EOL', PHP_EOL);
     define('IS_CLI', true);
-    $CLI = true;
 }else{
     define('FC_EOL','<br />');
     define('IS_CLI', false);
-    $CLI = true;
 }
 
 // 判断是不是win系统

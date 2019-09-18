@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2019-09-18 08:18:11 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 14:43:56
+ * @Last Modified time: 2019-09-18 14:57:59
  */
 
 class Log
@@ -20,6 +20,8 @@ class Log
 
     // 要记录的错误等级(错误等级都是倍数递增)
     public static $Level = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32767];
+
+    public static $ViewFile = PATH['FC'] . '/Error.html';
 
     /**
      * 错误处理函数
@@ -38,7 +40,8 @@ class Log
         }
         if (IS_AJAX === true || IS_CLI === true) {
             if ($lasterror) {
-                $err  = 'Type:' . $lasterror['type'] . PHP_EOL;
+                ob_clean();
+                $err  = PHP_EOL.'Type:' . $lasterror['type'] . PHP_EOL;
                 $err .= 'Line:' . $lasterror['line'] . PHP_EOL;
                 $err .= 'File:' . $lasterror['file'] . PHP_EOL;
                 $err .= 'Message:' . $lasterror['message'] . PHP_EOL;
@@ -54,7 +57,7 @@ class Log
             // 获取错误行号处的代码
             $lasterror['code'] = trim(self::GetLine($lasterror['file'], $lasterror['line'], $length = 500));
             $error = $lasterror;
-            require(PATH['FC'] . '/Error.html');
+            require(self::$ViewFile);
             self::WriteLog(array_unique($lasterror));
         }
         exit;
@@ -66,7 +69,7 @@ class Log
      * @param [type] $err
      * @return void
      */
-    public static function Log($err)
+    public static function Show($err)
     {
         $error = array();
         if (is_array($err)) {
@@ -78,7 +81,7 @@ class Log
             die((IS_WIN === true) ? iconv('UTF-8', 'GBK', $err) : $err);
         }
         $error['message'] = $err;
-        include(PATH['FC'] . '/Error.html');
+        require(self::$ViewFile);
         die();
     }
 
