@@ -3,7 +3,8 @@
 // 引入框架
 require dirname(__DIR__) . '/FC/Main.php';
 
-define('DEBUG',false);
+// 开启报错
+//define('DEBUG', true);
 
 try {
     $obj = FC\Obj('FC\Glue\Routes');
@@ -11,6 +12,5 @@ try {
 } catch (\Exception $e) {
     die($e->getMessage());
 }
-
 
 echo FC_EOL;

@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2017/08/25 20:45
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 11:28:44
+ * @Last Modified time: 2019-09-18 15:50:32
  */
 
 class File
@@ -106,7 +106,7 @@ class File
     public static function fileSize($file, $convert = true)
     {
         $filesize = filesize($file);
-        if ($convert == true) {
+        if ($convert === true) {
             return self::getSize($filesize);
         }
         return $filesize;

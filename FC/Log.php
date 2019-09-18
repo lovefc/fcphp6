@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2019-09-18 08:18:11 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 14:57:59
+ * @Last Modified time: 2019-09-18 15:29:06
  */
 
 class Log
@@ -176,7 +176,7 @@ class Log
      * 错误代码对照表,来自naples
      *
      * @param [type] $level
-     * @return void
+     * @return string
      */
     public static function ErrLevelMap($level)
     {

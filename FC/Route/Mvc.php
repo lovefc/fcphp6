@@ -11,7 +11,7 @@ use FC\Route AS LuYou;
  * @Author: lovefc 
  * @Date: 2019-09-17 08:24:01 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-17 10:18:11
+ * @Last Modified time: 2019-09-18 15:35:02
  */
 
 class MVC
@@ -31,7 +31,7 @@ class MVC
     public $style_template_tempdir; // 模版编译目录
 
 
-0    /**
+    /**
      * 初始化函数
      */
     public function run()

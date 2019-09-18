@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2019-09-17 10:25:58 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 13:46:51
+ * @Last Modified time: 2019-09-18 16:21:55
  */
 
 class Help
@@ -55,65 +55,17 @@ class Help
     {
         $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         $os = false;
-        if (preg_match('/Windows/', $agent) && preg_match('/98/', $agent)) {
-            $os = 'Windows 98';
-        } elseif (preg_match('/Windows/', $agent) && preg_match('/NT 5.1/', $agent)) {
-            $os = 'Windows XP';
-        } elseif (preg_match('/Windows/', $agent) && preg_match('/NT 5/', $agent)) {
-            $os = 'Windows 2000';
-        } elseif (preg_match('/Windows/', $agent) && preg_match('/NT 6.0/', $agent)) {
-            $os = 'WindowsVista';
-        } elseif (preg_match('/Windows/', $agent) && preg_match('/NT 6.1/', $agent)) {
-            $os = 'Windows 7';
-        } elseif (preg_match('/Windows/', $agent) && preg_match('/NT 6.2/', $agent)) {
-            $os = 'Windows 8';
-        } elseif (preg_match('/Windows/', $agent) && preg_match('/NT 6.3/', $agent)) {
-            $os = 'Windows 8.1';
-        } elseif (preg_match('/Windows/', $agent) && preg_match('/NT 6.4/', $agent)) {
-            $os = 'Windows 10';
-        } elseif (preg_match('/Windows/', $agent) && preg_match('/NT 32/', $agent)) {
-            $os = 'Windows 32';
-        } elseif (preg_match('/linux/', $agent)) {
+        if (strpos($agent, 'Windows')) {
+            $os = 'Windows';
+        } elseif (strpos($agent, "Linux")) {
             $os = 'Linux';
-        } elseif (preg_match('/unix/', $agent)) {
-            $os = 'Unix';
-        } elseif (preg_match('/sun/', $agent) && preg_match('/os/', $agent)) {
-            $os = 'SunOS';
-        } elseif (preg_match('/ibm/', $agent) && preg_match('/os/', $agent)) {
-            $os = 'IBM OS/2';
-        } elseif (preg_match('/Mac/', $agent) && preg_match('/PC/', $agent)) {
-            $os = 'Macintosh';
-        } elseif (preg_match('/PowerPC/', $agent)) {
-            $os = 'PowerPC';
-        } elseif (preg_match('/AIX/', $agent)) {
-            $os = 'AIX';
-        } elseif (preg_match('/HPUX/', $agent)) {
-            $os = 'HPUX';
-        } elseif (preg_match('/NetBSD/', $agent)) {
-            $os = 'NetBSD';
-        } elseif (preg_match('/BSD/', $agent)) {
-            $os = 'BSD';
-        } elseif (preg_match('/OSF1/', $agent)) {
-            $os = 'OSF1';
-        } elseif (preg_match('/IRIX/', $agent)) {
-            $os = 'IRIX';
-        } elseif (preg_match('/FreeBSD/', $agent)) {
-            $os = 'FreeBSD';
-        } elseif (preg_match('/teleport/', $agent)) {
-            $os = 'teleport';
-        } elseif (preg_match('/flashget/', $agent)) {
-            $os = 'flashget';
-        } elseif (preg_match('/webzip/', $agent)) {
-            $os = 'webzip';
-        } elseif (preg_match('/offline/', $agent)) {
-            $os = 'offline';
-        } elseif (strpos($agent, "Android") !== false) {
+        } elseif (strpos($agent, "Android")) {
             $os = 'Android';
-        } elseif (strpos($agent, "iPhone") !== false) {
+        } elseif (strpos($agent, "iPhone")) {
             $os = 'iPhone';
-        } elseif (strpos($agent, "iPad") !== false) {
+        } elseif (strpos($agent, "iPad")) {
             $os = 'iPad';
-        } elseif (strpos($agent, "Nokia") !== false) {
+        } elseif (strpos($agent, "Nokia")) {
             $rel = 'Nokia';
         } else {
             $os = 'Unknown';
