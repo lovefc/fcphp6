@@ -5,14 +5,19 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 11:32:04
+ * @Last Modified time: 2019-09-18 14:45:23
  */
 
-// 判断运行版本
+// 开启错误
+ini_set("display_errors","On");
+
+// 屏蔽错误
+error_reporting(0);
 
 // 定义版本信息，用于覆盖原来的php版本
 header("X-Powered-By: FC/6.0");
 
+// 判断运行版本
 version_compare(PHP_VERSION, '7.0.0', '<=') && exit("FC框架只能运行在php7版本或以上的环境中,敬请见谅!\n");
 
 // 屏蔽PHP启动过程中的错误信息，不建议显示
@@ -51,7 +56,7 @@ $ROOT_PATH = ($_SERVER['CONTEXT_DOCUMENT_ROOT'] ?? '') || ($_SERVER['HOME'] ?? '
  */
 $IS_AJAX = ((isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')) ? true : false;
 // 是否为ajax请求
-define('AJAX', $IS_AJAX);
+define('IS_AJAX', $IS_AJAX);
 
 // pathinfo下对于PHP_SELF的兼容，避免出现不必要的值和安全问题,如果要获取本页面地址，推荐使用$_SERVER['SCRIPT_NAME']
 isset($_SERVER['PATH_INFO']) ? $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'] : '';
@@ -125,3 +130,9 @@ FC\Load\LoaderClass::AddPsr4('FC', __DIR__);
 
 // 自动加载
 FC\Load\LoaderClass::register();
+
+// 错误处理和记录
+register_shutdown_function(['\FC\Log','Error']);
+
+// 获取当前地址，兼容方案
+define('NOW_URL', FC\RequestUri());

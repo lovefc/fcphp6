@@ -1,19 +1,16 @@
-
 <?php
 
-namespace FC\Log;
-
-use FC\File;
+namespace FC;
 
 /*
  * 错误处理类
  * @Author: lovefc 
  * @Date: 2019-09-18 08:18:11 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 11:35:02
+ * @Last Modified time: 2019-09-18 14:43:56
  */
 
-class Error
+class Log
 {
     // 错误日志目录
     public static $LogDir;
@@ -29,12 +26,16 @@ class Error
      *
      * @return void
      */
-    public static function __Error()
+    public static function Error()
     {
         $lasterror = error_get_last();
-        // 检测是否开启错误输出
-        $debug = defined('ERROR_SHOW') ? ERROR_SHOW : true;
-
+        // 日志记录路径
+        self::$LogDir = defined('LOG_DIR') ? LOG_DIR : PATH['NOW'] . '/Log';
+        (defined('DEBUG') && empty(DEBUG)) && self::$Level = [0];
+        $type = $lasterror['type'];
+        if (!\FC\InArray($type, self::$Level)) {
+            $lasterror = '';
+        }
         if (IS_AJAX === true || IS_CLI === true) {
             if ($lasterror) {
                 $err  = 'Type:' . $lasterror['type'] . PHP_EOL;
@@ -47,15 +48,13 @@ class Error
             exit;
         }
         if ($lasterror) {
-            if ($debug === false) {
-                ob_clean();
-                // 获取程序执行结束的时间
-                $lasterror['run_time'] = round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5);
-                // 获取错误行号处的代码
-                $lasterror['code'] = trim(GetLine($lasterror['file'], $lasterror['line'], $length = 500));
-                $error = $lasterror;
-                include(PATH['FC'] . '/Static/View/error.html');
-            }
+            ob_clean();
+            // 获取程序执行结束的时间
+            $lasterror['run_time'] = round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5);
+            // 获取错误行号处的代码
+            $lasterror['code'] = trim(self::GetLine($lasterror['file'], $lasterror['line'], $length = 500));
+            $error = $lasterror;
+            require(PATH['FC'] . '/Error.html');
             self::WriteLog(array_unique($lasterror));
         }
         exit;
@@ -79,7 +78,7 @@ class Error
             die((IS_WIN === true) ? iconv('UTF-8', 'GBK', $err) : $err);
         }
         $error['message'] = $err;
-        include(PATH['FC'] . '/Static/View/error.html');
+        include(PATH['FC'] . '/Error.html');
         die();
     }
 
@@ -127,7 +126,7 @@ class Error
             foreach ($lasterror as $key => $value) {
                 $str .= PHP_EOL . $key . '：' . $value;
                 if ($key == 'type') {
-                    $str .= PHP_EOL . 'explain' . '：' . ErrLevelMap($value);
+                    $str .= PHP_EOL . 'explain' . '：' . self::ErrLevelMap($value);
                 }
             }
         }
@@ -137,12 +136,12 @@ class Error
             $cli = isset($_SERVER['argv'][0]) ? implode(' ', $_SERVER['argv']) : null;
             $str .= PHP_EOL . 'pattern：cli' . PHP_EOL . 'cli：' . $cli . PHP_EOL;
         } else {
-            $str .= PHP_EOL . 'url：' . NOW_URL . PHP_EOL . 'ip：' . GetIp() . PHP_EOL;
+            $str .= PHP_EOL . 'url：' . NOW_URL . PHP_EOL . 'ip：' . Help::GetIP() . PHP_EOL . 'os：' . Help::GetOS() . PHP_EOL;
         }
 
         // 检测目录，不存在或者没有权限就赋予一下
-        if (!is_dir(self::$LogDir) || !is_writable(self::$LogDir)) { 
-             File::create(self::$LogDir);
+        if (!is_dir(self::$LogDir) || !is_writable(self::$LogDir)) {
+            File::create(self::$LogDir);
         }
 
         $path = self::$LogDir . '/' . date("Ymd") . '.txt';
@@ -151,18 +150,22 @@ class Error
         // 读取临时错误文件
         if (is_file($temp_path)) {
             $temp = file_get_contents($temp_path);
+        } else {
+            file_put_contents($temp_path, $lasterror['message'], LOCK_EX);
         }
-
+        // 创建文件
+        if (!is_file($path)) {
+            file_put_contents($path, $str, LOCK_EX);
+        }
         // 相同的错误，判断不允许写入
         if ($temp == $lasterror['message']) {
             return false;
         }
         //错误每30s写入一次,避免在大并发下,写的越来越大
-        if (filemtime($path) < TIME - 30) {
+        if (filemtime($path) < TIME - 10) {
             $file = fopen($path, 'a+b');
             fwrite($file, $str, 4096);
             fclose($file);
-            file_put_contents($temp_path, $lasterror['message'], LOCK_EX);
         }
     }
 

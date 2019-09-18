@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2016/9/09 13:29:34 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 08:17:22
+ * @Last Modified time: 2019-09-18 14:08:01
  */
 
 /**
@@ -52,9 +52,9 @@ function Obj($class, $mode = 'cache')
  * @param boolean $status 翻转数组，查找键值
  * @return void
  */
-function InArray($item, $array, $status = false)
+function InArray($item, $array, $status = true)
 {
-    if ($status == false) {
+    if ($status === true) {
         $flipArray = array_flip($array);
     }
     return isset($flipArray[$item]);
@@ -241,4 +241,30 @@ function Jump($url)
     }
     header('Location: ' . $url);
     exit();
+}
+
+/**
+ * 获取当前的url
+ * 获取 $_SERVER['REQUEST_URI'] 值的通用解决方案
+ * 因为$_SERVER["REQUEST_URI"]这个值只有在apache下才会起作用
+ * @return string
+ */
+function RequestUri()
+{
+    $scheme = $_SERVER['REQUEST_SCHEME'] ?? '';
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $purl = $scheme .'://'. $host;
+    if (isset($_SERVER['REQUEST_URI'])) {
+        $uri = $_SERVER['REQUEST_URI'];
+        if (!strstr($uri, 'http://') || !strstr($uri, 'http://')) {
+            $uri = $purl. $_SERVER["REQUEST_URI"];
+        }
+    } else {
+        if (isset($_SERVER['argv'])) {
+            $uri = $purl . $_SERVER['PHP_SELF'] . '?' . $_SERVER['argv'][0];
+        } else {
+            $uri = $purl . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'];
+        }
+    }
+    return $uri;
 }

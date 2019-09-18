@@ -1,16 +1,16 @@
 <?php
 
-namespace FC\Tools;
+namespace FC;
 
 /*
  * 全局辅助函数
  * @Author: lovefc 
  * @Date: 2019-09-17 10:25:58 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-17 13:25:03
+ * @Last Modified time: 2019-09-18 13:46:51
  */
 
-class Helper
+class Help
 {
 
     /**
@@ -53,7 +53,7 @@ class Helper
      */
     public static function GetOS()
     {
-        $agent = $_SERVER['HTTP_USER_AGENT'];
+        $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
         $os = false;
         if (preg_match('/Windows/', $agent) && preg_match('/98/', $agent)) {
             $os = 'Windows 98';
