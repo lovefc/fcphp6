@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2016/9/09 13:29:34 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 15:39:48
+ * @Last Modified time: 2019-09-18 17:33:31
  */
 
 /**
@@ -24,7 +24,7 @@ function Obj($class, $mode = 'cache')
         return false;
     }
     $class = ltrim($class, '\\');
-    static $fcobj = array();
+    static $fcobj = [];
     if (isset($fcobj[$class]) && $mode != 'notcache') {
         return $fcobj[$class];
     }
@@ -95,7 +95,7 @@ function Input($input, $var = null)
         $var = MAGIC_QUOTES_GPC === 0 ? addslashes($inputs) : $inputs;
     } else {
         if (is_array($input)) {
-            $var = array();
+            $var = [];
             foreach ($input as $key => $value) {
                 $var[$key] = MAGIC_QUOTES_GPC === 0 ? addslashes($value) : $value;
             }

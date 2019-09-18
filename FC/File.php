@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2017/08/25 20:45
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 15:50:32
+ * @Last Modified time: 2019-09-18 17:33:41
  */
 
 class File
@@ -21,7 +21,7 @@ class File
     public static function getFiles($path, $child = false, $zidir = false)
     {
         $path = strtr(realpath($path), '\\', '/');
-        $files = array();
+        $files = [];
         if (!$child) {
             if (is_dir($path)) {
                 $dp = dir($path);
