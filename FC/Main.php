@@ -115,7 +115,7 @@ define('PATH',[
 require $FC_PATH . '/Load/LoaderClass.php';
 
 // 引入函数库
-require $FC_PATH . '/Function.php';
+require $FC_PATH . '/Func.php';
 
 // 加载框架类库
 FC\Load\LoaderClass::AddPsr4('FC', __DIR__);
