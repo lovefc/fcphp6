@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-17 17:36:04
+ * @Last Modified time: 2019-09-18 11:32:04
  */
 
 // 判断运行版本
@@ -61,6 +61,9 @@ $FC_PATH = strtr(__DIR__, '\\', '/');
 
 // 获取当前目录
 $NOW_PATH = isset($_SERVER['SCRIPT_FILENAME']) ? strtr(dirname($_SERVER['SCRIPT_FILENAME']), '\\', '/') : '';
+
+// 时间常量,避免多次使用函数
+define('TIME',time());
 
 // 在CLI，CGI模式下的一些设置和兼容
 if(PHP_SAPI === 'cli'){

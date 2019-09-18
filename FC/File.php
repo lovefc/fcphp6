@@ -1,13 +1,16 @@
 <?php
 
-namespace fcphp\extend;
+namespace FC;
 
-/**
+/*
  * 封装的一些文件操作
- * author:lovefc
- * time: 2017/08/25 20:45
+ * @Author: lovefc 
+ * @Date: 2017/08/25 20:45
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-09-18 11:28:44
  */
-class Files
+
+class File
 {
     /**
      * 获取某个目录下所有文件
@@ -15,7 +18,7 @@ class Files
      * @param $child 是否包含对应的目录
      * @param $zidir 是否读取子目录里的文件
      */
-    public function getfiles($path, $child = false, $zidir = false)
+    public static function getFiles($path, $child = false, $zidir = false)
     {
         $path = strtr(realpath($path), '\\', '/');
         $files = array();
@@ -33,7 +36,7 @@ class Files
             }
             $dp->close();
         } else {
-            $this->scanfiles($files, $path, $zidir);
+            self::scanFiles($files, $path, $zidir);
         }
         return $files;
     }
@@ -44,7 +47,7 @@ class Files
      * @param $path 路径
      * @param $childDir 子目录名称
      */
-    public function scanfiles(&$files, $path, $zidir = false)
+    private static function scanFiles(&$files, $path, $zidir = false)
     {
         $dp = dir(strtr(realpath($path), '\\', '/'));
         if ($dp) {
@@ -55,9 +58,9 @@ class Files
                         $files[] = $file;
                     } else { //当前为目录
                         if ($zidir == true) {
-                            $this->scanfiles($files[$file], $file, $zidir);
+                            self::scanFiles($files[$file], $file, $zidir);
                         } else {
-                            $this->scanfiles($files, $file);
+                            self::scanFiles($files, $file);
                         }
                     }
                 }
@@ -70,12 +73,13 @@ class Files
     }
 
     /**
-     * 转换大小
+     * 获取大小
+     * 
      * @param $sizes 大小,单位为B
      * @param $unit 要计算的单位
      * @return array
      */
-    public function getsize($sizes, $unit = 'B')
+    public static function getSize($sizes, $unit = 'B')
     {
         if ($sizes >= 1073741824 || $unit == 'G') {
             $size = round($sizes / 1073741824 * 100) / 100;
@@ -94,26 +98,28 @@ class Files
 
     /**
      * 获取文件大小
+     * 
      * @param $file 文件路径
      * @param $convert 是否转换成相应的大小
      * @return number
      */
-    public function fsize($file, $convert = true)
+    public static function fileSize($file, $convert = true)
     {
         $filesize = filesize($file);
         if ($convert == true) {
-            return $this->getsize($filesize);
+            return self::getSize($filesize);
         }
         return $filesize;
     }
 
     /**
      * 获取目录大小
+     * 
      * @param $dir 目录路径
      * @param $convert 是否转换成相应的大小
      * @return number
      */
-    public function dsize($dir, $convert = true)
+    public static function dirSize($dir, $convert = true)
     {
         $dirsize = 0;
         if ($dh = @opendir($dir)) {
@@ -123,7 +129,7 @@ class Files
                         $dirsize += filesize($dir . '/' . $filename);
                     } else {
                         if (is_dir($dir . '/' . $filename)) {
-                            $dirsize += $this->dsize($dir . '/' . $filename, false);
+                            $dirsize += self::dirSize($dir . '/' . $filename, false);
                         }
                     }
                 }
@@ -131,19 +137,20 @@ class Files
             closedir($dh);
         }
         if ($convert == true) {
-            return $this->getsize($dirsize);
+            return self::getSize($dirsize);
         }
         return $dirsize;
     }
 
     /**
      * 创建一个文件或者目录
+     * 
      * @param $dir 目录名或者文件名
      * @param $file 如果是文件，则设为true
      * @param $mode 文件的权限
      * @return false|true
      */
-    public function create($dir, $file = false, $mode = 0777)
+    public static function create($dir, $file = false, $mode = 0775)
     {
         $path = str_replace("\\", "/", $dir);
 
@@ -158,13 +165,12 @@ class Files
         }
 
         if (!is_dir($path)) {
-            @mkdir($path, $mode, true);
+            mkdir($path, $mode, true);
         } else {
-            @chmod($path, $mode);
+            chmod($path, $mode);
         }
-
         if ($file) {
-            $fh = @fopen($file, 'a');
+            $fh = fopen($file, 'a');
             if ($fh) {
                 fclose($fh);
                 return true;
@@ -179,9 +185,10 @@ class Files
 
     /**
      * 获取文件扩展名
+     * 
      * @param $file 文件路径
      */
-    public function suffix($file)
+    public static function suffix($file)
     {
         $a = explode('?', $file);
         $b = strrpos($a[0], '.');
@@ -191,23 +198,24 @@ class Files
 
     /**
      * 删除一个目录或者文件
+     * 
      * @param $path 文件或者目录的路径
      */
-    public function delete($path)
+    public static function delete($path)
     {
         if (file_exists($path)) {
             if (is_dir($path)) {
-                $pathdir = @scandir($path);
+                $pathdir = scandir($path);
                 if (is_array($pathdir)) {
                     $pathdir = array_slice($pathdir, 2);
                     foreach ($pathdir as $value) {
                         $dir_url = "{$path}/{$value}";
-                        $this->delete($dir_url);
+                        self::delete($dir_url);
                     }
                 }
                 return rmdir($path);
             } else {
-                if (@unlink($path) == false) {
+                if (unlink($path) == false) {
                     return false;
                 } else {
                     return true;
@@ -222,8 +230,9 @@ class Files
      * @param $path 原来的文件目录的路径
      * @param $new_path 要移动到的文件或者目录名
      * @param $cover 表示是否覆盖文件
+     * @return bool
      */
-    public function rename($path, $new_path, $cover = true)
+    public static function rename($path, $new_path, $cover = true)
     {
         if (!file_exists($path)) {
             return false;
@@ -252,7 +261,7 @@ class Files
      * @param  $aimUrl
      * @param  $overWrite 该参数控制是否覆盖原文件
      */
-    public function copyfile($fileUrl, $aimUrl, $overWrite = false)
+    public static function copyFile($fileUrl, $aimUrl, $overWrite = false)
     {
         if (!is_file($fileUrl)) {
             return false;
@@ -261,7 +270,7 @@ class Files
             return false;
         }
         $aimDir = dirname($aimUrl);
-        $this->create($aimDir);
+        self::create($aimDir);
 
         copy($fileUrl, $aimUrl);
         return true;
@@ -273,8 +282,9 @@ class Files
      * @param $oldDir
      * @param $aimDir
      * @param $overWrite 该参数控制是否覆盖原文件
+     * @return bool
      */
-    public function copydir($oldDir, $aimDir, $overWrite = false)
+    public static function copyDir($oldDir, $aimDir, $overWrite = false)
     {
         $aimDir = str_replace('', '/', $aimDir);
         $aimDir = substr($aimDir, -1) == '/' ? $aimDir : $aimDir . '/';
@@ -284,7 +294,7 @@ class Files
             return false;
         }
         if (!file_exists($aimDir)) {
-            $this->create($aimDir);
+            self::create($aimDir);
         }
         $dirHandle = opendir($oldDir);
         while (false !== ($file = readdir($dirHandle))) {
@@ -292,9 +302,9 @@ class Files
                 continue;
             }
             if (!is_dir($oldDir . $file)) {
-                $this->copyfile($oldDir . $file, $aimDir . $file, $overWrite);
+                self::copyFile($oldDir . $file, $aimDir . $file, $overWrite);
             } else {
-                $this->copydir($oldDir . $file, $aimDir . $file, $overWrite);
+                self::copyDir($oldDir . $file, $aimDir . $file, $overWrite);
             }
         }
         return closedir($dirHandle);
@@ -302,10 +312,12 @@ class Files
 
     /**
      * 批量更改文件或者目录的权限
+     * 
      * @param $path 文件或者目录的路径
      * @param $filemode 文件的权限
+     * @return bool
      */
-    public function chmod($path, $filemode = 0755)
+    public static function chmod($path, $filemode = 0755)
     {
         if (!is_dir($path)) {
             return chmod($path, $filemode);
@@ -318,7 +330,7 @@ class Files
                     return false;
                 } elseif (!is_dir($fullpath) && !chmod($fullpath, $filemode)) {
                     return false;
-                } elseif (!$this->chmodr($fullpath, $filemode)) {
+                } elseif (!self::chmodr($fullpath, $filemode)) {
                     return false;
                 }
             }
@@ -333,15 +345,17 @@ class Files
 
     /**
      * 远程上传
+     * 
      * @param $url表示远程文件地址
      * @param $path表示要保存的文件地址
      * @param $cover 表示是否覆盖文件
      * @param $second表示超时时间
+     * @return bool
      */
-    public function upurl($url, $path, $cover = false, $second = 720)
+    public static function remote($url, $path, $cover = false, $second = 720)
     {
         if (!is_file($path)) {
-            $this->create(dirname($path));
+            self::create(dirname($path));
         } else {
             if ($cover == false) {
                 throw new \Exception('文件已经存在');
