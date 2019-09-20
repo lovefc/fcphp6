@@ -5,11 +5,11 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-20 13:39:05
+ * @Last Modified time: 2019-09-20 14:39:18
  */
 
 // 开启错误
-ini_set("display_errors","On");
+ini_set("display_errors", "On");
 
 // 屏蔽错误
 error_reporting(0);
@@ -68,19 +68,19 @@ $FC_PATH = strtr(__DIR__, '\\', '/');
 $NOW_PATH =  strtr(getcwd(), '\\', '/');
 
 // 时间常量,避免多次使用函数
-define('TIME',time());
+define('TIME', time());
 
 // 在CLI，CGI模式下的一些设置和兼容
-if(PHP_SAPI === 'cli'){
+if (PHP_SAPI === 'cli') {
     define('FC_EOL', PHP_EOL);
     define('IS_CLI', true);
-}else{
-    define('FC_EOL','<br />');
+} else {
+    define('FC_EOL', '<br />');
     define('IS_CLI', false);
 }
 
 // 判断是不是win系统
-define('IS_WIN', (PATH_SEPARATOR === ':')? false : true);
+define('IS_WIN', (PATH_SEPARATOR === ':') ? false : true);
 
 // 虽然有$_SERVER全局变量,但不可太过于依赖它，这里用于兼容判断取值
 /*
@@ -104,15 +104,15 @@ define('SERVER', [
 ]);
 */
 
-define('PATH',[
+define('PATH', [
     // 框架目录
-    'FC' => $FC_PATH,    
+    'FC' => $FC_PATH,
     // web运行的绝对目录
-    'ROOT'  => $ROOT_PATH,   
+    'ROOT'  => $ROOT_PATH,
     // 框架配置目录
     'FC_CONFIG' => $FC_PATH . '/Config',
     // 插件目录
-    'FC_PLUG' => $FC_PATH . '/Plug',   
+    'FC_PLUG' => $FC_PATH . '/Plug',
     // 当前执行脚本的绝对路径
     'NOW'   => $NOW_PATH, // 当前路径
     // 当前配置目录
@@ -132,10 +132,13 @@ FC\Load\LoaderClass::AddPsr4('FC', __DIR__);
 FC\Load\LoaderClass::register();
 
 // 错误处理和记录
-register_shutdown_function(['\FC\Log','Error']);
+register_shutdown_function(['\FC\Log', 'Error']);
 
 // 获取当前地址，兼容方案
 define('NOW_URL', FC\RequestUri());
 
 // 插件目录设置
-\FC\Obj('FC\Glue\Load')->ExtendConfig(PATH['FC_PLUG']. '/config.php');
+\FC\Obj('FC\Glue\Load')->ExtendConfig(PATH['FC_PLUG'] . '/config.php');
+
+// 插件目录设置
+\FC\Obj('FC\Glue\Init')->run();

@@ -9,7 +9,7 @@ use FC\Load\LoaderClass;
  * @Author: lovefc 
  * @Date: 2018/7/12 17:03:53 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-20 13:29:29
+ * @Last Modified time: 2019-09-20 14:05:44
  */
 
 class Load
@@ -35,7 +35,7 @@ class Load
         }
     }
 
-    //错误消息
+    // 错误消息
     public function error($msg)
     {
         \FC\Log::Show($msg);

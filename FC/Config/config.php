@@ -11,11 +11,12 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:49:57 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-20 13:42:09
+ * @Last Modified time: 2019-09-20 14:36:09
  */
 
 
 return [
    'FC\Glue\Routes'  => 'route.php',
    'FC\Glue\Load'    => 'loader.php',
+   'FC\Glue\Init'    => 'init.php'
 ];
