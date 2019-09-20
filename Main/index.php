@@ -14,3 +14,5 @@ try {
 }
 
 echo FC_EOL;
+
+echo round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5);

@@ -5,7 +5,9 @@
  * @Author: lovefc 
  * @Date: 2019-09-20 14:37:43 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-20 14:38:03
+ * @Last Modified time: 2019-09-20 15:57:24
  */
 
-return [];
+return [
+   //'0' => ['common\model\xxxx', 'run'], 例子
+];
