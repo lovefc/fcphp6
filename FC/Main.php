@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 15:17:28
+ * @Last Modified time: 2019-09-20 13:39:05
  */
 
 // 开启错误
@@ -111,10 +111,12 @@ define('PATH',[
     'ROOT'  => $ROOT_PATH,   
     // 框架配置目录
     'FC_CONFIG' => $FC_PATH . '/Config',
+    // 插件目录
+    'FC_PLUG' => $FC_PATH . '/Plug',   
     // 当前执行脚本的绝对路径
     'NOW'   => $NOW_PATH, // 当前路径
     // 当前配置目录
-    'NOW_CONFIG' => $NOW_PATH . '/Config',
+    'NOW_CONFIG' => $NOW_PATH . '/Config'
 ]);
 
 // 引入加载类
@@ -134,3 +136,6 @@ register_shutdown_function(['\FC\Log','Error']);
 
 // 获取当前地址，兼容方案
 define('NOW_URL', FC\RequestUri());
+
+// 插件目录设置
+\FC\Obj('FC\Glue\Load')->ExtendConfig(PATH['FC_PLUG']. '/config.php');

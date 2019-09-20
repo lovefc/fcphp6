@@ -6,7 +6,7 @@
  */
 return array(
 
-    //如果是数组，三个参数，1为类名，2为是否为静态类，3为是否存储到session
+    //如果是数组，三个参数，1为类名，2为是否为静态类
     'DB'      => 'fcphp\start\mysqlStart',
     
     'DB_MY'   => 'fcphp\start\mysqlStart',

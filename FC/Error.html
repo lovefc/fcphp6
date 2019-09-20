@@ -128,7 +128,7 @@
 					<div class="panel-body">
 						<?php if(isset($error['type'])){ ?>
 						<p>
-							<?php echo '错误说明:'.FC\Log\Error::ErrLevelMap($error['type']); ?>
+							<?php echo '错误说明:'.FC\Log::ErrLevelMap($error['type']); ?>
 						</p>
 						<?php } ?>
 						<?php if(isset($error['message'])){ ?>

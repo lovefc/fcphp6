@@ -1,5 +1,5 @@
-
 <?php
+
 /**
  * 定义一些类所要使用的配置扩展
  * 这里要注意的问题有
@@ -11,10 +11,11 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:49:57 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-16 15:51:50
+ * @Last Modified time: 2019-09-20 13:42:09
  */
 
 
 return [
    'FC\Glue\Routes'  => 'route.php',
+   'FC\Glue\Load'    => 'loader.php',
 ];
