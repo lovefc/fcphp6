@@ -1,13 +1,14 @@
 <?php
 
-/**
- * Author: lovefc
+/*
+ * @Author: lovefc 
  * Version: 1.6.7.1
- * Update time: 2017-8-29 09:30
- * Copyright to author lovefc all
+ * @Date: 2017-8-29 09:30
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-09-22 17:22:08
  */
 
-namespace fcphp\extend;
+namespace FC\View;
 
 define('EZTPL', true);
 

@@ -1,4 +1,3 @@
-
 <?php
 
 namespace FC\Traits;
@@ -9,7 +8,7 @@ namespace FC\Traits;
  * @Author: lovefc 
  * @Date: 2019-09-20 10:17:40 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-20 13:58:03
+ * @Last Modified time: 2019-09-22 19:42:11
  */
 
 trait Parts

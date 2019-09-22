@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:52:35 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-16 15:52:56
+ * @Last Modified time: 2019-09-22 17:54:33
  */
 
 return [
@@ -16,4 +16,5 @@ return [
     '1' => function(){
        echo '2222';
     },
+    '2' => ['\\Main\cs','index'],    
 ];

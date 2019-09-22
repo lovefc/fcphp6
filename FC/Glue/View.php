@@ -1,8 +1,8 @@
 <?php
-namespace fcphp\start;
-use fcphp\extend\Eztpl;
+namespace FC\Glue;
+use FC\View\Eztpl;
 
-class tplStart extends Eztpl
+class View extends Eztpl
 {
     use \fcphp\traits\Parents;//继承
 
@@ -17,6 +17,6 @@ class tplStart extends Eztpl
     //错误消息
     public function error($msg)
     {
-        \ErrorShow($msg);
+        \FC\Log::Show($msg);
     }
 }

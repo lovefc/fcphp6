@@ -11,7 +11,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:49:57 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-20 16:34:13
+ * @Last Modified time: 2019-09-22 17:26:01
  */
 
 
@@ -19,4 +19,5 @@ return [
    'FC\Glue\Routes'  => 'route.php',
    'FC\Glue\Load'    => 'loader.php',
    'FC\Glue\Init'    => 'init.php',
+   'FC\Glue\View'    => 'view.php',  
 ];
