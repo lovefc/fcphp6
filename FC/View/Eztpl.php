@@ -5,7 +5,7 @@
  * Version: 1.6.7.1
  * @Date: 2017-8-29 09:30
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-22 17:22:08
+ * @Last Modified time: 2019-09-23 00:08:28
  */
 
 namespace FC\View;
@@ -77,6 +77,8 @@ class Eztpl
     //获取模版文件路径
     protected function get_sourcefile_url($file_name)
     {
+        echo $this->dirs;
+        die();
         return (!empty($this->tempdirname)) ? $this->dirs . '/' . $this->tempdirname . '/' . $file_name . '.' . $this->suffix : $this->dirs . '/' . $file_name . '.' . $this->suffix;
     }
 

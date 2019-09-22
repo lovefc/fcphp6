@@ -5,16 +5,15 @@
  * @Author: lovefc 
  * @Date: 2019-09-22 17:28:00 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-22 17:40:53
+ * @Last Modified time: 2019-09-23 00:07:40
  */
 
 return [
 
     'default' => [
 
-        'tplbegin' => '{(',
-
         //左分割符
+        'tplbegin' => '{(',
 
         //右分割符
         'tplend' => ')}',
@@ -23,12 +22,12 @@ return [
         'suffix' => 'html',
 
         //模版文件路径
-        //'dirs' => PATH.'/app/view',
+        'dirs' => PATH['NOW'] . '/View',
 
-        //'tempdirs' => PATH .'/app/runtime',
+        'tempdirs' => PATH['NOW'] . '/Runtime',
 
         //模板文件错误，要跳转的地址，可以是绝对地址,默认为文字提示
-        'errorurl' => Url('404.html', false, true, 3),
+        'errorurl' => '模版文件错误',
 
         //强制编译
         'tempopen' => true,

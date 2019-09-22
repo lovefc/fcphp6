@@ -4,7 +4,7 @@ use FC\View\Eztpl;
 
 class View extends Eztpl
 {
-    use \fcphp\traits\Parents;//继承
+    use \FC\Traits\Parents;//继承
 
     
     //初始设置

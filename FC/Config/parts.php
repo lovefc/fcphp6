@@ -8,10 +8,10 @@
  * @Author: lovefc 
  * @Date: 2019-09-22 17:41:41 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-22 17:42:33
+ * @Last Modified time: 2019-09-22 23:51:28
  */
 return [
 
-    'View'     => 'FC\Glue\View',
+    'VIEW'     => 'FC\Glue\View',
 
 ];
