@@ -5,14 +5,14 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-20 14:39:18
+ * @Last Modified time: 2019-09-23 11:01:15
  */
 
 // 开启错误
 ini_set("display_errors", "On");
 
 // 屏蔽错误
-error_reporting(1);
+error_reporting(0);
 
 // 定义版本信息，用于覆盖原来的php版本
 header("X-Powered-By: FC/6.0");
@@ -28,6 +28,9 @@ ini_set('display_startup_errors', 0);
 
 // 定义编码
 !defined('CHARSET') ? header("Content-type:text/html; charset=utf-8") : header('Content-type: text/html; charset=' . CHARSET);
+
+// 判断swoole
+if (isset($_SERVER['SERVER_SOFTWARE']) && $_SERVER['SERVER_SOFTWARE'] === 'swoole-http-server') { }
 
 
 // 检测是否定义fastcgi_finish_request
@@ -131,6 +134,12 @@ FC\Load\LoaderClass::AddPsr4('FC', __DIR__);
 // 自动加载
 FC\Load\LoaderClass::register();
 
+// 触发事件设置
+\FC\Obj('FC\Glue\Event')->run();
+
+// 添加事件
+FC\Event::trigger('onload');
+
 // 错误处理和记录
 register_shutdown_function(['\FC\Log', 'Error']);
 
@@ -139,6 +148,3 @@ define('NOW_URL', FC\RequestUri());
 
 // 插件目录设置
 \FC\Obj('FC\Glue\Load')->ExtendConfig(PATH['FC_PLUG'] . '/config.php');
-
-// 插件目录设置
-\FC\Obj('FC\Glue\Init')->run();

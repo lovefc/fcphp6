@@ -18,6 +18,6 @@
 return [
    'FC\Glue\Routes'  => 'route.php',
    'FC\Glue\Load'    => 'loader.php',
-   'FC\Glue\Init'    => 'init.php',
-   'FC\Glue\View'    => 'view.php',  
+   'FC\Glue\View'    => 'view.php', 
+   'FC\Glue\Event'   => 'event.php',     
 ];

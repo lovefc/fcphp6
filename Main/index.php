@@ -3,6 +3,7 @@
 // 引入框架
 require dirname(__DIR__) . '/FC/Main.php';
 
+
 // 开启报错
 //define('DEBUG', true);
 
