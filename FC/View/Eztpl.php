@@ -37,6 +37,7 @@ class Eztpl
     {
         return $this->$name = isset($this->$name) ? $this->$name : '';
     }
+    
 
     //创建方法
     public function __call($method, $args)
@@ -55,31 +56,29 @@ class Eztpl
     //初始化设置 (array)
     public function config($setting = null)
     {
-        $this->charset = (!empty($setting['charset'])) ? $setting['charset'] : null;
-        $this->tplbegin = (!empty($setting['tplbegin'])) ? $setting['tplbegin'] : '{(';
-        $this->tplend = (!empty($setting['tplend'])) ? $setting['tplend'] : ')}';
-        $this->dirs = (!empty($setting['dirs'])) ? $setting['dirs'] : './templates';
-        $this->tempdirs = (!empty($setting['tempdirs'])) ? $setting['tempdirs'] : './templates_c';
-        $this->suffix = (!empty($setting['suffix'])) ? $setting['suffix'] : 'tpl';
-        $this->errorurl = (!empty($setting['errorurl'])) ? $setting['errorurl'] : '';
-        $this->tempdirname = (!empty($setting['tempdirname'])) ? $setting['tempdirname'] : '';
-        $this->tempopen = (!empty($setting['tempopen'])) ? $setting['tempopen'] : false;
-        $this->includeopen = (!empty($setting['includeopen'])) ? $setting['includeopen'] : true;
+        $this->Charset = (!empty($setting['Charset'])) ? $setting['Charset'] : null;
+        $this->TplBegin = (!empty($setting['TplBegin'])) ? $setting['TplBegin'] : '{(';
+        $this->TplEnd = (!empty($setting['TplEnd'])) ? $setting['TplEnd'] : ')}';
+        $this->Dir = (!empty($setting['Dir'])) ? $setting['Dir'] : __DIR__.'/templates';
+        $this->TempDir = (!empty($setting['TempDir'])) ? $setting['TempDir'] : __DIR__.'/templates_c';
+        $this->Suffix = (!empty($setting['Suffix'])) ? $setting['Suffix'] : 'tpl';
+        $this->ErrorUrl = (!empty($setting['ErrorUrl'])) ? $setting['ErrorUrl'] : '';
+        $this->DirName = (!empty($setting['DirName'])) ? $setting['DirName'] : '';
+        $this->TempOpen = (!empty($setting['TempOpen'])) ? $setting['TempOpen'] : false;
+        $this->IncludeOpen = (!empty($setting['IncludeOpen'])) ? $setting['IncludeOpen'] : true;
         return $this;
     }
 
     //获取缓存文件路径
     protected function get_compiledfile_url($file_name)
     {
-        return (!empty($this->tempdirname)) ? $this->tempdirs . '/' . $this->tempdirname . '/' . $file_name . '.php' : $this->tempdirs . '/' . $file_name . '.php';
+        return (!empty($this->DirName)) ? $this->TempDir . '/' . $this->DirName . '/' . $file_name . '.php' : $this->TempDir . '/' . $file_name . '.php';
     }
 
     //获取模版文件路径
     protected function get_sourcefile_url($file_name)
     {
-        echo $this->dirs;
-        die();
-        return (!empty($this->tempdirname)) ? $this->dirs . '/' . $this->tempdirname . '/' . $file_name . '.' . $this->suffix : $this->dirs . '/' . $file_name . '.' . $this->suffix;
+        return (!empty($this->DirName)) ? $this->Dir . '/' . $this->DirName . '/' . $file_name . '.' . $this->Suffix : $this->Dir . '/' . $file_name . '.' . $this->Suffix;
     }
 
     //判断是否需要编译
@@ -88,7 +87,7 @@ class Eztpl
         if (!is_readable($source_url)) {
             $this->show_messages('Template file not readable to ' . $source_url);
         }
-        if ($this->tempopen || !is_file($compiled_url)) {
+        if ($this->TempOpen || !is_file($compiled_url)) {
             return true;
         }
         if (filemtime($source_url) > filemtime($compiled_url)) {
@@ -114,28 +113,28 @@ class Eztpl
     //编译过程
     protected function compileds($source_url)
     {
-        $lovefc_left = self::_quote($this->tplbegin);
-        $lovefc_right = self::_quote($this->tplend);
+        $lovefc_left = self::_quote($this->TplBegin);
+        $lovefc_right = self::_quote($this->TplEnd);
         $content = $this->place($this->get_contents($source_url));
-        if (strpos($content, $this->tplbegin . 'include') !== false) {
+        if (strpos($content, $this->TplBegin . 'include') !== false) {
             $include_regular = '/' . $lovefc_left . 'include\s+file\s*=\s*["](.+?)["]' . $lovefc_right . '/i';
             if (preg_match_all($include_regular, $content, $include_arr)) {
                 $include_arr[1] = array_unique($include_arr[1]);
                 foreach ($include_arr[1] as $key => $value) {
-                    $str = $this->tplbegin . 'include file="' . $value . '"' . $this->tplend;
+                    $str = $this->TplBegin . 'include file="' . $value . '"' . $this->TplEnd;
                     $source = $this->get_sourcefile_url($value);
                     if (is_file($source)) {
-                        $compiled = $this->tempdirs . '/' . $value . '.php';
+                        $compiled = $this->TempDir . '/' . $value . '.php';
                     } else {
-                        $source = $this->dirs . '/' . $value . '.' . $this->suffix;
+                        $source = $this->Dir . '/' . $value . '.' . $this->Suffix;
                         if (is_file($source)) {
-                            $compiled = $this->tempdirs . '/' . $value . '.php';
+                            $compiled = $this->TempDir . '/' . $value . '.php';
                         } else {
                             $compiled = null;
                         }
                     }
                     if ($compiled) {
-                        if ($this->includeopen) {
+                        if ($this->IncludeOpen) {
                             $regular = '<?php if($this->includes(\'' . $source . '\',' . '\'' . $compiled . '\')){ require(\'' . $compiled . '\'); } ?>';
                         } else {
                             $this->compile($source, $compiled);
@@ -152,7 +151,7 @@ class Eztpl
                 }
             }
         }
-        $else_end_regular = $this->tplbegin . 'else' . $this->tplend;
+        $else_end_regular = $this->TplBegin . 'else' . $this->TplEnd;
         if (strpos($content, $else_end_regular)) {
             $else_rep = "<?php\r\n}else{\r\n?>";
             $content = str_ireplace($else_end_regular, $else_rep, $content);
@@ -164,7 +163,7 @@ class Eztpl
                 $content = str_replace($value, '<?php } ?>', $content);
             }
         }
-        if (strpos($content, $this->tplbegin . 'if') !== false) {
+        if (strpos($content, $this->TplBegin . 'if') !== false) {
             $if_regular = '/' . $lovefc_left . 'if (.*)' . $lovefc_right . '/isU';
             if (preg_match_all($if_regular, $content, $vars_arr)) {
                 foreach ($vars_arr[1] as $key => $value) {
@@ -173,7 +172,7 @@ class Eztpl
                 }
             }
         }
-        if (strpos($content, $this->tplbegin . 'elseif') !== false) {
+        if (strpos($content, $this->TplBegin . 'elseif') !== false) {
             $elseif_regular = '/' . $lovefc_left . 'elseif (.*)' . $lovefc_right . '/isU';
             if (preg_match_all($elseif_regular, $content, $vars_arr)) {
                 foreach ($vars_arr[1] as $key => $value) {
@@ -182,7 +181,7 @@ class Eztpl
                 }
             }
         }
-        if (strpos($content, $this->tplbegin . 'foreach') !== false) {
+        if (strpos($content, $this->TplBegin . 'foreach') !== false) {
             $foreach_regular = '/' . $lovefc_left . 'foreach (.*)' . $lovefc_right . '/isU';
             if (preg_match_all($foreach_regular, $content, $vars_arr)) {
                 foreach ($vars_arr[1] as $key => $value) {
@@ -194,7 +193,7 @@ class Eztpl
                 }
             }
         }
-        if (strpos($content, $this->tplbegin . 'for') !== false) {
+        if (strpos($content, $this->TplBegin . 'for') !== false) {
             $for_regular = '/' . $lovefc_left . 'for (.*)' . $lovefc_right . '/isU';
             if (preg_match_all($for_regular, $content, $vars_arr)) {
                 foreach ($vars_arr[1] as $key => $value) {
@@ -203,7 +202,7 @@ class Eztpl
                 }
             }
         }
-        if (strpos($content, $this->tplbegin . 'while') !== false) {
+        if (strpos($content, $this->TplBegin . 'while') !== false) {
             $while_regular = '/' . $lovefc_left . 'while (.*)' . $lovefc_right . '/isU';
             if (preg_match_all($while_regular, $content, $vars_arr)) {
                 foreach ($vars_arr[1] as $key => $value) {
@@ -242,15 +241,15 @@ class Eztpl
         $source_url = $this->get_sourcefile_url($file_name);
         $compiled_url = $this->get_compiledfile_url($file_name);
         $this->compile($source_url, $compiled_url);
-        $this->charset && header('Content-Type:text/html;charset=' . $this->charset);
+        $this->Charset && header('Content-Type:text/html;charset=' . $this->Charset);
         require($compiled_url);
     }
 
     //结束一个句柄
-    public function end()
+    public function end($ObjName = 'default')
     {
-        self::$lovefc = null;
-        unset(self::$lovefc);
+        self::$eztpl[$ObjName] = null;
+        unset(self::$eztpl[$ObjName]);
     }
 
     //获取cpu
@@ -287,7 +286,7 @@ class Eztpl
     }
 
     //参数绑定判断
-    public function binds($abstract, $concrete)
+    public function bind($abstract, $concrete)
     {
         if ($concrete instanceof \Closure) {
             $this->binds[$abstract] = $concrete;
@@ -297,14 +296,14 @@ class Eztpl
     }
 
     //参数绑定
-    public function bind($abstract, $concrete = ' ')
+    public function binds($abstract, $concrete = ' ')
     {
         if (is_array($abstract)) {
             foreach ($abstract as $key => $value) {
-                $this->binds($key, $value);
+                $this->bind($key, $value);
             }
         } else {
-            $this->binds($abstract, $concrete);
+            $this->bind($abstract, $concrete);
         }
     }
 
@@ -437,8 +436,8 @@ class Eztpl
     //消息输出
     protected function show_messages($message = null)
     {
-        if ($this->errorurl != null) {
-            header('Location: ' . $this->errorurl);
+        if ($this->ErrorUrl != null) {
+            header('Location: ' . $this->ErrorUrl);
         } else {
             $this->error($message);
         }

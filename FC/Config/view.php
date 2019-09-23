@@ -13,27 +13,27 @@ return [
     'default' => [
 
         //左分割符
-        'tplbegin' => '{(',
+        'TplBegin' => '{(',
 
         //右分割符
-        'tplend' => ')}',
+        'TplEnd' => ')}',
 
         //模版后缀
-        'suffix' => 'html',
+        'Suffix' => 'html',
 
         //模版文件路径
-        'dirs' => PATH['NOW'] . '/View',
+        'Dir' => PATH['NOW'] . '/View',
 
-        'tempdirs' => PATH['NOW'] . '/Runtime',
+        'TempDir' => PATH['NOW'] . '/Runtime',
 
         //模板文件错误，要跳转的地址，可以是绝对地址,默认为文字提示
-        'errorurl' => '模版文件错误',
+        'ErrorUrl' => '模版文件错误',
 
         //强制编译
-        'tempopen' => true,
+        'TempOpen' => true,
 
         //引用编译
-        'includeopen' => true,
+        'IncludeOpen' => true,
 
     ],
 

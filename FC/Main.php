@@ -12,7 +12,7 @@
 ini_set("display_errors", "On");
 
 // 屏蔽错误
-error_reporting(0);
+error_reporting(1);
 
 // 定义版本信息，用于覆盖原来的php版本
 header("X-Powered-By: FC/6.0");

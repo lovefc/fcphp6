@@ -84,8 +84,8 @@ trait Parents
     }
 
 
-    // 设置访问的配置
-    public function P_Read($type)
+    // 设置访问的配置,这里可以指定数组键名
+    public function ReadConf($type)
     {
         if (isset($type)) {
             $this->P_ConfigType = $type;
