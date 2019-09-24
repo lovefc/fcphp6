@@ -8,7 +8,7 @@ namespace FC\Http;
  * @Author: lovefc 
  * @Date: 2019-09-24 10:14:06 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-24 15:02:57
+ * @Last Modified time: 2019-09-24 17:36:48
  */
 
 class Session
@@ -28,7 +28,7 @@ class Session
     // 是否将httpOnly标志添加到cookie中，这使得浏览器脚本语言(如JavaScript)无法访问该标志。
     public $cookie_httponly = false;
     // 在读取完会话数据之后， 立即关闭会话存储文件，不做任何修改
-    public $read_and_close  = true;
+    public $read_and_close  = false;
     // 存储路径
     public $save_path = '';
     // 存储方式
@@ -56,17 +56,18 @@ class Session
         if (!isset($_SESSION)) {
             session_start([
                 'cache_limiter' => $this->cache_limiter,
-                'cookie_lifetime' => $this->cookie_lifetime,
+                //'read_and_close' => $this->read_and_close,
                 'cookie_path' => $this->cookie_path,
                 'cookie_domain' => $this->cookie_domain,
                 'cookie_httponly' => $this->cookie_httponly,
-                'read_and_close' => $this->read_and_close,
+                'cookie_lifetime' => $this->cookie_lifetime,
                 'save_path' => $this->save_path,
                 'save_handler' => $this->save_handler,
                 'name' => $this->_name,
                 'gc_probability' => $this->gc_probability,
                 'gc_divisor' => $this->gc_divisor,
                 'gc_maxlifetime' => $this->gc_maxlifetime
+               
             ]);
         }
     }

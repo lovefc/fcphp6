@@ -24,10 +24,8 @@ return [
         'cookie_domain' => '',
         // 是否将httpOnly标志添加到cookie中，这使得浏览器脚本语言(如JavaScript)无法访问该标志。
         'cookie_httponly' => 0,
-        // 在读取完会话数据之后， 立即关闭会话存储文件，不做任何修改
-        'read_and_close ' => 1,
         // 存储路径
-        'save_path' => 'D:\phpStudy\PHPTutorial\work\0909\fcphp6\Session',
+        'save_path' => dirname(PATH['FC']).'/Session',
         // 存储方式
         'save_handler' => 'files', // redis,files
         // 定义“垃圾收集”过程启动的概率
