@@ -14,6 +14,8 @@ try {
     die($e->getMessage());
 }
 
+echo md5(uniqid(random_int(0,10000), true));
+
 echo FC_EOL;
 
 echo round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5);

@@ -8,7 +8,7 @@ namespace FC\Http;
  * @Author: lovefc 
  * @Date: 2019-09-24 10:14:06 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-24 13:34:40
+ * @Last Modified time: 2019-09-24 15:02:57
  */
 
 class Session
@@ -66,8 +66,7 @@ class Session
                 'name' => $this->_name,
                 'gc_probability' => $this->gc_probability,
                 'gc_divisor' => $this->gc_divisor,
-                'gc_maxlifetime' => $this->gc_maxlifetime,
-                'use_trans_sid' =>1 
+                'gc_maxlifetime' => $this->gc_maxlifetime
             ]);
         }
     }

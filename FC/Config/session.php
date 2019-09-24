@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-24 12:32:45 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-24 13:23:50
+ * @Last Modified time: 2019-09-24 15:01:42
  */
 
 return [
@@ -36,6 +36,5 @@ return [
         'gc_divisor' => 100,
         // Session在服务端存储的时间
         'gc_maxlifetime' => 1440,
-
     ],
 ];
