@@ -17,7 +17,7 @@ class Load
     use \FC\Traits\Parents;
 
     // 初始化操作
-    public function init()
+    public function _init()
     {
         // 加载框架类库
         LoaderClass::AddFile($this->P_Config);

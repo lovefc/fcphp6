@@ -13,5 +13,7 @@
 return [
 
     'VIEW'     => 'FC\Glue\View',
+    
+    'SESSION'  => 'FC\Glue\Session',
 
 ];

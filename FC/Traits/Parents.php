@@ -7,7 +7,7 @@ namespace FC\Traits;
  * @Author: lovefc 
  * @Date: 2016/8/29 10:51:27 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-17 16:30:30
+ * @Last Modified time: 2019-09-24 13:22:20
  */
 
 trait Parents
@@ -39,9 +39,12 @@ trait Parents
             $this->P_Config = self::$P_CacheVars->P_Configs[$this->P_ClassName] = self::P_Receive($this->P_ClassName);
         }
         // init初始化，应用于父类
-        if (method_exists($this, 'init')) {
-            $this->init();
-        }
+        if (method_exists($this, '_init')) {
+            $this->_init();
+        }          
+        if(empty($this->P_Config)){
+            return false;
+        }      
         if (empty($this->P_ConfigType)) {
             $this->P_RegVar = array_keys($this->P_Config);
         } else {
@@ -49,8 +52,8 @@ trait Parents
         }
         $this->P_Start();
         // start初始化，应用于子类
-        if (method_exists($this, 'start')) {
-            $this->start();
+        if (method_exists($this, '_start')) {
+            $this->_start();
         }
     }
 
@@ -77,8 +80,10 @@ trait Parents
     // 初始化
     public function P_Start()
     {
-        foreach ($this->P_RegVar as $value) {
-            unset($this->$value);
+        if(is_array($this->P_RegVar)){
+            foreach ($this->P_RegVar as $value) {
+                unset($this->$value);
+            }
         }
         return $this;
     }

@@ -2,22 +2,22 @@
 
 namespace FC\Glue;
 
-use FC\Route;
+use FC\Route as LuYou;
 
 /*
  * @Author: lovefc 
  * @Date: 2019-09-16 15:05:57 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-22 17:24:53
+ * @Last Modified time: 2019-09-24 10:54:04
  */
 
-class Routes extends Route
+class Route extends LuYou
 {
     //继承配置
     use \FC\traits\Parents;
 
     //初始设置
-    public function init()
+    public function _init()
     {
         self::$routeval = $this->P_Config;
     }

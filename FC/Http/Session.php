@@ -1,7 +1,6 @@
-
 <?php
 
-namespace FC\Server\Session;
+namespace FC\Http;
 
 /**
  * 简单的session封装
@@ -9,7 +8,7 @@ namespace FC\Server\Session;
  * @Author: lovefc 
  * @Date: 2019-09-24 10:14:06 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-24 10:43:46
+ * @Last Modified time: 2019-09-24 13:34:40
  */
 
 class Session
@@ -31,9 +30,9 @@ class Session
     // 在读取完会话数据之后， 立即关闭会话存储文件，不做任何修改
     public $read_and_close  = true;
     // 存储路径
-    public $save_path = 'tcp://127.0.0.1:6379';
+    public $save_path = '';
     // 存储方式
-    public $save_handler = 'redis';
+    public $save_handler = 'files';
     // 定义“垃圾收集”过程启动的概率
     public $gc_probability = 1;
     // 垃圾收集，运行概率
@@ -45,6 +44,14 @@ class Session
      * 初始化
      */
     public function __construct()
+    {
+        $this->init();
+    }
+    
+    /**
+     * 初始化属性赋值
+     */
+    public function init()
     {
         if (!isset($_SESSION)) {
             session_start([
@@ -59,7 +66,8 @@ class Session
                 'name' => $this->_name,
                 'gc_probability' => $this->gc_probability,
                 'gc_divisor' => $this->gc_divisor,
-                'gc_maxlifetime' => $this->gc_maxlifetime
+                'gc_maxlifetime' => $this->gc_maxlifetime,
+                'use_trans_sid' =>1 
             ]);
         }
     }

@@ -8,7 +8,7 @@ require dirname(__DIR__) . '/FC/Main.php';
 //define('DEBUG', true);
 
 try {
-    $obj = FC\Obj('FC\Glue\Routes');
+    $obj = FC\Obj('FC\Glue\Route');
     $obj::run();
 } catch (\Exception $e) {
     die($e->getMessage());
