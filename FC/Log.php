@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2019-09-18 08:18:11 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 15:29:06
+ * @Last Modified time: 2019-09-25 15:55:43
  */
 
 class Log
@@ -37,6 +37,10 @@ class Log
         $type = $lasterror['type'];
         if (!\FC\InArray($type, self::$Level)) {
             $lasterror = '';
+        }
+        if($lasterror){
+            // 添加监听错误的事件
+            FC\Event::trigger('ListError',$lasterror);
         }
         if (IS_AJAX === true || IS_CLI === true) {
             if ($lasterror) {

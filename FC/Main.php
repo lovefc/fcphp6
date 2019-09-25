@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-23 11:01:15
+ * @Last Modified time: 2019-09-25 15:53:56
  */
 
 // 开启错误
@@ -138,7 +138,7 @@ FC\Load\LoaderClass::register();
 \FC\Obj('FC\Glue\Event')->run();
 
 // 添加事件
-FC\Event::trigger('onload');
+FC\Event::trigger('OnLoad');
 
 // 错误处理和记录
 register_shutdown_function(['\FC\Log', 'Error']);

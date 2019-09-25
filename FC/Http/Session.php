@@ -10,7 +10,7 @@ use FC\File;
  * @Author: lovefc 
  * @Date: 2019-09-24 10:14:06 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-25 11:02:24
+ * @Last Modified time: 2019-09-25 15:29:23
  */
 
 class Session
@@ -65,7 +65,7 @@ class Session
                     throw new \Exception('Session不可写');
                 }
             }
-            
+            // 这里采用了php7的特性，这里的参数其实影响到php.ini的设置，慎重改变
             session_start([
                 'cache_limiter' => $this->cache_limiter,
                 'read_and_close' => $this->read_and_close,
