@@ -11,8 +11,10 @@ class cs
         $this->SESSION->set('aaa',222);
         
         echo $this->SESSION->get('aaa');
+        /*
         $this->VIEW->assign('text', $a);
         $this->VIEW->display('index');
+        */
     }
 
     public function index2()

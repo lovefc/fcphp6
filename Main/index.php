@@ -14,7 +14,7 @@ try {
     die($e->getMessage());
 }
 
-echo md5(uniqid(random_int(0,10000), true));
+//echo md5(uniqid(random_int(0,10000), true));
 
 echo FC_EOL;
 
