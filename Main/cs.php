@@ -9,8 +9,7 @@ class cs
     public function index($a = 'hello')
     {
         $this->SESSION->set('aaa',222);
-        
-        echo $this->SESSION->get('aaa');
+        $this->COOKIES->set('aaa',333);
         /*
         $this->VIEW->assign('text', $a);
         $this->VIEW->display('index');
@@ -20,6 +19,7 @@ class cs
     public function index2()
     {
         echo $this->SESSION->get('aaa');
+        echo $this->COOKIES->get('aaa');
 
     }
 

@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2019-09-18 08:18:11 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-25 15:58:56
+ * @Last Modified time: 2019-09-26 16:09:34
  */
 
 class Log
@@ -33,19 +33,18 @@ class Log
         $lasterror = error_get_last();
         // 日志记录路径
         self::$LogDir = defined('LOG_DIR') ? LOG_DIR : PATH['NOW'] . '/Log';
-        (defined('DEBUG') && empty(DEBUG)) && self::$Level = [0];
         $type = $lasterror['type'];
         if (!\FC\InArray($type, self::$Level)) {
             $lasterror = '';
         }
-        if($lasterror){
+        if ($lasterror) {
             // 添加监听错误的事件
-            FC\Event::trigger('ListError',$lasterror);
+            \FC\Event::trigger('ListError', $lasterror);
         }
         if (IS_AJAX === true || IS_CLI === true) {
             if ($lasterror) {
                 ob_clean();
-                $err  = PHP_EOL.'Type:' . $lasterror['type'] . PHP_EOL;
+                $err  = PHP_EOL . 'Type:' . $lasterror['type'] . PHP_EOL;
                 $err .= 'Line:' . $lasterror['line'] . PHP_EOL;
                 $err .= 'File:' . $lasterror['file'] . PHP_EOL;
                 $err .= 'Message:' . $lasterror['message'] . PHP_EOL;

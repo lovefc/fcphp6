@@ -8,7 +8,7 @@ use FC\Http\Session as Sess;
  * @Author: lovefc 
  * @Date: 2019-09-24 10:58:20
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-24 12:47:35
+ * @Last Modified time: 2019-09-26 15:20:52
  */
 
 class Session extends Sess

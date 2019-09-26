@@ -5,14 +5,19 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-25 15:53:56
+ * @Last Modified time: 2019-09-26 16:08:19
  */
 
-// 开启错误
-ini_set("display_errors", "On");
 
-// 屏蔽错误
-error_reporting(0);
+if (defined('DEBUG') && empty(DEBUG)) {
+    // 关闭错误
+    ini_set("display_errors", "Off");
+    error_reporting(0);
+} else {
+    // 开启错误
+    ini_set("display_errors", "On");
+    error_reporting(1);
+}
 
 // 定义版本信息，用于覆盖原来的php版本
 header("X-Powered-By: FC/6.0");
@@ -119,7 +124,7 @@ define('PATH', [
     // 当前配置目录
     'NOW_CONFIG' => $NOW_PATH . '/Config',
     // 插件目录
-    'FC_PLUG' => defined(FC_PLUG) ? FC_PLUG : $NOW_PATH . '/Plug',
+    'FC_PLUG' => defined('FC_PLUG') ? FC_PLUG : $NOW_PATH . '/Plug',
 ]);
 
 // 引入加载类

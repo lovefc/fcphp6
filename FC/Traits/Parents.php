@@ -7,7 +7,7 @@ namespace FC\Traits;
  * @Author: lovefc 
  * @Date: 2016/8/29 10:51:27 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-25 08:41:35
+ * @Last Modified time: 2019-09-26 15:44:42
  */
 
 trait Parents

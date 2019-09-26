@@ -3,9 +3,8 @@
 // 引入框架
 require dirname(__DIR__) . '/FC/Main.php';
 
-
-// 开启报错
-//define('DEBUG', true);
+// 关闭报错
+//define('DEBUG', false);
 
 try {
     $obj = FC\Obj('FC\Glue\Route');
