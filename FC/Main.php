@@ -114,12 +114,12 @@ define('PATH', [
     'ROOT'  => $ROOT_PATH,
     // 框架配置目录
     'FC_CONFIG' => $FC_PATH . '/Config',
-    // 插件目录
-    'FC_PLUG' => $FC_PATH . '/Plug',
     // 当前执行脚本的绝对路径
     'NOW'   => $NOW_PATH, // 当前路径
     // 当前配置目录
-    'NOW_CONFIG' => $NOW_PATH . '/Config'
+    'NOW_CONFIG' => $NOW_PATH . '/Config',
+    // 插件目录
+    'FC_PLUG' => defined(FC_PLUG) ? FC_PLUG : $NOW_PATH . '/Plug',
 ]);
 
 // 引入加载类

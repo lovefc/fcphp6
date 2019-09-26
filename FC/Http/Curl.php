@@ -1,15 +1,16 @@
+
 <?php
 
-namespace fcphp\extend;
+namespace FC\Http;
 
 /**
  * 简单方便的curl类
- * author:lovefc
- * time:2017/2/16
- * uptime:2018/1/27
- * uptime:2018/10/27 cookies提交，获取cookies值
- * uptime:2019/03/20 自定义header头，模拟session
+ * @Author: lovefc 
+ * @Date: 2019/03/20 14:07:11 
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-09-26 09:37:05
  */
+
 class Curl
 {
     public $ua;

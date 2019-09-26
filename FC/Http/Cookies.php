@@ -1,19 +1,23 @@
 <?php
 
-namespace fcphp\extend;
+namespace FC\Http;
 
-/**
+/*
  * 简单的cookies封装
- * author:lovefc
+ * @Author: lovefc 
+ * @Date: 2019-09-26 10:20:07 
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-09-26 11:19:11
  */
 
 class Cookies
 {
-    public $_prefix = '';
-    public $_expire = 3600;
-    public $_path;
-    public $_domain;
-    public $_secure; //设置这个 Cookie 是否仅仅通过安全的 HTTPS 连接传给客户端
+    public $prefix = '';
+    public $expire = 3600;
+    public $path;
+    public $domain;
+    // 设置这个 Cookie 是否仅仅通过安全的 HTTPS 连接传给客户端(这不是全局设置)
+    public $secure;
 
     /**
      * 设置cookies的过期时间
@@ -23,7 +27,7 @@ class Cookies
     public function expire($expire)
     {
         if (is_numeric($expire) && $expire != '') {
-            $this->_expire = $expire;
+            $this->expire = $expire;
         }
         return $this;
     }
@@ -36,7 +40,7 @@ class Cookies
     public function prefix($prefix)
     {
         if (is_string($prefix) && $prefix != '') {
-            $this->_prefix = $prefix;
+            $this->prefix = $prefix;
         }
         return $this;
     }
@@ -49,7 +53,7 @@ class Cookies
     public function path($path)
     {
         if (is_string($path) && $path != '') {
-            $this->_path = $path;
+            $this->path = $path;
         }
         return $this;
     }
@@ -62,7 +66,7 @@ class Cookies
     public function domain($domain)
     {
         if (is_string($domain) && $domain != '') {
-            $this->_domain = $domain;
+            $this->domain = $domain;
         }
         return $this;
     }
@@ -73,7 +77,7 @@ class Cookies
     public function secure($secure)
     {
         if (is_string($secure) && $secure != '') {
-            $this->_secure = $secure;
+            $this->secure = $secure;
         }
         return $this;
     }
@@ -86,14 +90,14 @@ class Cookies
      */
     public function set($name, $value = null)
     {
-        $name = empty($this->_prefix) ? $name : $this->_prefix . $name;
-        $expire = empty($this->_expire) ? 0 : $this->_expire;
+        $name = empty($this->prefix) ? $name : $this->prefix . $name;
+        $expire = empty($this->expire) ? 0 : $this->expire;
         $baseUrl = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
         $baseUrl = empty($baseUrl) ? '/' : '/' . trim($baseUrl, '/') . '/';
-        $path = empty($this->_path) ? $baseUrl : $this->_path;
+        $path = empty($this->path) ? $baseUrl : $this->path;
         $server_name = isset($_SERVER['SERVER_NAME']) ? trim($_SERVER['SERVER_NAME'], '/') : '';
-        $domain = empty($this->_domain) ? $server_name : $this->_domain;
-        $secure = $this->_secure == true ? true : false;
+        $domain = empty($this->domain) ? $server_name : $this->domain;
+        $secure = $this->secure == true ? true : false;
         if (is_string($name) && $name != '') {
             return setcookie($name, $value, time() + $expire, $path, $domain, $secure);
         }
@@ -106,7 +110,7 @@ class Cookies
      */
     public function has($name)
     {
-        $name = empty($this->_prefix) ? $name : $this->_prefix . $name;
+        $name = empty($this->prefix) ? $name : $this->prefix . $name;
         if (isset($_COOKIE[$name])) {
             return true;
         } else {
@@ -122,13 +126,13 @@ class Cookies
      */
     public function del($name)
     {
-        $name = empty($this->_prefix) ? $name : $this->_prefix . $name;
-        $expire = empty($this->_expire) ? 0 : $this->_expire;
+        $name = empty($this->prefix) ? $name : $this->prefix . $name;
+        $expire = empty($this->expire) ? 0 : $this->expire;
         $baseUrl = str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME']));
         $baseUrl = empty($baseUrl) ? '/' : '/' . trim($baseUrl, '/') . '/';
-        $path = empty($this->_path) ? $baseUrl : $this->_path;
-        $domain = empty($this->_domain) ? $_SERVER['SERVER_NAME'] : $this->_domain;
-        $secure = $this->_secure == true ? true : false;
+        $path = empty($this->path) ? $baseUrl : $this->path;
+        $domain = empty($this->domain) ? $_SERVER['SERVER_NAME'] : $this->domain;
+        $secure = $this->secure == true ? true : false;
         if (is_string($name) && $name != '') {
             return setcookie($name, '', time() - 36000, $path, $domain, $secure);
         }
@@ -141,7 +145,7 @@ class Cookies
      */
     public function get($name)
     {
-        $name = empty($this->_prefix) ? $name : $this->_prefix . $name;
+        $name = empty($this->prefix) ? $name : $this->prefix . $name;
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : null;
     }
 

@@ -8,12 +8,14 @@
  * @Author: lovefc 
  * @Date: 2019-09-22 17:41:41 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-22 23:51:28
+ * @Last Modified time: 2019-09-26 14:00:00
  */
 return [
 
     'VIEW'     => 'FC\Glue\View',
     
     'SESSION'  => 'FC\Glue\Session',
+
+    'COOKIES'  => 'FC\Http\Cookies',
 
 ];

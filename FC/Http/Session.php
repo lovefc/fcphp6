@@ -6,11 +6,10 @@ use FC\File;
 
 /**
  * 简单的session封装
- * 
  * @Author: lovefc 
  * @Date: 2019-09-24 10:14:06 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-25 15:29:23
+ * @Last Modified time: 2019-09-26 10:20:35
  */
 
 class Session
