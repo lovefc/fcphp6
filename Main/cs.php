@@ -8,9 +8,11 @@ class cs
 
     public function index($a = 'hello')
     {
+
+        $this->VALICODE->ReadConf('default2')->doImg();
+        /*
         $this->SESSION->set('aaa',222);
         $this->COOKIES->set('aaa',333);
-        /*
         $this->VIEW->assign('text', $a);
         $this->VIEW->display('index');
         */
@@ -22,5 +24,4 @@ class cs
         echo $this->COOKIES->get('aaa');
 
     }
-
 }

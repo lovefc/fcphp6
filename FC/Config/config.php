@@ -11,7 +11,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:49:57 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-24 12:38:14
+ * @Last Modified time: 2019-09-27 15:21:20
  */
 
 
@@ -21,4 +21,5 @@ return [
    'FC\Glue\View'      => 'view.php',
    'FC\Glue\Event'     => 'event.php',
    'FC\Glue\Session'   => 'session.php',
+   'FC\Glue\ValiCode'  => 'valicode.php',   
 ];

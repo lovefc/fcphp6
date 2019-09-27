@@ -1,4 +1,3 @@
-
 <?php
 /*
  * 多部件继承配置(简易容器)
@@ -8,14 +7,15 @@
  * @Author: lovefc 
  * @Date: 2019-09-22 17:41:41 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-26 14:00:00
+ * @Last Modified time: 2019-09-27 17:38:08
  */
 return [
-
+    // 视图类
     'VIEW'     => 'FC\Glue\View',
-    
+    // Session类
     'SESSION'  => 'FC\Glue\Session',
-
+    // Cookies类
     'COOKIES'  => 'FC\Http\Cookies',
-
+    // 验证码类
+    'VALICODE' => 'FC\Glue\ValiCode'
 ];

@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-26 16:08:19
+ * @Last Modified time: 2019-09-27 16:55:59
  */
 
 
@@ -16,7 +16,7 @@ if (defined('DEBUG') && empty(DEBUG)) {
 } else {
     // 开启错误
     ini_set("display_errors", "On");
-    error_reporting(1);
+    error_reporting(E_ALL);
 }
 
 // 定义版本信息，用于覆盖原来的php版本

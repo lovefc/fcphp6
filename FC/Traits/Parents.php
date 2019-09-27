@@ -7,7 +7,7 @@ namespace FC\Traits;
  * @Author: lovefc 
  * @Date: 2016/8/29 10:51:27 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-26 15:44:42
+ * @Last Modified time: 2019-09-27 17:48:00
  */
 
 trait Parents
@@ -41,16 +41,10 @@ trait Parents
         // init初始化，应用于父类
         if (method_exists($this, '_init')) {
             $this->_init();
-        }          
-        if(empty($this->P_Config)){
-            return false;
-        }      
-        if (empty($this->P_ConfigType)) {
-            $this->P_RegVar = array_keys($this->P_Config);
-        } else {
-            $this->P_RegVar = array_keys($this->P_Config[$this->P_ConfigType]);
         }
-        $this->P_Start();
+        if (empty($this->P_Config)) {
+            return false;
+        }
         // start初始化，应用于子类
         if (method_exists($this, '_start')) {
             $this->_start();
@@ -80,14 +74,13 @@ trait Parents
     // 初始化
     public function P_Start()
     {
-        if(is_array($this->P_RegVar)){
-            foreach ($this->P_RegVar as $value) {
+        if (is_array($this->P_RegVar)) {
+            foreach ($this->P_RegVar as $k=>$value) {
                 unset($this->$value);
             }
         }
         return $this;
     }
-
 
     // 设置访问的配置,这里可以指定数组键名
     public function ReadConf($type)
@@ -95,6 +88,11 @@ trait Parents
         if (isset($type)) {
             $this->P_ConfigType = $type;
         }
+        if (empty($this->P_ConfigType)) {
+            $this->P_RegVar = array_keys($this->P_Config);
+        } else {
+            $this->P_RegVar = array_keys($this->P_Config[$this->P_ConfigType]);
+        }   
         // 初始化
         $this->P_Start();
         return $this;

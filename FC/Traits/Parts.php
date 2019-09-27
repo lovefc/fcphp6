@@ -2,13 +2,12 @@
 
 namespace FC\Traits;
 
-
 /*
  * 多继承容器
  * @Author: lovefc 
  * @Date: 2019-09-20 10:17:40 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-22 19:42:11
+ * @Last Modified time: 2019-09-27 17:12:01
  */
 
 trait Parts
