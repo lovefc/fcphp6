@@ -2,12 +2,15 @@
 
 namespace FC\Http;
 
+use FC\Http\GIF\GIFEncoder;
+
+
 /*
  * 验证码类库
  * @Author: lovefc 
  * @Date: 2019-09-27 14:35:05 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-27 17:44:47
+ * @Last Modified time: 2019-09-28 14:06:18
  */
 
 
@@ -31,6 +34,12 @@ class ValiCode
 
     // 字体路径
     public $font_url = '';
+
+    // 是否为动态验证码
+    public $is_gif = true;
+
+    // 动图帧数
+    public $gif_fps = 10;
 
     // 验证码
     public $code;
@@ -57,14 +66,38 @@ class ValiCode
     public function doImg()
     {
         $this->code = strtolower($this->setVerNumber());
+        $imagedata = [];
+        if ($this->is_gif) {
+            for ($i = 0; $i < $this->gif_fps; $i++) {
+                $imagedata[] = $this->creBackGIF();
+                ++$i;
+            }
+        } else {
+            $imagedata[] = $this->creBackGIF();
+        }
+        $gif = new GIFEncoder($imagedata);
+        header('Content-type:image/gif');
+        echo $gif->GetAnimation();
+        exit;
+    }
+
+    /**
+     * 创建动态背景
+     *
+     * @return void
+     */
+    private function creBackGIF()
+    {
+        ob_start();
         $im = $this->createImageSource();
         $this->setBackGroundColor($im);
         $this->setCode($im, $this->code);
         $this->setRandomCode($im);
-        header("Content-type: image/png");
-        Imagepng($im);
-        ImageDestroy($im);
-        exit;
+        imagegif($im);
+        imagedestroy($im);
+        $imagedata = ob_get_contents();
+        ob_clean();
+        return $imagedata;
     }
 
     /**
