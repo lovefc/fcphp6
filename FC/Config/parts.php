@@ -17,5 +17,5 @@ return [
     // Cookies类
     'COOKIES'  => 'FC\Http\Cookies',
     // 验证码类
-    'VALICODE' => 'FC\Glue\ValiCode'
+    'CAPTCHA' => 'FC\Glue\Captcha'
 ];

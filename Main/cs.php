@@ -9,11 +9,9 @@ class cs
     public function index($a = 'hello')
     {
         // 获取随机码
-        $code = $this->VALICODE->getCode();
+        $code = $this->CAPTCHA->getCode();
         $this->SESSION->set('code',$code);
-        $this->VALICODE->doImg($code);
-
-
+        $this->CAPTCHA->doImg($code);
         /*
         $this->SESSION->set('aaa',222);
         $this->COOKIES->set('aaa',333);

@@ -2,7 +2,7 @@
 
 namespace FC\Glue;
 
-use FC\Http\ValiCode as Code;
+use FC\Http\Captcha as Code;
 
 /*
  * @Author: lovefc 
@@ -11,7 +11,7 @@ use FC\Http\ValiCode as Code;
  * @Last Modified time: 2019-09-27 17:37:22
  */
 
-class ValiCode extends Code
+class Captcha extends Code
 {
     // 继承配置
     use \FC\traits\Parents;

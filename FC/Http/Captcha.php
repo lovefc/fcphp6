@@ -10,11 +10,10 @@ use FC\Http\GIF\GIFEncoder;
  * @Author: lovefc 
  * @Date: 2019-09-27 14:35:05 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-28 14:22:17
+ * @Last Modified time: 2019-09-28 16:32:06
  */
 
-
-class ValiCode
+class Captcha
 {
 
     // 验证码宽度
@@ -27,22 +26,19 @@ class ValiCode
     public $nums = 4;
 
     // 随机数
-    public $random = '1234567890zxcvbnmasdfghjklqwertyuiop';
+    public $random = '2345689zxcvbnmasdfhjkqwertyup';
 
     // 随机数大小
-    public $font_size = 38;
+    public $font_size = 36;
 
     // 字体路径
-    public $font_url = '';
+    public $font_path = __DIR__ . '/Font/zhankukuhei.ttf';
 
     // 是否为动态验证码
     public $is_gif = true;
 
     // 动图帧数
     public $gif_fps = 10;
-
-    // 验证码
-    public $code;
 
     /**
      * 获取验证码
@@ -51,7 +47,7 @@ class ValiCode
      */
     public function getCode()
     {
-        return strtolower($this->setVerNumber());
+        return $this->code = strtolower($this->setVerNumber());
     }
 
     /**
@@ -65,18 +61,18 @@ class ValiCode
      */
     public function doImg($code = '')
     {
-        if(!$code){
-           return false;
+        if (!$code) {
+            return false;
         }
-        $this->code = $code;
+        $code = strtoupper($code);
         $imagedata = [];
         if ($this->is_gif) {
             for ($i = 0; $i < $this->gif_fps; $i++) {
-                $imagedata[] = $this->creBackGIF();
+                $imagedata[] = $this->creBackGIF($code);
                 ++$i;
             }
         } else {
-            $imagedata[] = $this->creBackGIF();
+            $imagedata[] = $this->creBackGIF($code);
         }
         $gif = new GIFEncoder($imagedata);
         header('Content-type:image/gif');
@@ -89,12 +85,12 @@ class ValiCode
      *
      * @return void
      */
-    private function creBackGIF()
+    private function creBackGIF($code)
     {
         ob_start();
         $im = $this->createImageSource();
         $this->setBackGroundColor($im);
-        $this->setCode($im, $this->code);
+        $this->setCode($im, $code);
         $this->setRandomCode($im);
         imagegif($im);
         imagedestroy($im);
@@ -121,7 +117,7 @@ class ValiCode
      */
     private function setBackGroundColor($im)
     {
-        $bgcolor = ImageColorAllocate($im, rand(200, 255), rand(200, 255), rand(200, 255));
+        $bgcolor = imagecolorallocate($im, rand(200, 255), rand(200, 255), rand(200, 255));
         imagefill($im, 0, 0, $bgcolor);
     }
 
@@ -139,7 +135,7 @@ class ValiCode
             $x = rand(0, $this->width);
             $y = rand(0, $this->height);
             $jiaodu = rand(0, 360); //设置角度
-            $fonturl = $this->font_url; //使用的字体
+            $fonturl = $this->font_path; //使用的字体
             // 检测中文
             if (preg_match("/[\x7f-\xff]/", $this->random)) {
                 $fontsize = $this->font_size / 4;
@@ -151,7 +147,7 @@ class ValiCode
                 $countdistrub = mb_strlen($originalcode);
                 $dscode = $originalcode[rand(0, $countdistrub - 1)];
             }
-            $color = ImageColorAllocate($im, rand(40, 140), rand(40, 140), rand(40, 140));
+            $color = imagecolorallocate($im, rand(40, 140), rand(40, 140), rand(40, 140));
             imagettftext($im, $fontsize, $jiaodu, $x, $y, $color, $fonturl, $dscode);
         }
     }
@@ -195,13 +191,13 @@ class ValiCode
         }
         $y = floor($height / 2) + floor($height / 4);
         $fontsize = rand($this->font_size - 2, $this->font_size);
-        $fonturl = $this->font_url;
+        $fonturl = $this->font_path;
         $counts = $count;
         for ($i = 0; $i < $counts; $i++) {
             $char = $array[$i];
             $x = floor($width / $counts) * $i + ($width / 15);
             $jiaodu = rand(-30, 30);
-            $color = ImageColorAllocate($im, rand(0, 50), rand(50, 100), rand(100, 140));
+            $color = imagecolorallocate($im, rand(0, 50), rand(50, 100), rand(100, 140));
             imagettftext($im, $fontsize, $jiaodu, $x, $y, $color, $fonturl, $char);
         }
     }

@@ -22,7 +22,7 @@ return [
         // 随机数大小
         'font_size' => 35,
         // 字体路径
-        'font_url' => PATH['FC'].'/Http/Font/casablancalhf.otf'
+        //'font_path' => PATH['FC'].'/Http/Font/zhankukuhei.otf'
     ],
     'default2' => [
         // 验证码宽度
@@ -36,6 +36,6 @@ return [
         // 随机数大小
         'font_size' => 25,
         // 字体路径
-        'font_url' => PATH['FC'].'/Http/Font/zhankukuhei.ttf'
+        //'font_path' => PATH['FC'].'/Http/Font/zhankukuhei.ttf'
     ],   
 ];

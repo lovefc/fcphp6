@@ -21,5 +21,5 @@ return [
    'FC\Glue\View'      => 'view.php',
    'FC\Glue\Event'     => 'event.php',
    'FC\Glue\Session'   => 'session.php',
-   'FC\Glue\ValiCode'  => 'valicode.php',   
+   'FC\Glue\Captcha'   => 'Captcha.php',   
 ];
