@@ -15,8 +15,8 @@ return [
         // Session的名称
         'name' => 'FCSESSION',
         // 存储路径
-        'save_path' => 'tcp://127.0.0.1:6379',
+        'save_path' => dirname(PATH['FC']).'/Session',
         // 存储方式
-        'save_handler' => 'redis',
+        'save_handler' => 'files', // redis,files
     ],
 ];

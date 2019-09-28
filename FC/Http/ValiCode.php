@@ -10,7 +10,7 @@ use FC\Http\GIF\GIFEncoder;
  * @Author: lovefc 
  * @Date: 2019-09-27 14:35:05 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-28 14:06:18
+ * @Last Modified time: 2019-09-28 14:22:17
  */
 
 
@@ -51,7 +51,7 @@ class ValiCode
      */
     public function getCode()
     {
-        return $this->code;
+        return strtolower($this->setVerNumber());
     }
 
     /**
@@ -63,9 +63,12 @@ class ValiCode
      * @param string $random 随机字符串
      * @return void
      */
-    public function doImg()
+    public function doImg($code = '')
     {
-        $this->code = strtolower($this->setVerNumber());
+        if(!$code){
+           return false;
+        }
+        $this->code = $code;
         $imagedata = [];
         if ($this->is_gif) {
             for ($i = 0; $i < $this->gif_fps; $i++) {

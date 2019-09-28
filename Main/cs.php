@@ -8,8 +8,12 @@ class cs
 
     public function index($a = 'hello')
     {
+        // 获取随机码
+        $code = $this->VALICODE->getCode();
+        $this->SESSION->set('code',$code);
+        $this->VALICODE->doImg($code);
 
-        $this->VALICODE->ReadConf('default2')->doImg();
+
         /*
         $this->SESSION->set('aaa',222);
         $this->COOKIES->set('aaa',333);
@@ -20,8 +24,6 @@ class cs
 
     public function index2()
     {
-        echo $this->SESSION->get('aaa');
-        echo $this->COOKIES->get('aaa');
-
+        echo $this->SESSION->get('code');
     }
 }

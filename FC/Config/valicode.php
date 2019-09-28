@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-27 15:19:42
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-27 17:45:34
+ * @Last Modified time: 2019-09-28 14:30:07
  */
 
 return [
@@ -20,7 +20,7 @@ return [
         // 随机数
         'random' => '1234567890zxcvbnmasdfghjklqwertyuiop',
         // 随机数大小
-        'font_size' => 40,
+        'font_size' => 35,
         // 字体路径
         'font_url' => PATH['FC'].'/Http/Font/casablancalhf.otf'
     ],
