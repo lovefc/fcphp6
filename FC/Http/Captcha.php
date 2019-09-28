@@ -25,7 +25,7 @@ class Captcha
     // 验证码个数
     public $nums = 4;
 
-    // 随机数
+    // 随机字符串
     public $random = '2345689zxcvbnmasdfhjkqwertyup';
 
     // 随机数大小
