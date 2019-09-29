@@ -9,9 +9,12 @@ class cs
     public function index($a = 'hello')
     {
         // 获取随机码
-        $code = $this->CAPTCHA->getCode();
+        $code = $this->CAPTCHA->ReadConf('default2')->getCode();
+        $this->CAPTCHA->ReadConf('default2')->width= 300;
+        $this->CAPTCHA->ReadConf('default2')->height= 100;
+        $code = '小妖我爱你';
         $this->SESSION->set('code',$code);
-        $this->CAPTCHA->doImg($code);
+        $this->CAPTCHA->ReadConf('default2')->doImg($code);
         /*
         $this->SESSION->set('aaa',222);
         $this->COOKIES->set('aaa',333);

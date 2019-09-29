@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-27 15:19:42
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-28 14:30:07
+ * @Last Modified time: 2019-09-29 12:19:49
  */
 
 return [
@@ -26,15 +26,15 @@ return [
     ],
     'default2' => [
         // 验证码宽度
-        'width' => 200,
+        'width' => 300,
         // 验证码高度
-        'height' => 60,
+        'height' => 100,
         // 验证码个数
         'nums' => 4,
         // 随机数0
         'random' => '舔狗不得好死',
         // 随机数大小
-        'font_size' => 25,
+        'font_size' => 30,
         // 字体路径
         //'font_path' => PATH['FC'].'/Http/Font/zhankukuhei.ttf'
     ],   
