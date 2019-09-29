@@ -1,4 +1,3 @@
-
 <?php
 
 namespace FC\Http;
@@ -18,14 +17,26 @@ class Curl
     public $data;
     public $backurl;
     public $url;
-    public $timeout; // 设置超时时间
-    public $getcookie = array(); //得到的cookies值
-    public $setcookie; //设置的cookies值
-    public $mode = 'text'; //结果解析方式,json,xml,head返回结果都是数组
-    public $headers = array(); // header头数组存放
+    // 设置超时时间
+    public $timeout;
+    // 得到的cookies值
+    public $getcookie = array();
+    // 设置的cookies值
+    public $setcookie;
+    // 结果解析方式,json,xml,head返回结果都是数组
+    public $mode = 'text';
+    // header头数组存放
+    public $headers = array();
+    // session名称
+    public $session_name = 'PHPSESSID';
 
 
-    //header设置，可以是数组或者是一个值
+    /**
+     * header设置，可以是数组或者是一个值
+     *
+     * @param string $header
+     * @return object
+     */
     public function head($header = '')
     {
         if (empty($header)) {
@@ -42,8 +53,12 @@ class Curl
         return $this;
     }
 
-
-    //定义一个ua,可选值（android,iphone,macos,windows）值为空就随机
+    /**
+     * 定义一个ua
+     *
+     * @param string $ua
+     * @return object
+     */
     public function ua($ua = '')
     {
         $ua = $this->fixed_ua($ua);
@@ -51,7 +66,12 @@ class Curl
         return $this;
     }
 
-    //定义cookies，可以是数组或者是a=b&c=d这样的格式
+    /**
+     * 定义cookies，可以是数组或者是a=b&c=d这样的格式
+     *
+     * @param string $cookie
+     * @return object
+     */
     public function cookie($cookie = '')
     {
         if (empty($cookie))
@@ -66,21 +86,36 @@ class Curl
         return $this;
     }
 
-    //定义一个IP,值为空就随机
+    /**
+     * 定义一个IP,值为空就随机
+     *
+     * @param string $ip
+     * @return object
+     */
     public function ip($ip = '')
     {
         $this->ip = empty($ip) ? $this->rand_ip() : $ip;
         return $this;
     }
 
-    //定义超时时间,值为空就默认为5
+    /**
+     * 定义超时时间,值为空就默认为5
+     *
+     * @param string $timeout
+     * @return object
+     */
     public function timeout($timeout = '')
     {
         $this->timeout = empty($timeout) ? 5 : (int) $timeout;
         return $this;
     }
 
-    //定义来源地址
+    /**
+     * 定义来源地址
+     *
+     * @param string $backurl
+     * @return obiect
+     */
     public function backurl($backurl = '')
     {
         if (!empty($backurl)) {
@@ -89,7 +124,12 @@ class Curl
         return $this;
     }
 
-    //定义访问的url
+    /**
+     * 定义访问的url
+     *
+     * @param string $url
+     * @return object
+     */
     public function url($url = '')
     {
         if (!empty($url)) {
@@ -98,7 +138,12 @@ class Curl
         return $this;
     }
 
-    //定义post的数据
+    /**
+     * 定义post的数据,数组或者字符串形式
+     *
+     * @param string $data
+     * @return object
+     */
     public function post($data = '')
     {
         if (!empty($data)) {
@@ -107,7 +152,12 @@ class Curl
         return $this;
     }
 
-    //返回值
+    /**
+     * 返回值
+     *
+     * @param string $mode
+     * @return void
+     */
     public function results($mode = '')
     {
         switch ($mode) {
@@ -126,7 +176,12 @@ class Curl
         return $this->gets();
     }
 
-    //解析数据
+    /**
+     * 解析数据
+     *
+     * @param [type] $result
+     * @return void
+     */
     public function jx_result($result)
     {
         if (empty($result) && $result != 0) {
@@ -144,21 +199,33 @@ class Curl
         }
     }
 
-    // 获取cookies的值,是一个数组
+    /**
+     * 获取cookies的值,是一个数组
+     *
+     * @return array
+     */
     public function getCookie()
     {
         return $this->getcookie;
     }
 
-    // 获取字符串形式的cookie
+    /**
+     * 获取字符串形式的cookie
+     *
+     * @return string
+     */
     public function getCookieStr()
     {
         $ck = $this->getcookie;
-        unset($ck['PHPSESSID']);
+        // unset($ck[$this->session_name]);
         return http_build_query($ck);
     }
 
-    //curl封装
+    /**
+     * curl封装
+     *
+     * @return void
+     */
     public function gets()
     {
         $url = $this->url;
@@ -184,7 +251,7 @@ class Curl
             $headers[] = 'CLIENT-IP:' . $ip;
         }
         isset($_SESSION) || session_start();
-        $headers['PHPSESSID'] = isset($_COOKIE['PHPSESSID']) ? $_COOKIE['PHPSESSID'] : null;
+        $headers[$this->session_name] = isset($this->session_name) ? $_COOKIE[$this->session_name] : null;
         session_write_close();
         if (!empty($headers)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
@@ -233,7 +300,12 @@ class Curl
         return $this->jx_result($out);
     }
 
-    //固定ua
+    /**
+     * UA类型
+     *
+     * @param string $bs
+     * @return string
+     */
     public function fixed_ua($bs = 'windows')
     {
         $uas = array();
@@ -244,7 +316,11 @@ class Curl
         return isset($uas[$bs]) ? $uas[$bs] : $bs;
     }
 
-    //随机生成ua
+    /**
+     * 随机生成ua
+     *
+     * @return string
+     */
     public function rand_ua()
     {
         $ua_long = array(
@@ -261,7 +337,11 @@ class Curl
         return $ua_long[array_rand($ua_long, 1)];
     }
 
-    //随机生成ip
+    /**
+     * 随机生成ip
+     *
+     * @return void
+     */
     public function rand_ip()
     {
         $ip_long = array(

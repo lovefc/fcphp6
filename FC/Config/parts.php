@@ -10,6 +10,8 @@
  * @Last Modified time: 2019-09-27 17:38:08
  */
 return [
+    // Curl类
+    'CURL'     => 'FC\Http\Curl',
     // 视图类
     'VIEW'     => 'FC\Glue\View',
     // Session类
@@ -17,5 +19,5 @@ return [
     // Cookies类
     'COOKIES'  => 'FC\Http\Cookies',
     // 验证码类
-    'CAPTCHA' => 'FC\Glue\Captcha'
+    'CAPTCHA'  => 'FC\Glue\Captcha'
 ];
