@@ -11,7 +11,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:49:57 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-30 08:17:45
+ * @Last Modified time: 2019-09-30 14:53:55
  */
 
 
@@ -22,4 +22,5 @@ return [
    'FC\Glue\Event'     => 'event.php',
    'FC\Glue\Session'   => 'session.php',
    'FC\Glue\Captcha'   => 'captcha.php',
+   'FC\Glue\SafeMode'  => 'safemode.php',
 ];

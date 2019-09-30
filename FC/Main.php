@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-27 16:55:59
+ * @Last Modified time: 2019-09-30 15:07:48
  */
 
 
@@ -150,6 +150,9 @@ register_shutdown_function(['\FC\Log', 'Error']);
 
 // 获取当前地址，兼容方案
 define('NOW_URL', FC\RequestUri());
+
+// 安全过滤
+\FC\Obj('FC\Glue\SafeMode')->run();
 
 // 插件目录设置
 \FC\Obj('FC\Glue\Load')->ExtendConfig(PATH['FC_PLUG'] . '/config.php');
