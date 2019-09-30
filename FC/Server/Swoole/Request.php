@@ -5,9 +5,9 @@
  * author:lovefc
  */ 
  
-namespace swoole;
+namespace Server;
 
-class WebServer{
+class Request{
 	
 	private $request = [];
 	
@@ -135,7 +135,7 @@ class WebServer{
         $this->response->header('Location', $url);
     }	
 	
-	//设置head头
+	// 设置head头
 	public function header($val,$type='Content-Type'){
 	    $this->response->header($type,$val);
 	}	
@@ -186,11 +186,11 @@ class WebServer{
         $_SERVER['HTTP_USER_AGENT'] = $this->getHttpUserAgent();//用户ua
 		
         $_SERVER['HTTP_ACCEPT']     = $this->getHttpAccept();//accept
+        
         $_SERVER['HTTP_ACCEPT_ENCODING']     =  $this->getHttpAcceptEncoding();//accept-encoding
 		
         $_SERVER['HTTP_ACCEPT_LANGUAGE']     =  $this->getHttpAcceptLanguage();
-	    
-		//unset($_SERVER);
+        
 	}
 	
 	//获取REQUEST
@@ -247,7 +247,7 @@ class WebServer{
 	}	
 	
 	//监听处理
-	public function onRequest($request, $response){
+	public function onRequest($request, $response, $callback){
 		
 		//记录一下时间
         $_SERVER['FC_STIME'] = microtime(true);
@@ -264,17 +264,11 @@ class WebServer{
 		
 		ob_start();
     
-        //MVC模拟器
-        try {
-            $mvc = GetObj('mvcStart', 'start'); //这个函数不懂，看函数库里的注释
-            $mvc->run();
-        } catch (\Exception $e) {
-            \ErrorShow($e->getMessage()); //打印访问错误
-        }
+       
    
-		$info=ob_get_contents();
+		$res = ob_get_contents();
 	    
-        $this->pre($info);
+        $this->pre($res);
 	}
 	
 	//读取配置
