@@ -7,7 +7,7 @@ namespace FC\Http;
  * @Author: lovefc 
  * @Date: 2019/03/20 14:07:11 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-26 09:37:05
+ * @Last Modified time: 2019-09-30 08:05:30
  */
 
 class Curl
@@ -251,7 +251,7 @@ class Curl
             $headers[] = 'CLIENT-IP:' . $ip;
         }
         isset($_SESSION) || session_start();
-        $headers[$this->session_name] = isset($this->session_name) ? $_COOKIE[$this->session_name] : null;
+        $headers[$this->session_name] = isset($_COOKIE[$this->session_name]) ? $_COOKIE[$this->session_name] : null;
         session_write_close();
         if (!empty($headers)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
