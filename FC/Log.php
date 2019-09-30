@@ -168,7 +168,7 @@ class Log
         if ($temp == $lasterror['message']) {
             return false;
         }
-        //错误每30s写入一次,避免在大并发下,写的越来越大
+        // 错误每10s写入一次,避免在大并发下,写的越来越大
         if (filemtime($path) < TIME - 10) {
             $file = fopen($path, 'a+b');
             fwrite($file, $str, 4096);
