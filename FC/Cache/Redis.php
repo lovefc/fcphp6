@@ -1,6 +1,6 @@
 <?php
 
-namespace fcphp\extend\cache;
+namespace FC\Cache;
 
 /**
  * redis协议类
@@ -8,7 +8,10 @@ namespace fcphp\extend\cache;
  * time:2017/07/26
  * 只是封装了基本的操作，更多的操作可以去扩展
  * 更多命令可参考 http://www.redis.net.cn/order/
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-10-03 00:26:43
  */
+
 class Redis
 {
 

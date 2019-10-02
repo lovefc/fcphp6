@@ -1,11 +1,15 @@
 <?php
 
-namespace fcphp\extend\cache;
+namespace FC\Cache;
 
-/**
- * author:Fwolf,lovefc
- * update:2017/07/27 17:57
+/*
+ * @Author: Fwolf,lovefc
+ * @Date: 2017/07/27 17:57
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-10-03 00:03:17
  */
+
+
 class Memcached {
 
     //说实话，这一段常量我没怎么研究 -----by lovefc
