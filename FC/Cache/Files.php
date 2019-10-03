@@ -9,7 +9,7 @@ use FC\File;
  * @Author: lovefc
  * @Date: 2019-10-03 00:24:20
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-03 00:45:26
+ * @Last Modified time: 2019-10-03 15:02:26
  */
 
 class Files
@@ -23,7 +23,17 @@ class Files
     // 文件缓存过期时间
     public $Time;
 
-    public function connect($Path, $IsMd5 = false, $Ext = '.cache', $Time = 60)
+    /**
+     * 缓存配置
+     *
+     * @param [type] $Path
+     * @param bool   $IsMd5
+     * @param string $Ext
+     * @param int    $Time
+     *
+     * @return void
+     */
+    public function connect($Path = '', $IsMd5 = false, $Ext = '.cache', $Time = 60)
     {
         $this->Path = $Path;
         if (!is_dir($path)) {
@@ -35,7 +45,10 @@ class Files
     }
 
     /**
-     * 引入一个缓存文件.
+     * 引入一个缓存文件
+     *
+     * @param [type] $key
+     * @return void
      */
     public function incfile($key)
     {
@@ -50,39 +63,31 @@ class Files
 
     /*
      * 设置一个参数值
+     * 设置过期时间,file形式下无效
      * @param $key 参数名
      * @param $value 参数值
-     * 设置过期时间,file形式下无效
+     * @return void
      */
 
     public function set($key, $value, $expire = 60)
     {
         $expire = (0 == $expire) ? $this->Time : $expire;
-        if ('file' == $this->Mode) {
-            return $this->file_set($key, $value, $expire);
-        } else {
-            if ('memcache' == $this->Mode) {
-                return $this->obj()->set($key, $value, 0, $expire);
-            } else {
-                return $this->obj()->set($key, $value, $expire);
-            }
-        }
+        return $this->file_set($key, $value, $expire);
     }
 
-    /*
+    /**
      * 获取一个参数
+     *
+     * @param [type] $key
+     * @return void
      */
-
     public function get($key)
     {
         if (!$this->has($key)) {
             return false;
         }
-        if ('file' == $this->Mode) {
-            return $this->file_get($key);
-        } else {
-            return $this->obj()->get($key);
-        }
+        return $this->file_get($key);
+
     }
 
     /*
@@ -91,13 +96,7 @@ class Files
 
     public function del($key)
     {
-        if ('file' == $this->Mode) {
-            return $this->file_dele($key);
-        } else {
-            if ($this->check_key($key)) {
-                $this->obj()->delete($key);
-            }
-        }
+        return $this->file_dele($key);
     }
 
     /*
@@ -107,29 +106,14 @@ class Files
     public function has($key)
     {
         clearstatcache();
-        if ('file' == $this->Mode) {
-            if (true == $this->IsMd5) {
-                $key = md5($key);
-            }
-            $path = $this->obj().'/'.$key.$this->Ext;
-            if (is_file($path) && (time() - filemtime($path)) <= $this->Time) {
-                return true;
-            } else {
-                return false;
-            }
+        if (true == $this->IsMd5) {
+            $key = md5($key);
+        }
+        $path = $this->obj().'/'.$key.$this->Ext;
+        if (is_file($path) && (time() - filemtime($path)) <= $this->Time) {
+            return true;
         } else {
-            $obj = $this->obj();
-            if ('redis' == $this->Mode) {
-                if (method_exists($obj, 'exists')) {
-                    $data = $obj->exists($key);
-                } else {
-                    $data = $obj->has($key);
-                }
-            } else {
-                $data = $obj->get($key);
-            }
-
-            return $data;
+            return false;
         }
     }
 
@@ -181,47 +165,6 @@ class Files
         if (is_file($path)) {
             unlink($path);
 
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * 创建一个文件或者目录.
-     *
-     * @param $dir 目录名或者文件名
-     * @param $file 如果是文件，则设为true
-     * @param $mode 文件的权限
-     *
-     * @return false|true
-     */
-    public function create($dir, $file = false, $mode = 0777)
-    {
-        $path = str_replace('\\', '/', $dir);
-        if ($file) {
-            if (is_file($path)) {
-                return true;
-            }
-            $temp_arr = explode('/', $path);
-            array_pop($temp_arr);
-            $file = $path;
-            $path = implode('/', $temp_arr);
-        }
-        if (!is_dir($path)) {
-            mkdir($path, $mode, true);
-        } else {
-            chmod($path, $mode);
-        }
-        if ($file) {
-            $fh = @fopen($file, 'a');
-            if ($fh) {
-                fclose($fh);
-
-                return true;
-            }
-        }
-        if (is_dir($path)) {
             return true;
         }
 
