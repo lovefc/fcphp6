@@ -9,7 +9,7 @@ use FC\File;
  * @Author: lovefc
  * @Date: 2019-10-03 00:24:20
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-06 10:37:56
+ * @Last Modified time: 2019-10-06 18:33:41
  */
 
 class Files
@@ -21,7 +21,7 @@ class Files
     // 缓存的文件后缀
     public $Ext = '.cache';
     // 文件缓存过期时间
-    public $Time;
+    public $Time = 60;
 
     /**
      * 缓存配置
