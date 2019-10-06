@@ -5,13 +5,13 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:52:35 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-30 08:17:30
+ * @Last Modified time: 2019-10-07 00:21:04
  */
 
 return [
 
-    'default' => function ($a) {
-        echo "hello-{$a}";
+    'default' => function ($a = 'world') {
+        echo "hello {$a}";
     },
     '1' => function () {
         echo '2222';
@@ -23,6 +23,11 @@ return [
 
     '4' => ['\\Main\cs', 'index3'],
 
+    // 正则路由,后面可以跟jquery参数
+    '#^html/([0-9]*).html(.*)$#' => function($a){
+        echo $a;
+     }, 
+     
     '#^images/([0-9]*).jpg(.*)$#' => function ($a) {
         echo $a;
     },

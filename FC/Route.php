@@ -9,7 +9,7 @@ use FC\Route\Execs;
  * @Author: lovefc 
  * @Date: 2017/1/3 00:27
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-17 16:43:42
+ * @Last Modified time: 2019-10-07 00:11:09
  * *
  */
 
@@ -75,7 +75,7 @@ class Route extends Execs
         $orig_path_info = empty($_SERVER['ORIG_PATH_INFO']) ? '' : $_SERVER['ORIG_PATH_INFO'];
         $url = $path_info ? $path_info : $orig_path_info;
         if (!$url) {
-            $url = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
+            $url = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING']: '';
         }
         if (self::$route != '#^([\w\W]*)#') {
             $url = self::strReplaceLimit('&', '?', $url, 1);
@@ -310,6 +310,10 @@ class Route extends Execs
     {
         self::queryHandle();
         $pz = self::$routeval;
+        if (class_exists('\FC\Event', false)) {
+            // 添加事件
+            \FC\Event::trigger('Route', self::$route);
+        }      
         if (array_key_exists(self::$route, $pz)) {
             if ($reback = self::funcHandle($pz[self::$route])) {
                 self::reback($reback);
