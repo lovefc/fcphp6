@@ -9,7 +9,7 @@ use FC\File;
  * @Author: lovefc
  * @Date: 2019-10-03 00:24:20
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-03 15:02:26
+ * @Last Modified time: 2019-10-06 10:37:56
  */
 
 class Files
@@ -36,8 +36,8 @@ class Files
     public function connect($Path = '', $IsMd5 = false, $Ext = '.cache', $Time = 60)
     {
         $this->Path = $Path;
-        if (!is_dir($path)) {
-            File::create($path);
+        if (!is_dir($Path)) {
+            File::create($Path);
         }
         $this->IsMd5 = $IsMd5;
         $this->Ext = $Ext;
@@ -55,7 +55,7 @@ class Files
         if (true == $this->IsMd5) {
             $key = md5($key);
         }
-        $path = $this->obj().'/'.$key.$this->Ext;
+        $path = $this->Path.'/'.$key.$this->Ext;
         if (is_file($path)) {
             require $path;
         }
@@ -109,7 +109,7 @@ class Files
         if (true == $this->IsMd5) {
             $key = md5($key);
         }
-        $path = $this->obj().'/'.$key.$this->Ext;
+        $path = $this->Path.'/'.$key.$this->Ext;
         if (is_file($path) && (time() - filemtime($path)) <= $this->Time) {
             return true;
         } else {
@@ -126,8 +126,8 @@ class Files
         if (true == $this->IsMd5) {
             $key = md5($key);
         }
-        $path = $this->obj().'/'.$key.$this->Ext;
-        $this->create($path, true);
+        $path = $this->Path.'/'.$key.$this->Ext;
+        File::create($path, true);
         if (file_put_contents($path, $value)) {
             return true;
         } else {
@@ -144,7 +144,7 @@ class Files
         if (true == $this->IsMd5) {
             $key = md5($key);
         }
-        $path = $this->obj().'/'.$key.$this->Ext;
+        $path = $this->Path.'/'.$key.$this->Ext;
         if (is_file($path)) {
             return file_get_contents($path);
         } else {
@@ -161,7 +161,7 @@ class Files
         if (true == $this->IsMd5) {
             $key = md5($key);
         }
-        $path = $this->obj().'/'.$key.$this->Ext;
+        $path = $this->Path.'/'.$key.$this->Ext;
         if (is_file($path)) {
             unlink($path);
 

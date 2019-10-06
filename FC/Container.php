@@ -7,12 +7,12 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2019-09-06 08:54:09 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-17 15:56:15
+ * @Last Modified time: 2019-10-05 23:22:21
  */
 
 class Container
 {
-    private $s = array();
+    private static $s = array();
 
     /**
      * 创建值
@@ -21,9 +21,9 @@ class Container
      * @param [type] $c
      * @return void
      */
-    public function set($k, $c)
+    public static function set($k, $c)
     {
-        $this->s[$k] = $c;
+        self::$s[$k] = $c;
     }
 
     /**
@@ -32,10 +32,9 @@ class Container
      * @param [type] $k
      * @return void
      */ 
-    public function __get($k)
+    public static function get($k)
     {
-        $obj =  $this->build($this->s[$k]);
-        $this->$k = $obj;
+        $obj =  self::build(self::$s[$k]);
         return $obj;
     }
 
@@ -45,7 +44,7 @@ class Container
      * @param string $className
      * @return object
      */
-    public function build($className)
+    public static function build($className)
     {
         // 如果是匿名函数（Anonymous functions），也叫闭包函数（closures）
         if ($className instanceof Closure) {
@@ -68,7 +67,7 @@ class Container
         // 取构造函数参数,通过 ReflectionParameter 数组返回参数列表
         $parameters = $constructor->getParameters();
         // 递归解析构造函数的参数
-        $dependencies = $this->getDependencies($parameters);
+        $dependencies = self::getDependencies($parameters);
         // 创建一个类的新实例，给出的参数将传递到类的构造函数。
         return $reflector->newInstanceArgs($dependencies);
     }
@@ -80,17 +79,17 @@ class Container
      * @return array
      * @throws Exception
      */
-    public function getDependencies($parameters)
+    public static function getDependencies($parameters)
     {
         $dependencies = [];
         foreach ($parameters as $parameter) {
             $dependency = $parameter->getClass();
             if (is_null($dependency)) {
                 // 是变量,有默认值则设置默认值
-                $dependencies[] = $this->resolveNonClass($parameter);
+                $dependencies[] = self::resolveNonClass($parameter);
             } else {
                 // 是一个类，递归解析
-                $dependencies[] = $this->build($dependency->name);
+                $dependencies[] = self::build($dependency->name);
             }
         }
         return $dependencies;
@@ -103,7 +102,7 @@ class Container
      * @return mixed
      * @throws Exception
      */
-    public function resolveNonClass($parameter)
+    public static function resolveNonClass($parameter)
     {
         // 有默认值则返回默认值
         if ($parameter->isDefaultValueAvailable()) {

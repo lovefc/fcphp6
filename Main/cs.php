@@ -13,6 +13,8 @@ class cs
         $this->CAPTCHA->width = 300;
         $this->CAPTCHA->height = 100;
         $this->SESSION->set('code', $code);
+        $a = $this->CACHE->setMode('file')->set('a',$code);
+        die();
         $this->CAPTCHA->doImg($code);
         /*
         $this->SESSION->set('aaa',222);
@@ -35,6 +37,10 @@ class cs
 
     public function index2()
     {
-        echo $this->SESSION->get('code');
+        //echo $this->SESSION->get('code');
+        $a = $this->CACHE->obj()->get('a');
+        echo $a;
+        //print_r($a);
+        
     }
 }

@@ -4,7 +4,7 @@
 require dirname(__DIR__) . '/FC/Main.php';
 
 // 关闭报错
-// define('DEBUG', false);
+define('DEBUG', true);
 
 try {
     $obj = FC\Obj('FC\Glue\Route');

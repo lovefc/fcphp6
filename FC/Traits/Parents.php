@@ -99,8 +99,10 @@ trait Parents
     }
 
     // 魔术方法，用来创建方法
+	/*
     public function __call($method, $args)
     {
+		echo 111;
         $perfix = substr($method, 0, 3);
         $property = substr($method, 3);
         if (empty($perfix) || empty($property)) {
@@ -124,6 +126,7 @@ trait Parents
         }
         return $this;
     }
+	*/
 
     //获取配置，并关联
     final public static function P_GetConfig($file, $file2)

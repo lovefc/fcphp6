@@ -2,13 +2,15 @@
 
 namespace FC\Cache;
 
+use FC\Container;
+
 /*
  * 数据缓存类
  * memcache or redis or file
  * @Author: lovefc
  * @Date: 2019-10-03 00:24:47
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-03 00:35:23
+ * @Last Modified time: 2019-10-06 16:22:01
  */
 
 class Cache
@@ -30,20 +32,24 @@ class Cache
     // 类型
     public $ConfigType;
 
-    //魔术方法，用来创建方法
+
+    /**
+     * 魔术方法，用来创建方法
+     *
+     * @param [type] $method
+     * @param [type] $args
+     * @return void
+     */
+    
     public function __call($method, $args)
     {
-        $perfix = substr($method, 0, 3);
-        $property = substr($method, 3);
-        if (empty($perfix) || empty($property)) {
-            return $this;
+        if (('setMode' == $method) && isset($args[0])) {
+            $this->ConfigType  =  $this->Mode = $args[0];
+            $obj = $this->obj();
+            return $obj;
         }
-        if ('set' == $perfix) {
-            $this->$property = $args[0];
-        }
-
-        return $this;
     }
+    
 
     /*
      * 判断缓存方式
@@ -103,7 +109,6 @@ class Cache
             $obj = new Redis();
         }
         $obj->connect($this->Path, $this->Port) or $this->error('Could not connect as redis');
-
         return $obj;
     }
 
