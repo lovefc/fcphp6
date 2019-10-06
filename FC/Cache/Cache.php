@@ -10,7 +10,7 @@ use FC\Container;
  * @Author: lovefc
  * @Date: 2019-10-03 00:24:47
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-06 16:22:01
+ * @Last Modified time: 2019-10-06 16:40:06
  */
 
 class Cache
@@ -24,11 +24,11 @@ class Cache
     // 类的接口
     public $Obj = array(); 
     // 缓存文件的时候,保存的文件名是否md5加密
-    public $IsMd5 = false;
+    public $IsMd5 = true;
     // 缓存的文件后缀
     public $Ext = '.cache';
     // 文件缓存过期时间
-    public $Time;
+    public $Time = '60';
     // 类型
     public $ConfigType;
 
