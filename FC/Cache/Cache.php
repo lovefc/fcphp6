@@ -89,7 +89,7 @@ class Cache
         if (class_exists('Memcache', false)) {
             $obj = new \FC\Cache\Memcache();
         } else {
-            $obj = new Memcached();
+            $obj = new \Memcached();
         }
         $obj->connect($this->Path, $this->Port) or $this->error('Could not connect as memcache');
 
@@ -106,7 +106,7 @@ class Cache
         if (class_exists('Redis', false)) {
             $obj = new \FC\Cache\Redis();
         } else {
-            $obj = new Redis();
+            $obj = new \Redis();
         }
         $obj->connect($this->Path, $this->Port) or $this->error('Could not connect as redis');
         return $obj;
