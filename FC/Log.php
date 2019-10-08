@@ -35,7 +35,7 @@ class Log
         // 日志记录路径
         self::$LogDir = defined('LOG_DIR') ? LOG_DIR : PATH['NOW'] . '/Log';
         $type = $lasterror['type'];
-        if (!\FC\InArray($type, self::$Level)) {
+        if (!in_array($type, self::$Level)) {
             $lasterror = '';
         }
         if ($lasterror) {
@@ -143,7 +143,7 @@ class Log
             $cli = isset($_SERVER['argv'][0]) ? implode(' ', $_SERVER['argv']) : null;
             $str .= PHP_EOL . 'pattern：cli' . PHP_EOL . 'cli：' . $cli . PHP_EOL;
         } else {
-            $str .= PHP_EOL . 'url：' . NOW_URL . PHP_EOL . 'ip：' . Help::GetIP() . PHP_EOL . 'os：' . Help::GetOS() . PHP_EOL;
+            $str .= PHP_EOL . 'url：' . NOW_URL . PHP_EOL . 'ip：' . getIP() . PHP_EOL . 'os：' . getOS() . PHP_EOL;
         }
 
         // 检测目录，不存在或者没有权限就赋予一下

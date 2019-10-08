@@ -31,7 +31,7 @@ trait Parts
     {
         if (is_array($this->P_Config[$name]) && count($this->P_Config[$name]) > 0) {
             $method = (bool) isset($this->P_Config[$name][1]) ? $this->P_Config[$name][1] : false;
-            $obj = \FC\Obj($this->P_Config[$name][0]);
+            $obj = \FC\obj($this->P_Config[$name][0]);
             if ($method) {
                 try {
                     return $obj->$method();
@@ -43,7 +43,7 @@ trait Parts
             return $obj;
         } else {
             // 实例化
-            return \FC\Obj($this->P_Config[$name]);
+            return \FC\obj($this->P_Config[$name]);
         }
     }
 }

@@ -18,7 +18,7 @@ namespace FC;
  * @param string $mode
  * @return void
  */
-function Obj($class, $mode = 'cache')
+function obj($class, $mode = 'cache')
 {
     if (!$class) {
         return false;
@@ -52,32 +52,12 @@ function Obj($class, $mode = 'cache')
  * @param boolean $status 翻转数组，查找键值
  * @return void
  */
-function InArray($item, $array, $status = true)
+function inArray($item, $array, $status = true)
 {
     if ($status === true) {
         $flipArray = array_flip($array);
     }
     return isset($flipArray[$item]);
-}
-
-
-/**
- * 获取数组键名
- * 
- * @param $config 数组
- * @param $array 键名，多个
- * @return array
- */
-function ImpArray($config, $array)
-{
-    if (!is_array($config)) return false;
-    if (is_array($array) && count($array) > 0) {
-        foreach ($array as $value) {
-            $config = isset($config[$value]) ? $config[$value] : null;
-        }
-        return $config;
-    }
-    return $config;
 }
 
 /**
@@ -88,7 +68,7 @@ function ImpArray($config, $array)
  * @param $var 一个数组，如果存在的话，会把第一个参数当做键名检查
  * @return void
  */
-function Input($input, $var = null)
+function input($input, $var = null)
 {
     if (is_array($var)) {
         $inputs = isset($var[$input]) ? addslashes($var[$input]) : ImpArray($var, explode('::', $input));;
@@ -113,11 +93,10 @@ function Input($input, $var = null)
  * @param bool $case 是否检测大小写
  * @return voidtrue
  */
-function GET($key, $case = true)
+function get($key, $case = true)
 {
     if ($case === false) {
         $key = strtolower($key);
-        // $_GET[]
     }
     return Input($key, $_GET);
 }
@@ -128,11 +107,189 @@ function GET($key, $case = true)
  * @param [type] $key
  * @return void
  */
-function POST($key)
+function post($key)
 {
     return Input($key, $_POST);
 }
 
+
+/**
+ * 设置可跨域访问的域名
+ * 
+ * @param $allow_origin  允许的域名, 为false表示所有域名都可以访问，可以是一个包含域名列表的数组
+ * @param $method  请求方式，多个用，号分割(POST, GET, OPTIONS, PUT, DELETE)
+ * @param $credentials 支持跨域发送cookies
+ * @return void
+ */
+function setOrigin($allow_origin = false, $method = 'GET', $credentials = false)
+{
+    $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
+    $allow_origin = (empty($allow_origin) || $allow_origin == '*') ? '*' : (array) $allow_origin;
+    if ($allow_origin == '*') {
+        if ($credentials === true) {
+            header("Access-Control-Allow-Credentials: true");
+        }
+        header('Access-Control-Allow-Origin:*');
+        header('Access-Control-Allow-Methods:' . $method);
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');
+    } elseif (in_array($origin, $allow_origin)) {
+        if ($credentials === true) {
+            header("Access-Control-Allow-Credentials: true");
+        }
+        header('Access-Control-Allow-Origin:' . $origin);
+        header('Access-Control-Allow-Methods:' . $method);
+        header('Access-Control-Allow-Headers:x-requested-with,content-type');
+    } else {
+        die('No access allowed'); //不允许访问
+    }
+}
+
+/**
+ * 获取当前的url
+ * 获取 $_SERVER['REQUEST_URI'] 值的通用解决方案
+ * 因为$_SERVER["REQUEST_URI"]这个值只有在apache下才会起作用
+ * 
+ * @return string
+ */
+function requestUri()
+{
+    $scheme = $_SERVER['REQUEST_SCHEME'] ?? '';
+    $host = $_SERVER['HTTP_HOST'] ?? '';
+    $purl = $scheme . '://' . $host;
+    if (isset($_SERVER['REQUEST_URI'])) {
+        $uri = $_SERVER['REQUEST_URI'];
+        if (!strstr($uri, 'http://') || !strstr($uri, 'http://')) {
+            $uri = $purl . $_SERVER["REQUEST_URI"];
+        }
+    } else {
+        if (isset($_SERVER['argv'])) {
+            $uri = $purl . $_SERVER['PHP_SELF'] . '?' . $_SERVER['argv'][0];
+        } else {
+            $uri = $purl . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'];
+        }
+    }
+    return $uri;
+}
+
+/**
+ * 获取客户端ip
+ *
+ * @return string
+ */
+function getIP()
+{
+    if (isset($_SERVER["HTTP_CLIENT_IP"]) && strcasecmp($_SERVER["HTTP_CLIENT_IP"], "unknown")) {
+        $ip = $_SERVER["HTTP_CLIENT_IP"];
+    } else {
+        if (isset($_SERVER["HTTP_X_FORWARDED_FOR"]) && strcasecmp($_SERVER["HTTP_X_FORWARDED_FOR"], "unknown")) {
+            $ip = $_SERVER["HTTP_X_FORWARDED_FOR"];
+        } else {
+            if (isset($_SERVER["REMOTE_ADDR"]) && strcasecmp($_SERVER["REMOTE_ADDR"], "unknown")) {
+                $ip = $_SERVER["REMOTE_ADDR"];
+            } else {
+                if (
+                    isset($_SERVER['REMOTE_ADDR']) && $_SERVER['REMOTE_ADDR'] && strcasecmp(
+                        $_SERVER['REMOTE_ADDR'],
+                        "unknown"
+                    )
+                ) {
+                    $ip = $_SERVER['REMOTE_ADDR'];
+                } else {
+                    $ip = "unknown";
+                }
+            }
+        }
+    }
+    return $ip;
+}
+
+/**
+ * 获取客户端类型(简单检测)
+ *
+ * @return string
+ */
+function getOS()
+{
+    $agent = $_SERVER['HTTP_USER_AGENT'] ?? '';
+    $os = false;
+    if (strpos($agent, 'Windows')) {
+        $os = 'Windows';
+    } elseif (strpos($agent, "Linux")) {
+        $os = 'Linux';
+    } elseif (strpos($agent, "Android")) {
+        $os = 'Android';
+    } elseif (strpos($agent, "iPhone")) {
+        $os = 'iPhone';
+    } elseif (strpos($agent, "iPad")) {
+        $os = 'iPad';
+    } elseif (strpos($agent, "Nokia")) {
+        $rel = 'Nokia';
+    } else {
+        $os = 'Unknown';
+    }
+    return $os;
+}
+
+/**
+ * UUID
+ * 
+ * @return string
+ */
+function uuid($num = 36): string
+{
+    $str = '%04x%04x-%04x-%03x4-%04x-%04x%04x%04x';
+    if ($num == 32) {
+        $str = '%04x%04x%04x%03x4%04x%04x%04x%04x';
+    }
+    return sprintf(
+        $str,
+        mt_rand(0, 65535),
+        mt_rand(0, 65535),
+        mt_rand(0, 65535),
+        mt_rand(0, 4095),
+        bindec(substr_replace(sprintf('%016b', mt_rand(0, 65535)), '01', 6, 2)),
+        mt_rand(0, 65535),
+        mt_rand(0, 65535),
+        mt_rand(0, 65535)
+    );
+}
+
+
+/**
+ * 将指定字符串字符转换成大写
+ *
+ * @param  string  $value
+ * @return string
+ */
+function upper(string $value): string
+{
+    return mb_strtoupper($value, 'UTF-8');
+}
+
+/**
+ * 将给定的字符串所有字母转换成小写
+ *
+ * @param  string  $value
+ * @return string
+ */
+function lower(string $value): string
+{
+    return mb_strtolower($value, 'UTF-8');
+}
+
+/**
+ * 页面跳转
+ * 
+ * @return void
+ */
+function jump($url)
+{
+    if (!$url) {
+        return false;
+    }
+    header('Location: ' . $url);
+    exit();
+}
 
 /**
  * 设定http的状态
@@ -140,7 +297,7 @@ function POST($key)
  * @param $num 状态码
  * @return void
  */
-function Head($status = 200)
+function head($status = 200)
 {
     $http = array(
         100 => 'HTTP/1.1 100 Continue',
@@ -195,76 +352,4 @@ function Head($status = 200)
     );
     $hstatus = isset($http[$status]) ? $http[$status] : null;
     !empty($hstatus) && header($hstatus);
-}
-
-
-/**
- * 设置可跨域访问的域名
- * 
- * @param $allow_origin  允许的域名, 为false表示所有域名都可以访问，可以是一个包含域名列表的数组
- * @param $method  请求方式，多个用，号分割(POST, GET, OPTIONS, PUT, DELETE)
- * @param $credentials 支持跨域发送cookies
- * @return void
- */
-function SetOrigin($allow_origin = false, $method = 'GET', $credentials = false)
-{
-    $origin = isset($_SERVER['HTTP_ORIGIN']) ? $_SERVER['HTTP_ORIGIN'] : '';
-    $allow_origin = (empty($allow_origin) || $allow_origin == '*') ? '*' : (array) $allow_origin;
-    if ($allow_origin == '*') {
-        if ($credentials === true) {
-            header("Access-Control-Allow-Credentials: true");
-        }
-        header('Access-Control-Allow-Origin:*');
-        header('Access-Control-Allow-Methods:' . $method);
-        header('Access-Control-Allow-Headers:x-requested-with,content-type');
-    } elseif (in_array($origin, $allow_origin)) {
-        if ($credentials === true) {
-            header("Access-Control-Allow-Credentials: true");
-        }
-        header('Access-Control-Allow-Origin:' . $origin);
-        header('Access-Control-Allow-Methods:' . $method);
-        header('Access-Control-Allow-Headers:x-requested-with,content-type');
-    } else {
-        die('No access allowed'); //不允许访问
-    }
-}
-
-/**
- * 页面跳转
- * 
- * @return void
- */
-function Jump($url)
-{
-    if (!$url) {
-        return false;
-    }
-    header('Location: ' . $url);
-    exit();
-}
-
-/**
- * 获取当前的url
- * 获取 $_SERVER['REQUEST_URI'] 值的通用解决方案
- * 因为$_SERVER["REQUEST_URI"]这个值只有在apache下才会起作用
- * @return string
- */
-function RequestUri()
-{
-    $scheme = $_SERVER['REQUEST_SCHEME'] ?? '';
-    $host = $_SERVER['HTTP_HOST'] ?? '';
-    $purl = $scheme .'://'. $host;
-    if (isset($_SERVER['REQUEST_URI'])) {
-        $uri = $_SERVER['REQUEST_URI'];
-        if (!strstr($uri, 'http://') || !strstr($uri, 'http://')) {
-            $uri = $purl. $_SERVER["REQUEST_URI"];
-        }
-    } else {
-        if (isset($_SERVER['argv'])) {
-            $uri = $purl . $_SERVER['PHP_SELF'] . '?' . $_SERVER['argv'][0];
-        } else {
-            $uri = $purl . $_SERVER['PHP_SELF'] . '?' . $_SERVER['QUERY_STRING'];
-        }
-    }
-    return $uri;
 }

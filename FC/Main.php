@@ -140,7 +140,7 @@ FC\Load\LoaderClass::AddPsr4('FC', __DIR__);
 FC\Load\LoaderClass::register();
 
 // 触发事件设置
-\FC\Obj('FC\Glue\Event')->run();
+\FC\obj('FC\Glue\Event')->run();
 
 // 添加事件
 FC\Event::trigger('OnLoad');
@@ -149,10 +149,10 @@ FC\Event::trigger('OnLoad');
 register_shutdown_function(['\FC\Log', 'Error']);
 
 // 获取当前地址，兼容方案
-define('NOW_URL', FC\RequestUri());
+define('NOW_URL', FC\requestUri());
 
 // 安全过滤
-\FC\Obj('FC\Glue\SafeMode')->run();
+\FC\obj('FC\Glue\SafeMode')->run();
 
 // 插件目录设置
-\FC\Obj('FC\Glue\Load')->ExtendConfig(PATH['FC_PLUG'] . '/config.php');
+\FC\obj('FC\Glue\Load')->ExtendConfig(PATH['FC_PLUG'] . '/config.php');
