@@ -1,6 +1,8 @@
 <?php
 
-namespace fcphp\extend\db;
+namespace FC\Db;
+
+use FC\Db\Abstract\PdoBase;
 
 /**
  * AUTHOR:lovefc

@@ -1,6 +1,8 @@
 <?php
 
-namespace fcphp\extend\db;
+namespace FC\Db\Abstract;
+
+use FC\Db\Query\SqlJoin;
 
 /**
  * AUTHOR:lovefc

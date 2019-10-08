@@ -2,8 +2,6 @@
 
 namespace FC\Cache;
 
-use FC\Container;
-
 /*
  * 数据缓存类
  * memcache or redis or file

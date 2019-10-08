@@ -1,6 +1,6 @@
 <?php
 
-namespace fcphp\extend\db;
+namespace FC\Db\Query;
 
 /**
  * 拼接sql类
