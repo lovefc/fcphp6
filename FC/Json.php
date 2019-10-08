@@ -31,9 +31,9 @@ class Json
      * @param string $error 错误代码
      * @param string $msg 提示消息
      */
-    public static function error($error, $msg)
+    public static function error($code, $msg)
     {
-        self::apiJsonResponse('', $error, $msg);
+        self::apiJsonResponse('', $code, $msg);
     }
 
     /**
@@ -45,10 +45,10 @@ class Json
      * @param   string $msg
      * @return  void
      */
-    private static function apiJsonResponse($data = '', $error = '200', $msg = '', $append = array())
+    private static function apiJsonResponse($data = '', $code = '200', $msg = '', $append = array())
     {
 
-        $res = array('error' => $error, 'msg' => $msg, 'data' => $data);
+        $res = array('code' => $code, 'msg' => $msg, 'data' => $data);
         if (!empty($append)) {
             foreach ($append as $key => $val) {
                 $res[$key] = $val;
@@ -58,6 +58,8 @@ class Json
         //Jquery + Zeptojs jsonp
         $back  = isset($_GET['jsoncallback']) ? strip_tags($_GET['jsoncallback']) : false;
         $back2 = isset($_GET['callback']) ? strip_tags($_GET['callback']) : false;
+        // 定义一下head头
+        head('json');
         if ($back) {
             $val = $back . '(' . $val . ')';
             exit($val);
