@@ -1,6 +1,7 @@
 <?php
 
 namespace Main;
+use FC\Json;
 
 class cs
 {
@@ -14,6 +15,7 @@ class cs
         $this->CAPTCHA->height = 100;
         $this->SESSION->set('code', $code);
         $a = $this->FCACHE->set('a', $code);
+        Json::result('sss','成功');
         die();
         $this->CAPTCHA->doImg($code);
         /*

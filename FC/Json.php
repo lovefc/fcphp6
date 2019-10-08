@@ -8,13 +8,13 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2019-09-17 10:25:58 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-08 10:18:40
+ * @Last Modified time: 2019-10-08 10:34:15
  */
 
 class Json
 {
     /**
-     * API接口：生成JSON格式的正确消息
+     * 生成JSON格式的正确消息
      * 
      * @param string $data 数据
      * @param string $msg 提示消息
@@ -26,7 +26,7 @@ class Json
     }
 
     /**
-     * API接口：创建一个JSON格式的错误信息
+     * 生成JSON格式的错误信息
      * 
      * @param string $error 错误代码
      * @param string $msg 提示消息

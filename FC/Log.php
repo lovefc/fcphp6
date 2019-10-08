@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2019-09-18 08:18:11 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-26 16:09:34
+ * @Last Modified time: 2019-10-08 10:57:58
  */
 
 class Log
@@ -39,8 +39,8 @@ class Log
             $lasterror = '';
         }
         if ($lasterror) {
-            // 添加监听错误的事件
-            \FC\Event::trigger('ListError', $lasterror);
+            // 添加监听错误的事件l
+            \FC\Event::trigger('UnLoad', $lasterror);
         }
         if (IS_AJAX === true || IS_CLI === true) {
             if ($lasterror) {
