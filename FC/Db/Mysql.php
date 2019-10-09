@@ -10,7 +10,7 @@ use FC\Db\Abstract\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 09:34:46
+ * @Last Modified time: 2019-10-09 10:57:42
  */
 
 class MySql extends PdoBase
@@ -18,6 +18,7 @@ class MySql extends PdoBase
 
     /**
      * 创建新用户,创建的用户拥有所有权限
+     * 
      * @param $user 用户名
      * @param $pass 用户密码
      * @param $host 访问限制
@@ -25,6 +26,7 @@ class MySql extends PdoBase
      * Host=192.168.1.1。这里的意思就是说root用户只能通过192.168.1.1的客户端去访问。
      * * %是个通配符，如果Host=192.168.1.%，那么就表示只要是IP地址前缀为192.168.1.的客户端都可以连接。
      * 如果Host=%，表示所有IP都有连接权限。
+     * @return bool
      */
     public function newUser($user, $pass, $host = '127.0.0.1')
     {
@@ -49,7 +51,12 @@ class MySql extends PdoBase
         }
     }
 
-    //获取数据库表名
+    /**
+     * 获取数据库表名
+     *
+     * @param  string $table
+     * @return string
+     */
     public function getTable($table = null)
     {
         if (!$table) {
@@ -58,7 +65,12 @@ class MySql extends PdoBase
         return $this->Prefix . $table;
     }
 
-    //缓慢查询日志
+    /**
+     * 缓慢查询日志
+     *
+     * @param [type] $db
+     * @return void
+     */
     public function slowlog($db)
     {
         //5.1.21版本以后才支持毫秒级的慢查询日志
@@ -79,8 +91,12 @@ class MySql extends PdoBase
         }
     }
 
-
-    //获取缓慢查询日志,$num 为日志数量
+    /**
+     * 获取缓慢查询日志,
+     *
+     * @param integer $num 日志数量
+     * @return array
+     */
     public function getSlowLog($num = 1)
     {
         $num = (int)$num;
@@ -97,7 +113,13 @@ class MySql extends PdoBase
         return false;
     }
 
-    //复制一张表
+    /**
+     * 复制一张表
+     *
+     * @param [type] $newtable
+     * @param [type] $dbname
+     * @return bool
+     */
     public function copyTable($newtable = null, $dbname = null)
     {
         $dbname = empty($dbname) ? $this->DbName : $dbname;
@@ -113,7 +135,12 @@ class MySql extends PdoBase
         }
     }
 
-    //清空当前数据库表
+    /**
+     * 清空当前数据库表
+     *
+     * @param [type] $table
+     * @return bool
+     */
     public function cleanTable($table = null)
     {
         $table = empty($table) ? $this->Table : $table;
@@ -128,7 +155,13 @@ class MySql extends PdoBase
         }
     }
 
-    //修改数据库表名称
+    /**
+     *修改数据库表名称
+     *
+     * @param [type] $newtable 新的表名
+     * @param [type] $table 旧的表名
+     * @return bool
+     */
     public function newTableName($newtable = null, $table = null)
     {
         $table = empty($table) ? $this->Table : $table;
@@ -143,7 +176,11 @@ class MySql extends PdoBase
         }
     }
 
-    //获取所有的数据库名
+    /**
+     * 获取所有的数据库名
+     *
+     * @return array
+     */
     public function getAllDBName()
     {
         $re = $this->sql("SELECT SCHEMA_NAME FROM information_schema.SCHEMATA")->fetchall();
@@ -153,7 +190,13 @@ class MySql extends PdoBase
         return false;
     }
 
-    //获取所有的字段名
+    /**
+     * 获取所有的字段名
+     *
+     * @param [type] $table
+     * @param [type] $dbname
+     * @return array
+     */
     public function getAllField($table = null, $dbname = null)
     {
         $dbname = empty($dbname) ? $this->DbName : $dbname;
@@ -165,7 +208,13 @@ class MySql extends PdoBase
         return false;
     }
 
-    //获取数据库表的大小,参数都为空，获取所有的表大小
+    /**
+     * 获取数据库表的大小,参数都为空，获取所有的表大小
+     *
+     * @param [type] $table 表名
+     * @param [type] $dbname 数据库名
+     * @return array
+     */
     public function getTableSize($table = null, $dbname = null)
     {
         $dbname = empty($dbname) ? $this->DbName : $dbname;
@@ -182,7 +231,12 @@ class MySql extends PdoBase
         return 0;
     }
 
-    //获取数据库占用大小
+    /**
+     * 获取数据库占用大小
+     *
+     * @param [type] $dbname
+     * @return array
+     */
     public function getDBSize($dbname = null)
     {
         $dbname = empty($dbname) ? $this->DbName : $dbname;
@@ -192,8 +246,13 @@ class MySql extends PdoBase
         }
         return 0;
     }
-
-    //获取所有的表名
+    
+    /**
+     * 获取所有的表名
+     *
+     * @param [type] $dbname
+     * @return void
+     */
     public function getAllTable($dbname = null)
     {
         $dbname = empty($dbname) ? $this->DbName : $dbname;
@@ -204,7 +263,11 @@ class MySql extends PdoBase
         return false;
     }
 
-    //获取mysq版本号
+    /**
+     * 获取mysq版本号
+     *
+     * @return string
+     */
     public function verSion()
     {
         $dbh = $this->link();
@@ -216,6 +279,10 @@ class MySql extends PdoBase
 
     /**
      * 判断数据库表是否存在于数据库中
+     *
+     * @param [type] $table
+     * @param [type] $dbname
+     * @return bool
      */
     final public function hasTable($table = null, $dbname = null)
     {
@@ -234,6 +301,8 @@ class MySql extends PdoBase
 
     /**
      * 开始连接数据库
+     * 
+     * @return object
      */
     final public function link()
     {

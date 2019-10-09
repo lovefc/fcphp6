@@ -10,7 +10,7 @@ use FC\Db\Query\SqlJoin;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 09:34:41
+ * @Last Modified time: 2019-10-09 10:57:21
  */
 
 abstract class PdoBase
@@ -261,12 +261,12 @@ abstract class PdoBase
      * $jx 是否用预处理
      */
 
-    final public function add($data, $ignore = false, $jx = true)
+    final public function add($data, $ignore = false, $parsing = true)
     {
         if (empty($data)) {
             return false;
         }
-        return $this->insert($data, $ignore, $jx)->excute();
+        return $this->insert($data, $ignore, $parsing)->excute();
     }
 
     /**
