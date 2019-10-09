@@ -5,11 +5,11 @@ namespace FC\Glue;
 use FC\Load\LoaderClass;
 
 /*
-* 处理公共中的加载配置
+ * 处理公共中的加载配置
  * @Author: lovefc 
  * @Date: 2018/7/12 17:03:53 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-20 14:05:44
+ * @Last Modified time: 2019-10-09 15:40:46
  */
 
 class Load

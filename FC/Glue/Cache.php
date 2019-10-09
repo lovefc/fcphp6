@@ -5,10 +5,11 @@ namespace FC\Glue;
 use FC\Cache\Cache as Caches;
 
 /*
+ * 缓存类库
  * @Author: lovefc 
  * @Date: 2019-09-24 10:58:20
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-06 16:38:05
+ * @Last Modified time: 2019-10-09 15:41:20
  */
 
 class Cache extends Caches

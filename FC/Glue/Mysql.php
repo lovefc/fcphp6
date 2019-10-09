@@ -2,30 +2,25 @@
 
 namespace FC\Glue;
 
-use FC\Http\Session as Sess;
+use FC\Db\Mysql as MY;
 
 /*
- * SESSION
+ * mysql数据库
  * @Author: lovefc 
- * @Date: 2019-09-24 10:58:20
+ * @Date: 2019-10-09 15:38:02 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 15:39:55
+ * @Last Modified time: 2019-10-09 15:41:31
  */
 
-class Session extends Sess
+class Mysql extends MY
 {
-    // 继承配置
-    use \FC\traits\Parents;
-    
-    // 初始设置
+    use \fcphp\traits\Parents;
+
+    // 初始化操作
     public function _init()
     {
         // 默认配置，此选项用于多配置选择
         $this->ReadConf('default');
-    }
-
-    public function _start(){
-        $this->init();
     }
 
     // 错误消息

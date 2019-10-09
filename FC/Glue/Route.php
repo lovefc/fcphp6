@@ -5,10 +5,11 @@ namespace FC\Glue;
 use FC\Route as LuYou;
 
 /*
+ * 路由
  * @Author: lovefc 
  * @Date: 2019-09-16 15:05:57 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-24 10:54:04
+ * @Last Modified time: 2019-10-09 15:40:20
  */
 
 class Route extends LuYou
