@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2019-09-18 08:18:11 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-08 10:57:58
+ * @Last Modified time: 2019-10-09 16:09:34
  */
 
 class Log
@@ -32,8 +32,6 @@ class Log
     public static function Error()
     {
         $lasterror = error_get_last();
-        // 日志记录路径
-        self::$LogDir = defined('LOG_DIR') ? LOG_DIR : PATH['NOW'] . '/Log';
         $type = $lasterror['type'];
         if (!in_array($type, self::$Level)) {
             $lasterror = '';
@@ -127,7 +125,8 @@ class Log
         // 清空文件信息
         clearstatcache();
         $str = PHP_EOL . "time:" . date("Y-m-d H:i:s");
-
+        // 日志记录路径
+        self::$LogDir = defined('LOG_DIR') ? LOG_DIR : PATH['NOW'] . '/Log';
         // 循环取数据
         if (is_array($lasterror)) {
             foreach ($lasterror as $key => $value) {

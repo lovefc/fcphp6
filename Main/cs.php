@@ -15,9 +15,13 @@ class cs
         $this->CAPTCHA->height = 100;
         $this->SESSION->set('code', $code);
         $a = $this->FCACHE->set('a', $code);
+        $a = $this->MYSQL->table('admins')->limit(1)->fetch();
+        print_r($a);
+        /*
         Json::result('sss','成功');
         die();
         $this->CAPTCHA->doImg($code);
+        */
         /*
  		        $this->SESSION->set('aaa',222);
  		        $this->COOKIES->set('aaa',333);

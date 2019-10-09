@@ -2,7 +2,7 @@
 
 namespace FC\Db;
 
-use FC\Db\Abstract\PdoBase;
+use FC\Db\Base\PdoBase;
 
 /*
  * SQLITE类
@@ -10,7 +10,7 @@ use FC\Db\Abstract\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 10:28:52
+ * @Last Modified time: 2019-10-09 16:00:17
  */
 
 class Sqlite extends PdoBase {
@@ -71,7 +71,8 @@ class Sqlite extends PdoBase {
                 \PDO::ATTR_PERSISTENT => $this->Attr,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
             ));
-            //$db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false); //关闭预处理
+            // 设置禁止本地模拟prepare
+            $db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
             $this->ConfigName = md5($dbh);
             $this->DbObj[$this->ConfigName] = $db;
         } catch (\PDOException $e) {
@@ -81,7 +82,7 @@ class Sqlite extends PdoBase {
                 'message' => $e->getmessage(),
                 'file' => $e->getfile()
             );
-            WriteLog($error);
+            \FC\Log::WriteLog($error);
             $this->error($error['message']);
         }
         return $this->DbObj[$this->ConfigName];

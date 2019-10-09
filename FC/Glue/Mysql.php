@@ -9,12 +9,12 @@ use FC\Db\Mysql as MY;
  * @Author: lovefc 
  * @Date: 2019-10-09 15:38:02 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 15:41:31
+ * @Last Modified time: 2019-10-09 16:01:51
  */
 
 class Mysql extends MY
 {
-    use \fcphp\traits\Parents;
+    use \FC\Traits\Parents;
 
     // 初始化操作
     public function _init()

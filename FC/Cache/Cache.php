@@ -8,19 +8,19 @@ namespace FC\Cache;
  * @Author: lovefc
  * @Date: 2019-10-03 00:24:47
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-06 16:40:06
+ * @Last Modified time: 2019-10-09 16:27:25
  */
 
 class Cache
 {
     // 地址
-    public $Path; 
+    public $Path;
     // 端口
-    public $Port; 
+    public $Port;
     // 方式
-    public $Mode; 
+    public $Mode;
     // 类的接口
-    public $Obj = array(); 
+    public $Obj = array();
     // 缓存文件的时候,保存的文件名是否md5加密
     public $IsMd5 = true;
     // 缓存的文件后缀
@@ -38,7 +38,7 @@ class Cache
      * @param [type] $args
      * @return void
      */
-    
+
     public function __call($method, $args)
     {
         if (('setMode' == $method) && isset($args[0])) {
@@ -47,7 +47,7 @@ class Cache
             return $obj;
         }
     }
-    
+
 
     /*
      * 判断缓存方式

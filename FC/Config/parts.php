@@ -23,7 +23,7 @@ return [
     'REDIS'    => ['FC\Glue\Cache','redis'],
 
     // memcache缓存类
-    'MEMCACHE'    => ['FC\Glue\Cache','memcache'],   
+    'MEMCACHE' => ['FC\Glue\Cache','memcache'],   
 
     // 视图类
     'VIEW'     => 'FC\Glue\View',
@@ -36,4 +36,7 @@ return [
     
     // 验证码类
     'CAPTCHA'  => 'FC\Glue\Captcha',
+    
+    // Mysql
+    'MYSQL'    => 'FC\Glue\Mysql',
 ];

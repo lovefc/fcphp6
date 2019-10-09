@@ -1,6 +1,6 @@
 <?php
 
-namespace FC\Db\Abstract;
+namespace FC\Db\Base;
 
 use FC\Db\Query\SqlJoin;
 
@@ -10,7 +10,7 @@ use FC\Db\Query\SqlJoin;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 10:57:21
+ * @Last Modified time: 2019-10-09 16:10:16
  */
 
 abstract class PdoBase
@@ -91,7 +91,7 @@ abstract class PdoBase
                 'message' => $e->getmessage(),
                 'file' => $e->getfile()
             );
-            WriteLog($error);
+            \FC\Log::WriteLog($error);
             $this->error('SQL:' . $sql . '不能执行');
         }
         try {
@@ -107,7 +107,7 @@ abstract class PdoBase
                 'message' => $e->getmessage(),
                 'file' => $e->getfile()
             );
-            WriteLog($error);
+            \FC\Log::WriteLog($error);
             $this->error('预处理SQL:' . $sql . '执行失败');
         }
         return $db_preare;
@@ -359,7 +359,7 @@ abstract class PdoBase
                 'file' => $e->getfile()
             );
 
-            WriteLog($error);
+            \FC\Log::WriteLog($error);
             $this->error('SQL:' . $sql . '执行失败');
         }
     }
@@ -392,7 +392,7 @@ abstract class PdoBase
                 'message' => $e->getmessage(),
                 'file' => $e->getfile()
             );
-            WriteLog($error);
+            \FC\Log::WriteLog($error);
             $this->error('SQL:' . $sql . '执行失败');
         }
     }

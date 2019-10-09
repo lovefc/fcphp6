@@ -2,7 +2,7 @@
 
 namespace FC\Db;
 
-use FC\Db\Abstract\PdoBase;
+use FC\Db\Base\PdoBase;
 
 /*
  * MYSQL类
@@ -10,7 +10,7 @@ use FC\Db\Abstract\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 10:57:42
+ * @Last Modified time: 2019-10-09 16:00:04
  */
 
 class MySql extends PdoBase
@@ -329,7 +329,7 @@ class MySql extends PdoBase
                 'message' => $e->getmessage(),
                 'file' => $e->getfile()
             );
-            WriteLog($error);
+            \FC\Log::WriteLog($error);
             $this->error($error['message']);
         }
         return $this->DbObj[$this->ConfigName];
