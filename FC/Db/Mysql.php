@@ -4,9 +4,13 @@ namespace FC\Db;
 
 use FC\Db\Abstract\PdoBase;
 
-/**
- * AUTHOR:lovefc
- * pdo - mysql
+/*
+ * MYSQL类
+ * 
+ * @Author: lovefc 
+ * @Date: This was written in 2017
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-10-09 09:34:46
  */
 
 class MySql extends PdoBase
@@ -19,7 +23,7 @@ class MySql extends PdoBase
      * @param $host 访问限制
      * @param $Host列指定了允许用户登录所使用的IP
      * Host=192.168.1.1。这里的意思就是说root用户只能通过192.168.1.1的客户端去访问。
-     * 　　 * %是个通配符，如果Host=192.168.1.%，那么就表示只要是IP地址前缀为192.168.1.的客户端都可以连接。
+     * * %是个通配符，如果Host=192.168.1.%，那么就表示只要是IP地址前缀为192.168.1.的客户端都可以连接。
      * 如果Host=%，表示所有IP都有连接权限。
      */
     public function newUser($user, $pass, $host = '127.0.0.1')
@@ -244,7 +248,8 @@ class MySql extends PdoBase
                 \PDO::ATTR_PERSISTENT => $this->Attr,
                 \PDO::ATTR_DEFAULT_FETCH_MODE => \PDO::FETCH_ASSOC
             ));
-            //$db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false); //关闭预处理
+            //设置禁止本地模拟prepare
+            $db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
             $this->ConfigName = md5($dbh);
             $this->DbObj[$this->ConfigName] = $db;
             $this->slowlog($db); //缓慢日志查询

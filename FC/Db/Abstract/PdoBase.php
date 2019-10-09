@@ -4,9 +4,13 @@ namespace FC\Db\Abstract;
 
 use FC\Db\Query\SqlJoin;
 
-/**
- * AUTHOR:lovefc
- * pdo连接类
+/*
+ * PdoBase 父类
+ * 
+ * @Author: lovefc 
+ * @Date: This was written in 2017
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-10-09 09:34:41
  */
 
 abstract class PdoBase

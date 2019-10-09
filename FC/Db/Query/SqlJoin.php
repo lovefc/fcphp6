@@ -2,11 +2,16 @@
 
 namespace FC\Db\Query;
 
-/**
- * 拼接sql类
- * 作者:lovefc
- * 最后更新时间:2017/04/02 15:10
+/*
+ * SqlJoin类
+ * 
+ * @Author: lovefc 
+ * @Date: 2017/04/02 15:10
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-10-09 10:25:10
  */
+
+
 
 trait SqlJoin
 {
@@ -45,16 +50,10 @@ trait SqlJoin
     public $Column = '*';
 
     /**
-     * 错误
-     */
-
-    public function Error($msg)
-    {
-        die($msg);
-    }
-
-    /**
      * 数据库表名
+     *
+     * @param [type] $table 表名
+     * @return object
      */
     public function table($table)
     {
@@ -66,7 +65,10 @@ trait SqlJoin
     }
 
     /**
-     * sql
+     * SQL语句
+     *
+     * @param [type] $sql
+     * @return object
      */
     final public function sql($sql = null)
     {
@@ -79,6 +81,9 @@ trait SqlJoin
 
     /**
      * 传入预处理参数
+     *
+     * @param array $data
+     * @return object
      */
     final public function data($data = array())
     {
@@ -91,6 +96,9 @@ trait SqlJoin
 
     /**
      * 获取字段名
+     *
+     * @param [type] $column
+     * @return object
      */
     final public function getid($column = null)
     {
@@ -100,8 +108,10 @@ trait SqlJoin
 
     /**
      * 排序
-     * @param $ziduan 字段名
-     * @param $sort desc 降序 asc 升序
+     * 
+     * @param [type] $ziduan 字段名
+     * @param string $sort desc 降序 asc 升序
+     * @return object
      */
     final public function order($ziduan, $sort = 'desc')
     {
@@ -118,9 +128,11 @@ trait SqlJoin
      * JOIN
      * user ON article.uid = user.uid
      * $where 后面的条件
+     * @param $type的类型如下：
      * null（内连接）：取得两个表中存在连接匹配关系的记录。
      * left（左连接）：取得左表（table1）完全记录，即是右表（table2）并无对应匹配记录。
      * right（右连接）：与 LEFT JOIN 相反，取得右表（table2）完全记录，即是左表（table1）并无匹配对应记录。
+     * @return object
      */
     public function join($table, $where, $type = null)
     {
@@ -144,23 +156,30 @@ trait SqlJoin
     }
 
     /**
-     * LIMIT
+     * LIMIT 限定记录返回数量
+     *
+     * @param [type] $num  从那开始|记录行数
+     * @param [type] $num2 从那开始|记录行数
+     * @return object
      */
-    final public function limit($num = null, $num2 = null)
+    final public function limit($start = null, $num = null)
     {
-        if (!is_null($num)) {
-            $num = (int)$num;
-            $this->Limit = ' LIMIT ' . $num . ' ';
-            if (!is_null($num2)) {
-                $num2 = (int)$num2;
-                $this->Limit .= ',' . $num2 . ' ';
+        if (!is_null($start)) {
+            $start = (int) $start;
+            $this->Limit = ' LIMIT ' . $start. ' ';
+            if (!is_null($num)) {
+                $num = (int) $num2;
+                $this->Limit .= ',' . $num . ' ';
             }
         }
         return $this;
     }
 
     /**
-     * 判断运算符
+     * 判断sql中的运算符号
+     *
+     * @param [type] $str
+     * @return string
      */
     final public function is_operator($str)
     {
@@ -188,6 +207,9 @@ trait SqlJoin
 
     /**
      * 预处理解析where
+     *
+     * @param [type] $where
+     * @return string
      */
     final public function pre_where($where)
     {
@@ -247,10 +269,10 @@ trait SqlJoin
                             $where3[] = ' ' . $value[0] . ' ' . $key . ' ' . $value[1] . ' ? ';
                             $wdata[] = $value[2];
                             break;
-						// 新增，$where['a.title'] = array('AND','LOCATE',$s);
+                            // 新增，$where['a.title'] = array('AND','LOCATE',$s);
                         case 'LOCATE':
-                            $where3[] = " ".$value[0]." locate('".$value[2]."',".$key.")";
-                            break;						    
+                            $where3[] = " " . $value[0] . " locate('" . $value[2] . "'," . $key . ")";
+                            break;
                         default:
                             if (!isset($value[2])) {
                                 if (!$this->Where) {
@@ -283,6 +305,9 @@ trait SqlJoin
 
     /**
      * 普通处理where
+     *
+     * @param [type] $where
+     * @return string
      */
     public function pt_where($where)
     {
@@ -332,9 +357,9 @@ trait SqlJoin
                         case 'OPERATOR':
                             $where3[] = ' ' . $value[0] . ' ' . $key . ' ' . $value[1] . ' \'' . $value[2] . '\'';
                             break;
-						// 新增，$where['a.title'] = array('AND','LOCATE',$s);
+                            // 新增，$where['a.title'] = array('AND','LOCATE',$s);
                         case 'LOCATE':
-                            $where3[] = " ".$value[0]." locate('".$value[2]."',".$key.")";
+                            $where3[] = " " . $value[0] . " locate('" . $value[2] . "'," . $key . ")";
                             break;
                         default:
                             if (!isset($value[2])) {
@@ -365,7 +390,11 @@ trait SqlJoin
 
     /**
      * 解析where
-     */
+     *
+     * @param [type] $where
+     * @param [type] $jx
+     * @return string
+     */  
     public function where_jx($where, $jx)
     {
         if ($jx == true) {
@@ -378,15 +407,17 @@ trait SqlJoin
 
     /**
      * 获取where
-     * $where 条件数组
-     * $jx 解析条件 false为普通解析，true为预处理解析
+     * 
+     * @param array $where 条件数组
+     * @param bool $parsing 解析条件 false为普通解析，true为预处理解析
+     * @return object
      */
-    public function where($where = '', $jx = true)
+    public function where($where = '', $parsing = true)
     {
         if (empty($where)) {
             return $this;
         }
-        $where2 = $this->Where_jx($where, $jx);
+        $where2 = $this->Where_jx($where, $parsing);
         if (!$this->Where) {
             $this->Where = 'WHERE ';
         }
@@ -397,7 +428,9 @@ trait SqlJoin
 
     /**
      * 生成select查询语句
-     * $wy 查询前的值
+     *
+     * @param boolean $wy 查询前的值
+     * @return object
      */
     public function select($wy = false)
     {
@@ -411,7 +444,7 @@ trait SqlJoin
      * $ignore 是否忽略插入
      * $jx 是否用预处理
      */
-    public function insert($data, $ignore = false, $jx = true)
+    public function insert($data, $ignore = false, $parsing = true)
     {
         if (!is_array($data)) {
             return false;
@@ -423,7 +456,7 @@ trait SqlJoin
                 $sql2 .= ',';
             }
             $sql1 .= "$k";
-            if ($jx == true) {
+            if ($parsing == true) {
                 $value[] = $v;
                 $sql2 .= '?';
             } else {
@@ -437,7 +470,9 @@ trait SqlJoin
     }
 
     /**
-     * 删除整表
+     * 删除当前整表
+     * 
+     * @return object
      */
     public function drop()
     {
@@ -447,8 +482,9 @@ trait SqlJoin
 
     /**
      * 组合删除sql
+     * 
+     * @return object
      */
-
     public function delete()
     {
         if (!empty($this->Where)) {
@@ -462,12 +498,12 @@ trait SqlJoin
      * $where 条件数组
      * $jx 解析条件 false为普通解析，true为预处理解析
      */
-    public function update($data = '', $jx = true)
+    public function update($data = '', $parsing = true)
     {
         if (empty($data)) {
             return $this;
         }
-        if ($jx == true) {
+        if ($parsing == true) {
             return $this->pre_update($data);
         } else {
             return $this->pt_update($data);
@@ -476,7 +512,9 @@ trait SqlJoin
 
     /**
      * 组合更新sql(普通sql)
-     * $data 数组键名代表字段名，键值表示要更新的值
+     *
+     * @param array $data 数组键名代表字段名，键值表示要更新的值
+     * @return object
      */
     public function pt_update($data)
     {
@@ -503,11 +541,12 @@ trait SqlJoin
         return $this;
     }
 
-
     /**
      * 组合更新sql(预处理形式)
-     * $data 数组键名代表字段名，键值表示要更新的值
-     */
+     *
+     * @param array $data 数组键名代表字段名，键值表示要更新的值
+     * @return object
+     */    
     public function pre_update($data)
     {
         $datas = array_values($this->Data);
@@ -533,23 +572,10 @@ trait SqlJoin
     }
 
     /**
-     * 数组转换
+     * 初始化类变量
+     *
+     * @return void
      */
-    public function pdoarray($exlen, $data)
-    {
-        $array = array();
-        array_splice($data, 0, $exlen);
-        foreach ($data as $key => $d) {
-            if (!is_array($d)) {
-                $array[$key] = $d;
-            } else {
-                $array = array_merge($array, $d);
-            }
-        }
-        return $array;
-    }
-
-    //初始化
     public function uset()
     {
         $this->Joinvar = ''; //join
