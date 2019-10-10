@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 16:39:32
+ * @Last Modified time: 2019-10-10 17:31:24
  */
 class Redis
 {
@@ -131,13 +131,114 @@ class Redis
             $value,
         ));
         if (!empty($expire)) {
-            $this->command('EXPIRE', array(
+            $this->command('Expire', array(
                 $key,
                 (int) $expire,
             ));
         }
 
         return $re;
+    }
+
+    /**
+     * 设置key的过期时间.
+     *
+     * @param $key
+     * @param $expire 过期时间（秒）
+     *
+     * @return integer
+     */
+    public function expire($key, $expire = 60)
+    {
+        if (false == $this->has($key)) {
+            return false;
+        }
+        return  $this->command('Expire', array(
+            $key,
+            (int) $expire,
+        ));
+    }
+
+    /**
+     * 设置key的过期时间 (时间戳).
+     *
+     * @param $key
+     * @param $timestamp UNIX 时间戳
+     *
+     * @return integer
+     */
+    public function expireat($key, $timestamp)
+    {
+        if (false == $this->has($key)) {
+            return false;
+        }
+        return  $this->command('Expireat', array(
+            $key,
+            $timestamp,
+        ));
+    }
+
+
+    /**
+     * 搜索key的值
+     *
+     * @param $pattern
+     *
+     * @return array
+     */
+    public function keys($pattern = false)
+    {
+        if (empty($pattern)) {
+            $pattern = '*';
+        }
+        return  $this->command('KEYS', array(
+            $pattern
+        ));
+    }
+
+    /**
+     * 重命名 key (会覆盖原来的值)
+     *
+     * @param $old_key
+     * @param $new_key
+     *
+     * @return array
+     */
+    public function rename($old_key, $new_key)
+    {
+        if (false == $this->has($old_key)) {
+            return 'Not old key';
+        }
+        if (empty($new_key)) {
+            return 'Not new key name';
+        }
+        return  $this->command('RENAME', array(
+            $old_key,
+            $new_key
+        ));
+    }
+
+    /**
+     * 重命名 key (不会覆盖原来的值)
+     * 修改成功时，返回 1 。 如果 NEW_KEY_NAME 已经存在，返回 0
+     *
+     * @param $old_key
+     * @param $new_key
+     *
+     * @return integer
+     */
+    public function renamenx($old_key, $new_key)
+    {
+        if (false == $this->has($old_key)) {
+            return 'Not old key';
+        }
+        if (empty($new_key)) {
+            return 'Not new key name';
+        }
+        return  $this->command('RENAMENX', array(
+            $old_key,
+            $new_key
+        ));
     }
 
     /**
@@ -167,7 +268,7 @@ class Redis
     {
         return $this->command('DBSIZE');
     }
- 
+
     /**
      * 获取服务器时间
      * 
@@ -176,7 +277,7 @@ class Redis
     public function time()
     {
         return $this->command('TIME');
-    }    
+    }
 
     /**
      * 判断key的类型.
@@ -450,7 +551,7 @@ class Redis
         $info = $this->info();
         preg_match_all('/uptime_in_days:([0-9\.]+)/', $info, $matches);
         return $matches[1][0];
-    }    
+    }
 
     /**
      * 获取存储在哈希表中指定字段的值的长度.
