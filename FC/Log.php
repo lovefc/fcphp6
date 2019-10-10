@@ -126,7 +126,7 @@ class Log
         clearstatcache();
         $str = PHP_EOL . "time:" . date("Y-m-d H:i:s");
         // 日志记录路径
-        self::$LogDir = defined('LOG_DIR') ? LOG_DIR : PATH['NOW'] . '/Log';
+        self::$LogDir = defined('LOG_DIR') ? LOG_DIR : dirname(PATH['FC']) . '/Log';
         // 循环取数据
         if (is_array($lasterror)) {
             foreach ($lasterror as $key => $value) {
