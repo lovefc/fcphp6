@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-10-09 16:27:47 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 08:38:54
+ * @Last Modified time: 2019-10-10 10:31:12
  */
 
 return [
@@ -13,6 +13,7 @@ return [
     //默认链接数据库
 
     'default' => [
+        
         // 主机地址
         'Host' => '127.0.0.1',
 
