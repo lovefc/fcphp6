@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 17:31:24
+ * @Last Modified time: 2019-10-10 17:33:38
  */
 class Redis
 {
@@ -202,7 +202,7 @@ class Redis
      * @param $old_key
      * @param $new_key
      *
-     * @return array
+     * @return string
      */
     public function rename($old_key, $new_key)
     {
@@ -225,7 +225,7 @@ class Redis
      * @param $old_key
      * @param $new_key
      *
-     * @return integer
+     * @return string
      */
     public function renamenx($old_key, $new_key)
     {
