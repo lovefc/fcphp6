@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 15:26:32
+ * @Last Modified time: 2019-10-10 15:38:34
  */
 class Redis
 {
@@ -154,6 +154,46 @@ class Redis
         }
 
         return $this->command('GET', array(
+            $key,
+        ));
+    }
+
+    /**
+     * 返回 key 的剩余过期时间(毫秒).
+     * 当 key 不存在时，返回 -2 。
+     * 当 key 存在但没有设置剩余生存时间时，返回 -1 。 否则，以毫秒为单位，返回 key 的剩余生存时间
+     * 
+     * @param $key
+     *
+     * @return array|bool|int|string
+     */
+    public function pttl($key)
+    {
+        if (false == $this->has($key)) {
+            return false;
+        }
+
+        return $this->command('PTTL', array(
+            $key,
+        ));
+    }
+
+    /**
+     * 返回 key 的剩余过期时间.
+     * 当 key 不存在时，返回 -2 。
+     * 当 key 存在但没有设置剩余生存时间时，返回 -1 。 否则，以秒为单位，返回 key 的剩余生存时间
+     * 
+     * @param $key
+     *
+     * @return array|bool|int|string
+     */
+    public function ttl($key)
+    {
+        if (false == $this->has($key)) {
+            return false;
+        }
+
+        return $this->command('TTL', array(
             $key,
         ));
     }
