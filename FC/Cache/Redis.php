@@ -27,13 +27,12 @@ class Redis
      */
     public function connect($host, $port = 6379, $time = 1)
     {
-        try {
-            $connection = fsockopen($host, $port, $errorN, $errorStr, $time);
-            $this->connection = $connection;
-        } catch (\Exception $e) {
-            $this->error($e->getMessage());
-        }
 
+        $connection = @fsockopen($host, $port, $errorN, $errorStr, $time);
+        if (empty($connection)) {
+            return false;
+        }
+        $this->connection = $connection;
         return true;
     }
 
@@ -676,13 +675,5 @@ class Redis
             )
         );
     }
-
-    /*
-     * 打印错误
-     */
-
-    public function error($msg)
-    {
-        die($msg);
-    }
+    
 }

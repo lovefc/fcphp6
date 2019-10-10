@@ -72,8 +72,7 @@ class Cache
         } else {
             $obj = new \Memcached();
         }
-        $obj->connect($this->Path, $this->Port) or $this->error('Could not connect as memcache');
-
+        $obj->connect($this->Path, $this->Port) or $this->error('Memcache 链接出错，请检查配置');
         return $obj;
     }
 
@@ -90,7 +89,7 @@ class Cache
         } else {
             $obj = new \Redis();
         }
-        $obj->connect($this->Path, $this->Port) or $this->error('Could not connect as redis');
+        $obj->connect($this->Path, $this->Port) or $this->error('Redis 链接出错，请检查配置');
         return $obj;
     }
 

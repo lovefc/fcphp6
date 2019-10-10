@@ -19,7 +19,7 @@ class Log
     public static $ErrorShow;
 
     // 要记录的错误等级(错误等级都是倍数递增)
-    public static $Level = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32767];
+    public static $Level = [1, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32767];
     
     // 错误文件模版
     public static $ViewFile = PATH['FC'] . '/Error.html';
