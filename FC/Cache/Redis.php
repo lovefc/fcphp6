@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 15:49:41
+ * @Last Modified time: 2019-10-10 16:00:55
  */
 class Redis
 {
@@ -297,6 +297,26 @@ class Redis
     public function flushall()
     {
         return $this->runCommand('FLUSHALL');
+    }
+
+    /**
+     * 保存数据到磁盘
+     *
+     * @return string
+     */
+    public function save()
+    {
+        return $this->runCommand('SAVE');
+    }
+
+    /**
+     * 异步保存数据到磁盘
+     *
+     * @return string
+     */
+    public function bgsave()
+    {
+        return $this->runCommand('BGSAVE');
     }
 
     /**
