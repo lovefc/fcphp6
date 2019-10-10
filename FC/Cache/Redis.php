@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-04 13:06:33
+ * @Last Modified time: 2019-10-10 15:26:32
  */
 class Redis
 {
@@ -57,7 +57,7 @@ class Redis
     {
         $count = count($ar);
         for ($i = 0; $i < $count; ++$i) {
-            $command .= ' "'.str_replace(array("\n", "\r"), array('\n', '\r'), $ar[$i]).'"';
+            $command .= ' "' . str_replace(array("\n", "\r"), array('\n', '\r'), $ar[$i]) . '"';
         }
 
         return $command;
@@ -73,7 +73,7 @@ class Redis
     private function runCommand($command)
     {
         $handle = $this->connection;
-        fwrite($handle, $command."\r\n");
+        fwrite($handle, $command . "\r\n");
         $fl = fgets($handle); //fl:First Line
         $re = false;
         switch ($fl[0]) {
@@ -179,6 +179,37 @@ class Redis
         }
     }
 
+
+    /**
+     * 判断一个key是否存在或者过期
+     *
+     * @param $key
+     *
+     * @return true|false
+     */
+    public function exists($key)
+    {
+        return $this->command('EXISTS', array(
+            $key,
+        ));
+    }
+
+    /**
+     * 判断一个哈希key中的字段
+     *
+     * @param $key
+     * @param $field
+     *
+     * @return true|false
+     */
+    public function hexists($key, $field)
+    {
+        return $this->command('HEXISTS', array(
+            $key,
+            $field,
+        ));
+    }
+
     /**
      * 删除一个key(如果有第二个参数就是删除哈希表中的字段了).
      *
@@ -222,7 +253,8 @@ class Redis
     public function hset($key, $field, $value)
     {
         return $this->command(
-            'HSET', array(
+            'HSET',
+            array(
                 $key,
                 $field,
                 $value,
@@ -240,7 +272,8 @@ class Redis
     public function hgetall($key)
     {
         $re = $this->command(
-            'HGETALL', array(
+            'HGETALL',
+            array(
                 $key,
             )
         );
@@ -264,7 +297,8 @@ class Redis
     public function hget($key, $field)
     {
         return $this->command(
-            'HGET', array(
+            'HGET',
+            array(
                 $key,
                 $field,
             )
@@ -281,7 +315,8 @@ class Redis
     public function hvals($key)
     {
         return $this->command(
-            'HVALS', array(
+            'HVALS',
+            array(
                 $key,
             )
         );
@@ -321,7 +356,8 @@ class Redis
     public function hstrlen($key, $field)
     {
         return $this->command(
-            'HSTRLEN', array(
+            'HSTRLEN',
+            array(
                 $key,
                 $field,
             )
@@ -338,7 +374,8 @@ class Redis
     public function incr($key)
     {
         return $this->command(
-            'INCR', array(
+            'INCR',
+            array(
                 $key,
             )
         );
@@ -354,7 +391,8 @@ class Redis
     public function decr($key)
     {
         return $this->command(
-            'DECR', array(
+            'DECR',
+            array(
                 $key,
             )
         );
@@ -370,7 +408,8 @@ class Redis
     public function strlen($key)
     {
         return $this->command(
-            'STRLEN', array(
+            'STRLEN',
+            array(
                 $key,
             )
         );
@@ -403,7 +442,8 @@ class Redis
     public function incrby($key, $value)
     {
         return $this->command(
-            'INCRBY', array(
+            'INCRBY',
+            array(
                 $key,
                 $value,
             )
@@ -421,7 +461,8 @@ class Redis
     public function decrby($key, $value)
     {
         return $this->command(
-            'DECRBY', array(
+            'DECRBY',
+            array(
                 $key,
                 $value,
             )
