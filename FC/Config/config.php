@@ -11,7 +11,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:49:57 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-05 19:11:35
+ * @Last Modified time: 2019-10-10 08:56:54
  */
 
 
@@ -25,4 +25,5 @@ return [
    'FC\Glue\SafeMode'  => 'safemode.php',
    'FC\Glue\Cache'     => 'cache.php',
    'FC\Glue\Mysql'     => 'db/mysql.php',
+   'FC\Glue\Sqlite'    => 'db/sqlite.php',
 ];

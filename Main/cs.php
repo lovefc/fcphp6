@@ -15,13 +15,11 @@ class cs
         $this->CAPTCHA->height = 100;
         $this->SESSION->set('code', $code);
         $a = $this->FCACHE->set('a', $code);
-        $a = $this->MYSQL->table('admins')->limit(1)->fetch();
+        $a = $this->SQLITE->table('bizhi')->limit(1)->fetch();
         print_r($a);
-        /*
-        Json::result('sss','成功');
+        //Json::result('sss','成功');
         die();
         $this->CAPTCHA->doImg($code);
-        */
         /*
  		        $this->SESSION->set('aaa',222);
  		        $this->COOKIES->set('aaa',333);
@@ -44,8 +42,9 @@ class cs
     public function index2()
     {
         //echo $this->SESSION->get('code');
-        $a = $this->FCACHE->get('a');
-        echo $a;
+        //$a = $this->FCACHE->get('a');
+        $a = $this->MYSQL->table('admins')->limit(1)->fetch();
+        print_r($a);
         //print_r($a);
 
     }

@@ -7,7 +7,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-22 17:41:41 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-06 17:50:37
+ * @Last Modified time: 2019-10-10 08:47:26
  */
 return [
     // Curl类
@@ -39,4 +39,7 @@ return [
     
     // Mysql
     'MYSQL'    => 'FC\Glue\Mysql',
+
+    // Sqlite
+    'SQLITE'   => 'FC\Glue\Sqlite',    
 ];
