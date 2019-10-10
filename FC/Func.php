@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2016/9/09 13:29:34 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-27 17:23:35
+ * @Last Modified time: 2019-10-10 14:59:23
  */
 
 /**
@@ -352,4 +352,32 @@ function head($status = 200)
     );
     $hstatus = isset($http[$status]) ? $http[$status] : null;
     !empty($hstatus) && header($hstatus);
+}
+
+/**
+ * 雪花算法，获取唯一的值
+ *
+ * @return int(23)
+ */
+function snowFlakeID()
+{
+    //假设一个机器id
+    $machineId = 5219930613;
+    //41bit timestamp(毫秒)
+    $time = floor(microtime(true) * 1000);
+    //0bit 未使用
+    $suffix = 0;
+    //datacenterId  添加数据的时间
+    $base = decbin(pow(2, 40) - 1 + $time);
+    //workerId  机器ID
+    $machineid = decbin(pow(2, 9) - 1 + $machineId);
+    //毫秒类的计数
+    $random = mt_rand(1, pow(2, 11) - 1);
+    $random = decbin(pow(2, 11) - 1 + $random);
+    //拼装所有数据
+    $base64 = $suffix . $base . $machineid . $random;
+    //将二进制转换int
+    $base64 = bindec($base64);
+    $id = sprintf('%.0f', $base64);
+    return $id;
 }
