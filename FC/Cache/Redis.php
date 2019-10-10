@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 15:38:34
+ * @Last Modified time: 2019-10-10 15:49:41
  */
 class Redis
 {
@@ -154,6 +154,24 @@ class Redis
         }
 
         return $this->command('GET', array(
+            $key,
+        ));
+    }
+
+    /**
+     * 判断key的类型.
+     *
+     * @param $key
+     *
+     * @return none|string|set|zset|hash
+     */
+    public function type($key)
+    {
+        if (false == $this->has($key)) {
+            return false;
+        }
+
+        return $this->command('TYPE', array(
             $key,
         ));
     }
