@@ -42,7 +42,9 @@ class cs
     public function index2()
     {
         //echo $this->SESSION->get('code');
-        //$a = $this->FCACHE->get('a');
+        $a = $this->REDIS->time();
+        print_r($a);
+        die();
         $a = $this->MYSQL->table('admins')->limit(1)->fetch();
         print_r($a);
         //print_r($a);

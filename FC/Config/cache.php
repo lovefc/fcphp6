@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-10-04 13:06:03 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-06 17:36:26
+ * @Last Modified time: 2019-10-10 16:44:43
  */
 return [
 
@@ -13,46 +13,46 @@ return [
     'files' => [
 
         //缓存目录
-        'Path' => dirname(PATH['FC']).'/cache',
+        'Path' => dirname(PATH['FC']) . '/cache',
 
         //缓存方式，有三种情况，memcache,redis，file
         'Mode' => 'file',
-        
+
         //针对文件缓存的过期时间,redis和memcache设置这个选项无效
         'Time' => 10
-        
+
     ],
 
     // redis配置
     'redis' => [
 
-        'Path'   =>'127.0.0.1',
-        
+        'Path'   => '127.0.0.1',
+
         //memcache或者redis的端口
         'Port' => '6379',
-        
+
         //缓存方式，有三种情况，memcache,redis，file
         'Mode' => 'redis',
-        
+
         //针对文件缓存的过期时间,redis和memcache设置这个选项无效
         'Time' => 60
-        
+
     ],
 
     // memcache配置
-    'MEMCACHE' => [
+    'memcache' => [
 
-        'Path'   =>'127.0.0.1',
-        
+        'Path'   => '127.0.0.1',
+
         //memcache或者redis的端口
         'Port' => '11211',
-        
+
         //缓存方式，有三种情况，memcache,redis，file
         'Mode' => 'memcache',
-        
+
         //针对文件缓存的过期时间,redis和memcache设置这个选项无效
         'Time' => 60
-        
+
     ],
 
 ];

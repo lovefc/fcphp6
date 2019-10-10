@@ -7,23 +7,23 @@
  * @Author: lovefc 
  * @Date: 2019-09-22 17:41:41 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 08:47:26
+ * @Last Modified time: 2019-10-10 16:44:47
  */
 return [
     // Curl类
     'CURL'     => 'FC\Http\Curl',
-    
+
     // 缓存类
     'CACHE'    => 'FC\Glue\Cache',
 
     // 文件缓存类
-    'FCACHE'   => ['FC\Glue\Cache', 'files'],  
+    'FCACHE'   => ['FC\Glue\Cache', 'F'],
 
     // redis类
-    'REDIS'    => ['FC\Glue\Cache','redis'],
+    'REDIS'    => ['FC\Glue\Cache', 'R'],
 
     // memcache缓存类
-    'MEMCACHE' => ['FC\Glue\Cache','memcache'],   
+    'MEMCACHE' => ['FC\Glue\Cache', 'M'],
 
     // 视图类
     'VIEW'     => 'FC\Glue\View',
@@ -33,13 +33,13 @@ return [
 
     // Cookies类
     'COOKIES'  => 'FC\Http\Cookies',
-    
+
     // 验证码类
     'CAPTCHA'  => 'FC\Glue\Captcha',
-    
+
     // Mysql
     'MYSQL'    => 'FC\Glue\Mysql',
 
     // Sqlite
-    'SQLITE'   => 'FC\Glue\Sqlite',    
+    'SQLITE'   => 'FC\Glue\Sqlite',
 ];

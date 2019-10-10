@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 16:00:55
+ * @Last Modified time: 2019-10-10 16:39:32
  */
 class Redis
 {
@@ -159,6 +159,26 @@ class Redis
     }
 
     /**
+     * 当前数据库的 key 的数量
+     * 
+     * @return integer
+     */
+    public function dbsize()
+    {
+        return $this->command('DBSIZE');
+    }
+ 
+    /**
+     * 获取服务器时间
+     * 
+     * @return array 第一个键值是当前时间(UNIX时间戳)，第二个是当前这一秒钟已经逝去的微秒数
+     */
+    public function time()
+    {
+        return $this->command('TIME');
+    }    
+
+    /**
      * 判断key的类型.
      *
      * @param $key
@@ -167,10 +187,6 @@ class Redis
      */
     public function type($key)
     {
-        if (false == $this->has($key)) {
-            return false;
-        }
-
         return $this->command('TYPE', array(
             $key,
         ));
@@ -187,10 +203,6 @@ class Redis
      */
     public function pttl($key)
     {
-        if (false == $this->has($key)) {
-            return false;
-        }
-
         return $this->command('PTTL', array(
             $key,
         ));
@@ -207,10 +219,6 @@ class Redis
      */
     public function ttl($key)
     {
-        if (false == $this->has($key)) {
-            return false;
-        }
-
         return $this->command('TTL', array(
             $key,
         ));
@@ -297,6 +305,16 @@ class Redis
     public function flushall()
     {
         return $this->runCommand('FLUSHALL');
+    }
+
+    /**
+     * 返回最近一次 Redis 成功将数据保存到磁盘上的时间，以 UNIX 时间戳格式表示
+     *
+     * @return integer
+     */
+    public function lastsave()
+    {
+        return $this->runCommand('LASTSAVE');
     }
 
     /**
@@ -419,9 +437,20 @@ class Redis
     {
         $info = $this->info();
         preg_match_all('/redis_version:([0-9\.]+)/', $info, $matches);
-
         return $matches[1][0];
     }
+
+    /**
+     * redis的运行天数
+     *
+     * @return mixed
+     */
+    public function days()
+    {
+        $info = $this->info();
+        preg_match_all('/uptime_in_days:([0-9\.]+)/', $info, $matches);
+        return $matches[1][0];
+    }    
 
     /**
      * 获取存储在哈希表中指定字段的值的长度.

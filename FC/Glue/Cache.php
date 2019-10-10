@@ -23,7 +23,25 @@ class Cache extends Caches
         // 默认配置，此选项用于多配置选择
         $this->ReadConf('files');
     }
-
+    
+    // 返回redis句柄
+    public function R(){
+        $this->ReadConf('redis');
+        return $this->obj();
+    }
+    
+    // 返回files句柄
+    public function F(){
+        $this->ReadConf('files');
+        return $this->obj();
+    }    
+    
+    // 返回files句柄
+    public function M(){
+        $this->ReadConf('memcache');
+        return $this->obj();
+    }       
+    
     // 错误消息
     public function error($msg)
     {

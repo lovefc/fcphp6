@@ -8,7 +8,7 @@ namespace FC\Cache;
  * @Author: lovefc
  * @Date: 2019-10-03 00:24:47
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 16:27:25
+ * @Last Modified time: 2019-10-10 16:44:16
  */
 
 class Cache
@@ -30,29 +30,11 @@ class Cache
     // 类型
     public $ConfigType;
 
-
     /**
-     * 魔术方法，用来创建方法
+     * 判断缓存方式,返回句柄
      *
-     * @param [type] $method
-     * @param [type] $args
      * @return void
      */
-
-    public function __call($method, $args)
-    {
-        if (('setMode' == $method) && isset($args[0])) {
-            $this->ConfigType  =  $this->Mode = $args[0];
-            $obj = $this->obj();
-            return $obj;
-        }
-    }
-
-
-    /*
-     * 判断缓存方式
-     */
-
     public function obj()
     {
         if (isset($this->Obj[$this->ConfigType])) {
@@ -78,10 +60,11 @@ class Cache
         return false;
     }
 
-    /*
+    /**
      * memcache
+     *
+     * @return object
      */
-
     public function memcache()
     {
         if (class_exists('Memcache', false)) {
@@ -94,10 +77,11 @@ class Cache
         return $obj;
     }
 
-    /*
+    /**
      * redis
+     *
+     * @return object
      */
-
     public function redis()
     {
         $obj = null;
@@ -110,10 +94,11 @@ class Cache
         return $obj;
     }
 
-    /*
-     * files
+    /**
+     * file
+     *
+     * @return object
      */
-
     public function files()
     {
         $obj = new \FC\Cache\Files();
@@ -121,10 +106,12 @@ class Cache
         return $obj;
     }
 
-    /*
-     * 打印错误
+    /**
+     * 打印错误消息
+     *
+     * @param [type] $msg
+     * @return void
      */
-
     public function error($msg)
     {
         die($msg);
