@@ -8,7 +8,7 @@ namespace FC\Cache;
  * @Author: lovefc
  * @Date: 2019-10-03 00:24:47
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 16:44:16
+ * @Last Modified time: 2019-10-11 15:00:37
  */
 
 class Cache
@@ -68,9 +68,9 @@ class Cache
     public function memcache()
     {
         if (class_exists('Memcache', false)) {
-            $obj = new \FC\Cache\Memcache();
-        } else {
             $obj = new \Memcached();
+        } else {
+            $obj = new \FC\Cache\Memcache();
         }
         $obj->connect($this->Path, $this->Port) or $this->error('Memcache 链接出错，请检查配置');
         return $obj;
@@ -85,9 +85,9 @@ class Cache
     {
         $obj = null;
         if (class_exists('Redis', false)) {
-            $obj = new \FC\Cache\Redis();
-        } else {
             $obj = new \Redis();
+        } else {
+            $obj = new \FC\Cache\Redis();
         }
         $obj->connect($this->Path, $this->Port) or $this->error('Redis 链接出错，请检查配置');
         return $obj;

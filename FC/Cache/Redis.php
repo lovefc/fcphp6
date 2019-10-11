@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 17:33:38
+ * @Last Modified time: 2019-10-11 17:27:22
  */
 class Redis
 {
@@ -55,9 +55,9 @@ class Redis
     {
         $count = count($ar);
         for ($i = 0; $i < $count; ++$i) {
-            $command .= ' "' . str_replace(array("\n", "\r"), array('\n', '\r'), $ar[$i]) . '"';
+            $str = is_array($ar[$i]) ? implode(" ", $ar[$i]) : $ar[$i];
+            $command .= ' "' . str_replace(array("\n", "\r"), array('\n', '\r'), $str) . '"';
         }
-
         return $command;
     }
 
@@ -118,24 +118,52 @@ class Redis
      *
      * @param $key    键名
      * @param $value  键值
-     * @param $expire 过期时间
      *
-     * @return array|bool|int|string
+     * @return integer
      */
-    public function set($key, $value, $expire = null)
+    public function set($key, $value, $array = false)
     {
-        $re = $this->command('SET', array(
+        if (!empty($array) && is_array($array)) {
+            $array = array_change_key_case($array);
+            $func   = isset($array[0]) ? $array[0] : '';
+            $ex = isset($array['px']) ? $array['px'] / 1000 : 0;
+            if ($ex === 0) {
+                $ex = isset($array['ex']) ? $array['ex'] : 1;
+            }
+            if ($func == 'NX') {
+                if ($this->exists($key)) {
+                    return 1;
+                }
+                $ok = $this->set($key, $value);
+                if ($ok) {
+                    $this->expire($key, $ex);
+                }
+                return 0;
+            }
+            return;
+        }
+        return $this->command('SET', array(
             $key,
             $value,
         ));
-        if (!empty($expire)) {
-            $this->command('Expire', array(
-                $key,
-                (int) $expire,
-            ));
-        }
+    }
 
-        return $re;
+    /**
+     * 命令为指定的 key 设置值及其过期时间.
+     *
+     * @param $key    键名
+     * @param $expire 过期时间
+     * @param $value  键值
+     *
+     * @return integer
+     */
+    public function setex($key, $expire, $value)
+    {
+        return $this->command('SETEX', array(
+            $key,
+            $expire,
+            $value,
+        ));
     }
 
     /**
@@ -148,8 +176,8 @@ class Redis
      */
     public function expire($key, $expire = 60)
     {
-        if (false == $this->has($key)) {
-            return false;
+        if (0 == $this->exists($key)) {
+            return 0;
         }
         return  $this->command('Expire', array(
             $key,
@@ -167,8 +195,8 @@ class Redis
      */
     public function expireat($key, $timestamp)
     {
-        if (false == $this->has($key)) {
-            return false;
+        if (1 == $this->has($key)) {
+            return 0;
         }
         return  $this->command('Expireat', array(
             $key,
@@ -250,7 +278,7 @@ class Redis
      */
     public function renamenx($old_key, $new_key)
     {
-        if (false == $this->has($old_key)) {
+        if (0 == $this->exists($old_key)) {
             return 'Not old key';
         }
         if (empty($new_key)) {
@@ -271,7 +299,7 @@ class Redis
      */
     public function get($key)
     {
-        if (false == $this->has($key)) {
+        if (0 == $this->exists($key)) {
             return false;
         }
         return $this->command('GET', array(
@@ -560,7 +588,7 @@ class Redis
      * 
      * @return integer
      */
-    public function hkeys($key,$field,$value)
+    public function hkeys($key, $field, $value)
     {
         return $this->command(
             'HKEYS',
@@ -780,7 +808,7 @@ class Redis
      */
     public function setnx($key, $value)
     {
-        return $this->command('EXPIRE', array(
+        return $this->command('SETNX', array(
             $key,
             $value,
         ));
@@ -820,6 +848,28 @@ class Redis
             array(
                 $key,
                 $value,
+            )
+        );
+    }
+
+    /**
+     * 使用 Lua 解释器执行脚本.
+     *
+     * @param [type] $script
+     * @param [type] $keys
+     * @param [type] $numkeys
+     *
+     * @return int
+     */
+    public function eval($script, $keys, $numkeys, $args = false)
+    {
+        return $this->command(
+            'EVAL',
+            array(
+                $script,
+                $numkeys,
+                $keys,
+                $args
             )
         );
     }

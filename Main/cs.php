@@ -41,13 +41,21 @@ class cs
 
     public function index2()
     {
-        //echo $this->SESSION->get('code');
-        $a = $this->REDIS->time();
+        $redLock = new \FC\Tools\RedLock();
+        $lock = $redLock->lock('lovefc2', 1);
+        if ($lock) {
+            file_put_contents('lock.log','true'.PHP_EOL,FILE_APPEND);
+            $redLock->unlock();
+        } else {
+           file_put_contents('lock.log','false'.PHP_EOL,FILE_APPEND);
+        }
+
+
+        /*
+        $a = $this->REDIS->keys('w3c*');
         print_r($a);
-        die();
         $a = $this->MYSQL->table('admins')->limit(1)->fetch();
         print_r($a);
-        //print_r($a);
-
+        */
     }
 }
