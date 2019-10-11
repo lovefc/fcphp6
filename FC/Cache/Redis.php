@@ -429,22 +429,6 @@ class Redis
     }
 
     /**
-     * 判断一个哈希key中的字段
-     *
-     * @param $key
-     * @param $field
-     *
-     * @return true|false
-     */
-    public function hexists($key, $field)
-    {
-        return $this->command('HEXISTS', array(
-            $key,
-            $field,
-        ));
-    }
-
-    /**
      * 删除一个key(如果有第二个参数就是删除哈希表中的字段了).
      *
      * @param $key
@@ -546,7 +530,6 @@ class Redis
         for ($i = 0; $i < $count; ++$i) {
             $return[$re[$i * 2]] = $re[$i * 2 + 1];
         }
-
         return $return;
     }
 
@@ -570,16 +553,91 @@ class Redis
     }
 
     /**
+     * 获取哈希表中所有键名
+     *
+     * @param $key
+     * @param $field
+     * 
+     * @return integer
+     */
+    public function hkeys($key,$field,$value)
+    {
+        return $this->command(
+            'HKEYS',
+            array(
+                $key,
+                $field,
+                $value
+            )
+        );
+    }
+
+    /**
      * 获取哈希表中所有值
      *
      * @param $key
-     *
+     * 
      * @return array|bool|int|string
      */
     public function hvals($key)
     {
         return $this->command(
             'HVALS',
+            array(
+                $key,
+            )
+        );
+    }
+
+    /**
+     * 查看哈希表的指定字段是否存在
+     *
+     * @param $key
+     * @param $field
+     * 
+     * @param integer
+     */
+    public function hexists($key, $field)
+    {
+        return $this->command(
+            'HEXISTS',
+            array(
+                $key,
+                $field,
+            )
+        );
+    }
+
+    /**
+     * 删除哈希表 key 中的一个或多个指定字段
+     *
+     * @param $key
+     * @param $field
+     * 
+     * @param integer
+     */
+    public function hdel($key, $field)
+    {
+        return $this->command(
+            'HDEL',
+            array(
+                $key,
+                $field,
+            )
+        );
+    }
+
+    /**
+     * 获取哈希表中字段的数量
+     *
+     * @param $key
+     * 
+     * @param integer
+     */
+    public function hlen($key)
+    {
+        return $this->command(
+            'HLEN',
             array(
                 $key,
             )
@@ -638,6 +696,28 @@ class Redis
             )
         );
     }
+
+    /**
+     * 为哈希表中的字段值加上指定增量值.
+     *
+     * @param $key
+     * @param $field
+     * @param $value
+     *
+     * @return int
+     */
+    public function hincrby($key, $field, $value)
+    {
+        return $this->command(
+            'HINCRBY',
+            array(
+                $key,
+                $field,
+                $value,
+            )
+        );
+    }
+
 
     /**
      * 将 key 中储存的数字值增一
