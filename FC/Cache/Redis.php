@@ -346,6 +346,53 @@ class Redis
     }
 
     /**
+     * 为指定的 key 追加值.
+     * 如果 key 已经存在并且是一个字符串， APPEND 命令将 value 追加到 key 原来的值的末尾。
+     * 如果 key 不存在， APPEND 就简单地将给定 key 设为 value ，就像执行 SET key value 一样。
+     * 
+     * @param $key
+     *
+     * @return integer key 中字符串的长度
+     */
+    public function append($key)
+    {
+        return $this->command('APPEND', array(
+            $key,
+        ));
+    }
+
+    /**
+     * 开始事务
+     *
+     * @return 'OK'
+     */
+    public function multi()
+    {
+        return $this->command('MULTI');
+    }
+
+    /**
+     * 放弃事务
+     *
+     * @return 'OK'
+     */
+    public function discard()
+    {
+        return $this->command('DISCARD');
+    }
+
+    /**
+     * 执行事务内的命令
+     * 事务块内所有命令的返回值，按命令执行的先后顺序排列。 当操作被打断时，返回空值 nil
+     * 
+     * @return string  
+     */
+    public function exec()
+    {
+        return $this->command('EXEC');
+    }
+
+    /**
      * 判断一个key是否存在或者过期(如果有第二个参数就是判断哈希表中的字段了).
      *
      * @param $key
