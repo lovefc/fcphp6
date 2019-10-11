@@ -9,13 +9,13 @@ use FC\Http\Session as Sess;
  * @Author: lovefc 
  * @Date: 2019-09-24 10:58:20
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 15:39:55
+ * @Last Modified time: 2019-10-11 11:25:00
  */
 
 class Session extends Sess
 {
     // 继承配置
-    use \FC\traits\Parents;
+    use \FC\Traits\Parents;
     
     // 初始设置
     public function _init()

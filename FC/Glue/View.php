@@ -9,7 +9,7 @@ use FC\View\Eztpl;
  * @Author: lovefc 
  * @Date: 2019-09-24 15:24:20
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 15:40:10
+ * @Last Modified time: 2019-10-11 11:24:57
  */
 
 class View extends Eztpl

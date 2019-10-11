@@ -9,13 +9,13 @@ use FC\Http\Captcha as Code;
  * @Author: lovefc 
  * @Date: 2019-09-27 15:06:40
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 15:41:11
+ * @Last Modified time: 2019-10-11 11:25:04
  */
 
 class Captcha extends Code
 {
     // 继承配置
-    use \FC\traits\Parents;
+    use \FC\Traits\Parents;
 
     // 初始设置
     public function _init()
