@@ -25,9 +25,8 @@ class Redis
      *
      * @return bool
      */
-    public function connect($host, $port = 6379, $time = 1)
+    public function connect($host, $port = 6379, $time = 0.1)
     {
-
         $connection = @fsockopen($host, $port, $errorN, $errorStr, $time);
         if (empty($connection)) {
             return false;
@@ -177,6 +176,29 @@ class Redis
         ));
     }
 
+    /**
+     * 随机返回一个key.
+     *
+     * @return string
+     */
+    public function randomkey()
+    {
+        return $this->runCommand('RANDOMKEY');
+    }
+
+    /**
+     * 移除key的过期时间
+     *
+     * @param $key
+     *
+     * @return integer
+     */
+    public function persist($key)
+    {
+        return  $this->command('PERSIST', array(
+            $key
+        ));
+    }
 
     /**
      * 搜索key的值
@@ -252,7 +274,6 @@ class Redis
         if (false == $this->has($key)) {
             return false;
         }
-
         return $this->command('GET', array(
             $key,
         ));
@@ -675,5 +696,4 @@ class Redis
             )
         );
     }
-    
 }
