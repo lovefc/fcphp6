@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2016/9/09 13:29:34 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-10 14:59:23
+ * @Last Modified time: 2019-10-12 15:27:32
  */
 
 /**
@@ -380,4 +380,29 @@ function snowFlakeID()
     $base64 = bindec($base64);
     $id = sprintf('%.0f', $base64);
     return $id;
+}
+
+/**
+ * 格式化数组输出
+ * @param $vars 需要格式化的数组
+ * @param $label 名称
+ * @param $return 是否返回值，默认直接输出
+ * @return string
+ */
+function pre($vars, $label = '', $return = false)
+{
+    if (ini_get('html_errors')) {
+        $content = "<pre>\n";
+        if ($label != '') {
+            $content .= "<strong>{$label} :</strong>\n";
+        }
+        $content .= htmlspecialchars(print_r($vars, true));
+        $content .= "\n</pre>\n";
+    } else {
+        $content = $label . " :\n" . print_r($vars, true);
+    }
+    if ($return) {
+        return $content;
+    }
+    echo $content;
 }
