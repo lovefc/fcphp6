@@ -382,7 +382,7 @@ abstract class PdoBase
             $this->SqlTime = $this->SqlTime + round($stop - $begin, 6);
             $this->uset(); //初始化
             if ($query == false) {
-                $this->Error('SQL:' . $sql . '执行失败');
+                $this->error('SQL:' . $sql . '执行失败');
             }
             return $query;
         } catch (\PDOException $e) {
