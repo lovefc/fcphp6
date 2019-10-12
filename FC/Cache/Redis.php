@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 09:57:59
+ * @Last Modified time: 2019-10-12 10:21:07
  */
 class Redis
 {
@@ -193,7 +193,7 @@ class Redis
             if ($ex === 0) {
                 $ex = isset($array['ex']) ? $array['ex'] : 1;
             }
-            if ($func == 'NX') {
+            if ($func == 'NX' && $func == 'nx') {
                 if ($this->exists($key)) {
                     return 1;
                 }
