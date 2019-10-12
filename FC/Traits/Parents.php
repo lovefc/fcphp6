@@ -7,7 +7,7 @@ namespace FC\Traits;
  * @Author: lovefc 
  * @Date: 2016/8/29 10:51:27 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-27 17:48:00
+ * @Last Modified time: 2019-10-12 13:59:55
  */
 
 trait Parents
@@ -56,11 +56,15 @@ trait Parents
      */
     public function __destruct()
     {
-        // 脚本结束就自动释放，没必要
-        //unset($this->P_Config);
+        unset($this->P_Config);
     }
 
-    // __get()方法用来获取私有属性
+    /**
+     * __get()方法用来获取私有属性
+     *
+     * @param [type] $name
+     * @return string
+     */
     public function __get($name)
     {
         $this->P_RegVar[] = $name;
@@ -71,19 +75,28 @@ trait Parents
         }
     }
 
-    // 初始化
+    /**
+     * 初始化属性
+     *
+     * @return object
+     */
     public function P_Start()
     {
         if (is_array($this->P_RegVar)) {
-            foreach ($this->P_RegVar as $k=>$value) {
+            foreach ($this->P_RegVar as $k => $value) {
                 unset($this->$value);
             }
         }
         return $this;
     }
 
-    // 设置访问的配置,这里可以指定数组键名
-    public function ReadConf($type)
+    /**
+     * 设置访问的配置,这里可以指定数组键名
+     *
+     * @param [type] $type
+     * @return object
+     */
+    final function ReadConf($type)
     {
         if (isset($type)) {
             $this->P_ConfigType = $type;
@@ -92,14 +105,14 @@ trait Parents
             $this->P_RegVar = array_keys($this->P_Config);
         } else {
             $this->P_RegVar = array_keys($this->P_Config[$this->P_ConfigType]);
-        }   
+        }
         // 初始化
         $this->P_Start();
         return $this;
     }
 
     // 魔术方法，用来创建方法
-	/*
+    /*
     public function __call($method, $args)
     {
 		echo 111;
@@ -128,7 +141,13 @@ trait Parents
     }
 	*/
 
-    //获取配置，并关联
+    /**
+     * 获取配置，并关联
+     *
+     * @param [type] $file
+     * @param [type] $file2
+     * @return array
+     */
     final public static function P_GetConfig($file, $file2)
     {
         $config = self::P_GetConfigFile($file);
@@ -137,7 +156,12 @@ trait Parents
         return array_replace_recursive($config, $config2);
     }
 
-    //读取配置目录以及工作目录里的配置文件
+    /**
+     * 读取配置目录以及工作目录里的配置文件
+     *
+     * @param [type] $conf
+     * @return array
+     */
     final public static function P_ReadConfigFile($conf)
     {
         $dir = PATH['FC_CONFIG'];
@@ -150,7 +174,13 @@ trait Parents
         return [];
     }
 
-    //读取一个配置文件
+    /**
+     * 读取一个配置文件
+     *
+     * @param [type] $file
+     * @param string $ckey
+     * @return array
+     */
     final public static function P_GetConfigFile($file, $ckey = '')
     {
         if (is_file($file)) {
@@ -168,7 +198,12 @@ trait Parents
         return [];
     }
 
-    //读取配置,$conf代表类名
+    /**
+     * 读取配置,$conf代表类名
+     *
+     * @param [type] $conf
+     * @return array|string
+     */
     final public static function P_Receive($conf)
     {
         if (!$conf) {
@@ -214,7 +249,11 @@ trait Parents
         return [];
     }
 
-    //配置关联
+    /**
+     * 配置关联
+     *
+     * @return void
+     */
     final public function P_DefaultArrayConfig()
     {
         if (self::$P_CacheVars->P_ArrayConfig == null) {
@@ -222,10 +261,13 @@ trait Parents
         }
     }
 
-    /*
+
+    /**
      * 获取到多维数组的值
+     * 
      * @param $config 数组
      * @param $array 键名，多个
+     * @return array
      */
     final public static function P_ImpArray($config, $array)
     {
