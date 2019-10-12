@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 10:21:07
+ * @Last Modified time: 2019-10-12 10:43:07
  */
 class Redis
 {

@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:52:35 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-07 00:21:04
+ * @Last Modified time: 2019-10-12 09:41:37
  */
 
 return [
@@ -13,9 +13,8 @@ return [
     'default' => function ($a = 'world') {
         echo "hello {$a}";
     },
-    '1' => function () {
-        echo '2222';
-    },
+
+    'redis' => '\Main\Test\redis',
 
     '2' => ['\\Main\cs', 'index'],
 

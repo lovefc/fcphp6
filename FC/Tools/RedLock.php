@@ -7,7 +7,7 @@ namespace FC\Tools;
  * @Author: lovefc
  * @Date: 2019-10-11 10:40:43 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 09:31:10
+ * @Last Modified time: 2019-10-12 10:43:04
  */
 
 class RedLock
@@ -30,7 +30,7 @@ class RedLock
      * 加锁
      *
      * @param [type] $resource
-     * @param [type] $ttl
+     * @param [type] $ttl 锁住时长(秒)
      * @return integer
      */
     public function lock($lockKey, $ttl)
