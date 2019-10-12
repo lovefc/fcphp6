@@ -7,7 +7,7 @@ namespace FC\Tools;
  * @Author: lovefc
  * @Date: 2019-10-11 10:40:43 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-11 16:59:30
+ * @Last Modified time: 2019-10-12 09:31:10
  */
 
 class RedLock
@@ -31,7 +31,7 @@ class RedLock
      *
      * @param [type] $resource
      * @param [type] $ttl
-     * @return void
+     * @return integer
      */
     public function lock($lockKey, $ttl)
     {
@@ -45,7 +45,7 @@ class RedLock
      *
      * @param array $lock
      * 
-     * @return void
+     * @return integer
      */
     public function unlock()
     {
@@ -59,5 +59,31 @@ class RedLock
         $lockKey   = $this->lockKey;
         $lockValue = $this->lockValue;
         return $this->redis->eval($script, [$lockKey, $lockValue], 1);
+    }
+
+    /**
+     * 限制访问次数
+     *
+     * @param [type] $key
+     * @param integer $number
+     * @param integer $time
+     * @return integer
+     */
+    public function access($key, $number = 10, $time = 60)
+    {
+        $redis = $this->redis;
+        $check = $redis->exists($key);
+        if ($check) {
+            $redis->incr($key);  //键值递增
+            $count = $redis->get($key);
+            if ($count > $number) {
+                return 0;
+            }
+        } else {
+            $redis->incr($key);
+            $redis->expire($key, $time);
+        }
+        $count = $redis->get($key);
+        return $count;
     }
 }
