@@ -13,7 +13,7 @@ return [
     'files' => [
 
         //缓存目录
-        'Path' => dirname(PATH['FC']) . '/cache',
+        'Path' => dirname(PATH['FC']) . '/Cache',
 
         //缓存方式，有三种情况，memcache,redis，file
         'Mode' => 'file',
