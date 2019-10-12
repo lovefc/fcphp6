@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 09:51:47
+ * @Last Modified time: 2019-10-12 09:55:54
  */
 class Redis
 {
@@ -146,7 +146,7 @@ class Redis
             $index,
         ));
     }
-    
+
     /**
      * 打印字符串.
      *
@@ -464,6 +464,20 @@ class Redis
     public function multi()
     {
         return $this->command('MULTI');
+    }
+
+    /**
+     * 监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断
+     * 
+     * @param $keys
+     *
+     * @return integer | 'OK'
+     */
+    public function watch($keys)
+    {
+        return $this->command('WATCH', array(
+            $keys
+        ));
     }
 
     /**
