@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:52:35 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 14:43:46
+ * @Last Modified time: 2019-10-12 16:58:58
  */
 
 return [
@@ -17,6 +17,9 @@ return [
     'redis' => '\Main\Test\redis',
 
     'db' => '\Main\Test\db',    
+
+    'captcha' => '\Main\Test\captcha',
+    
 
     '2' => ['\\Main\cs', 'index'],
 
