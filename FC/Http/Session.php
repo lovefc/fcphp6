@@ -33,7 +33,7 @@ class Session
     // 存储路径
     public $save_path = '';
     // 存储方式
-    public $save_handler = 'files';
+    public $save_handler = '';
     // 定义“垃圾收集”过程启动的概率
     public $gc_probability = 1;
     // 垃圾收集，运行概率
@@ -64,6 +64,12 @@ class Session
                     throw new \Exception('Session不可写');
                 }
             }
+            if(empty($this->save_path)){
+                $this->save_path = ini_get('session.save_path');                
+            }
+            if(empty($this->save_handler)){
+                $this->save_handler = ini_get('session.save_handler');                
+            }            
             // 这里采用了php7的特性，这里的参数其实影响到php.ini的设置，慎重改变
             session_start([
                 'cache_limiter' => $this->cache_limiter,

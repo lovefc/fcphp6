@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2017/08/25 20:45
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-18 17:33:41
+ * @Last Modified time: 2019-10-12 13:20:21
  */
 
 class File
@@ -165,9 +165,9 @@ class File
         }
 
         if (!is_dir($path)) {
-            mkdir($path, $mode, true);
+            @mkdir($path, $mode, true);
         } else {
-            chmod($path, $mode);
+            @chmod($path, $mode);
         }
         if ($file) {
             $fh = fopen($file, 'a');

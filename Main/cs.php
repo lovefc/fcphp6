@@ -37,11 +37,19 @@ class cs
         $content = $ch->ua('widowns')->ip()->post($data)->url($url)->results('head'); // 获取内容
         print_r($ch->getCookie()); // 获取cookies，数组形式,只有设置results('head'),才会返回cookies
         print_r($content);
+        $this->SESSION->clear();
     }
 
     public function index2()
     {
         $redLock = new \FC\Tools\RedLock();
+        $r = $redLock->access('sss',10,10);
+        if($r == false){
+            echo '限制访问';
+        }else{
+            echo $r;
+        }
+        die();
         $lock = $redLock->lock('lovefc2', 1);
         if ($lock) {
             file_put_contents('lock.log','true'.PHP_EOL,FILE_APPEND);

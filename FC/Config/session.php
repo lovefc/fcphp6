@@ -15,9 +15,9 @@ return [
         // Session的名称
         'name' => 'FCSESSION',
         // 存储路径
-        'save_path' => dirname(PATH['FC']).'/Sess',
+        //'save_path' => dirname(PATH['FC']).'/Sess',
         // 存储方式
-        'save_handler' => 'files', // redis,files        
+        //'save_handler' => 'files', // redis,files        
         /*
         // 在读取完毕会话数据之后马上关闭会话存储文件
         'cache_limite' => 'private',
