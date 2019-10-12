@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-11 17:27:22
+ * @Last Modified time: 2019-10-12 09:16:09
  */
 class Redis
 {
@@ -111,6 +111,68 @@ class Redis
         }
 
         return $re;
+    }
+
+    /**
+     * 使用客户端向 Redis 服务器发送一个 PING.
+     *
+     * @return integer |' PONG'
+     */
+    public function ping()
+    {
+        return $this->command('PING');
+    }
+
+    /**
+     * 关闭客户端
+     *
+     * @return integer |'OK'
+     */
+    public function quit()
+    {
+        return $this->command('QUIT');
+    }
+
+    /**
+     * 切换到指定的数据库，数据库索引号 index 用数字值指定，以 0 作为起始索引值.
+     *
+     * @param $index  
+     *
+     * @return integer |'OK'
+     */
+    public function select($index)
+    {
+        return $this->command('SELECT', array(
+            $index,
+        ));
+    }
+    
+    /**
+     * 打印字符串.
+     *
+     * @param $message
+     *
+     * @return string
+     */
+    public function echo($message)
+    {
+        return $this->command('ECHO', array(
+            $message,
+        ));
+    }
+
+    /**
+     * 检测给定的密码和配置文件中的密码是否相符.
+     *
+     * @param $password   
+     *
+     * @return integer
+     */
+    public function auth($password)
+    {
+        return $this->command('AUTH', array(
+            $password,
+        ));
     }
 
     /**
@@ -392,7 +454,7 @@ class Redis
     /**
      * 开始事务
      *
-     * @return 'OK'
+     * @return integer
      */
     public function multi()
     {
@@ -402,7 +464,7 @@ class Redis
     /**
      * 放弃事务
      *
-     * @return 'OK'
+     * @return integer
      */
     public function discard()
     {
