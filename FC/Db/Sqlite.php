@@ -10,7 +10,7 @@ use FC\Db\Base\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 16:00:17
+ * @Last Modified time: 2019-10-12 15:28:54
  */
 
 class Sqlite extends PdoBase {
@@ -21,7 +21,7 @@ class Sqlite extends PdoBase {
      * @param [type] $table 表名
      * @return 
      */
-    public function gettable($table = null) {
+    public function getTable($table = null) {
         if (!$table) {
             return false;
         }
@@ -33,7 +33,7 @@ class Sqlite extends PdoBase {
      *
      * @return array
      */
-    public function dbsize() {
+    public function getDBSize() {
         $file = $this->DbName;
         if (is_file($file)) {
             return $this->getsize(filesize($file));
@@ -46,12 +46,54 @@ class Sqlite extends PdoBase {
      *
      * @return string
      */
-    public function version() {
+    public function verSion() {
         $dbh = $this->link();
         $sth = $dbh->prepare('select sqlite_version(*) as ver');
         $sth->execute();
         $re = $sth->fetch(\PDO::FETCH_ASSOC);
         return $re['ver'];
+    }
+
+    /**
+     * 获取所有的字段名
+     *
+     * @param [type] $table
+     * @return array
+     */
+    public function getAllField($table = null)
+    {
+        $table = empty($table) ? $this->Table : $table;
+        $re = $this->sql("PRAGMA table_info([{$table}])")->fetchall();
+        if (is_array($re)) {
+            $arr = [];
+            $i = 0;
+            foreach($re as $v){
+                $arr[$i] = $v['name'];
+                $i++;
+            }
+            return $arr;
+        }
+        return false;
+    }   
+
+     /**
+     * 获取所有的数据库名
+     *
+     * @return array
+     */
+    public function getAllTable()
+    {
+        $re = $this->sql("select * from sqlite_master WHERE type = 'table'")->fetchall();
+        if (is_array($re)) {
+            $arr = [];
+            $i = 0;
+            foreach($re as $v){
+                $arr[$i] = $v['tbl_name'];
+                $i++;
+            }
+            return $arr;
+        }
+        return false;
     }
 
     /**
