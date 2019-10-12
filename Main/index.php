@@ -10,7 +10,7 @@ try {
     $obj = FC\Obj('FC\Glue\Route');
     $obj::run();
 } catch (\Exception $e) {
-    die($e->getMessage());
+    \FC\Log::Show($e->getMessage());
 }
 
 echo FC_EOL;
