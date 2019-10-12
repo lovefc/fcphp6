@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 09:55:54
+ * @Last Modified time: 2019-10-12 09:57:59
  */
 class Redis
 {
@@ -478,6 +478,16 @@ class Redis
         return $this->command('WATCH', array(
             $keys
         ));
+    }
+
+    /**
+     * 放弃所有的监听
+     *
+     * @return integer | 'OK'
+     */
+    public function unwatch()
+    {
+        return $this->command('UNWATCH');
     }
 
     /**
