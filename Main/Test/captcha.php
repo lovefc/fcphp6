@@ -19,11 +19,7 @@ class captcha
     use \FC\Traits\Parts;
 
     // 显示验证码
-<<<<<<< HEAD
     public function show()
-=======
-    public function show($k = 'a', $v = 'hello')
->>>>>>> 9158e1d44b2f2491000a3e7f1eb669619a1d40a5
     {
         // 获取验证码字符串
         $code = $this->CAPTCHA->getCode();
