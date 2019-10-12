@@ -7,11 +7,7 @@ namespace Main\Test;
  * @Author: lovefc 
  * @Date: 2019-10-12 16:55:13
  * @Last Modified by: lovefc
-<<<<<<< HEAD
  * @Last Modified time: 2019-10-12 17:00:21
-=======
- * @Last Modified time: 2019-10-12 16:58:20
->>>>>>> 9158e1d44b2f2491000a3e7f1eb669619a1d40a5
  */
 
 class captcha
