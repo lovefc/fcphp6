@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-09 01:07:17 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-06 20:09:03
+ * @Last Modified time: 2019-10-12 14:23:27
  */
 
 
@@ -90,28 +90,7 @@ if (PHP_SAPI === 'cli') {
 // 判断是不是win系统
 define('IS_WIN', (PATH_SEPARATOR === ':') ? false : true);
 
-// 虽然有$_SERVER全局变量,但不可太过于依赖它，这里用于兼容判断取值
-/*
-define('SERVER', [
-    // 服务器ip
-    'IP'   =>  $_SERVER['SERVER_ADDR'] ?? '',
-    // 端口
-    'PORT' =>  $_SERVER['SERVER_PORT'] ?? '',
-    // 域名地址
-    'HOST' => $_SERVER['HTTP_HOST'] ?? '',
-    //请求开始的时间戳
-    'TIME' => $_SERVER['REQUEST_TIME'] ?? '',
-    // 服务器类型
-    'TYPE' => (PATH_SEPARATOR === ':') ? 'linux' : 'windows',
-    // 协议头，https或者http
-    'SCHEMA' => $_SERVER['REQUEST_SCHEME'] ?? '',
-    // 请求开始的时间戳
-    'TIME_FLOAT' => $_SERVER['REQUEST_TIME_FLOAT'] ?? '',
-    // 查询字符串
-    'QUERY_STRING' => $_SERVER['QUERY_STRING'] ?? '',
-]);
-*/
-
+// 定义框架的目录常量
 define('PATH', [
     // 框架目录
     'FC' => $FC_PATH,
@@ -123,8 +102,6 @@ define('PATH', [
     'NOW'   => $NOW_PATH, // 当前路径
     // 当前配置目录
     'NOW_CONFIG' => $NOW_PATH . '/Config',
-    // 插件目录
-    'FC_PLUG' => defined('FC_PLUG') ? FC_PLUG : $NOW_PATH . '/Plug',
 ]);
 
 // 引入加载类
@@ -155,4 +132,4 @@ define('NOW_URL', FC\requestUri());
 \FC\obj('FC\Glue\SafeMode')->run();
 
 // 插件目录设置
-\FC\obj('FC\Glue\Load')->ExtendConfig(PATH['FC_PLUG'] . '/config.php');
+//\FC\obj('FC\Glue\Load')->ExtendConfig(PATH['FC_PLUG'] . '/config.php');
