@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 09:16:09
+ * @Last Modified time: 2019-10-12 09:51:47
  */
 class Redis
 {
@@ -180,6 +180,7 @@ class Redis
      *
      * @param $key    键名
      * @param $value  键值
+     * @param $array  注意这个值，可能是值也可能是过期时间
      *
      * @return integer
      */
@@ -204,10 +205,14 @@ class Redis
             }
             return;
         }
-        return $this->command('SET', array(
+        $status = $this->command('SET', array(
             $key,
             $value,
         ));
+        if (is_numeric($array)) {
+            $this->expire($key, $array);
+        }
+        return  $status;
     }
 
     /**
