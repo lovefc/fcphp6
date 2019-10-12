@@ -14,7 +14,7 @@ return [
     'default' => [
  
         // 数据库路径
-        'DbName' => PATH['NOW'] . '/748a66a894058a5fcdc2f2a782321b7f.db',
+        'DbName' => PATH['NOW'] . '/Sql/ceshi.db',
 
         // 数据库用户名
         'DbUser' => 'root',

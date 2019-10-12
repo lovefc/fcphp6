@@ -20,7 +20,7 @@ return [
         //'Port' => '3306',
 
         // 数据库名
-        'DbName' => 'blog',
+        'DbName' => 'ceshi',
 
         // 数据库用户名
         'DbUser' => 'root',
@@ -35,7 +35,7 @@ return [
         'Charset' => 'utf8',
 
         // 数据库表前缀
-        'Prefix' => 'fc_',
+        'Prefix' => '',
 
         // 数据库类型
         'DbType' => 'mysql',
