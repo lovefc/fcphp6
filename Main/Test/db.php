@@ -25,10 +25,13 @@ class db
     }
 
     // 获取表的一个值
-    public function get($table = 'bizhi', $limit = 1)
+    public function get($table = 'ceshi', $limit = 1)
     {
         $re = $this->SQLITE->table($table)->limit(1)->fetch();
         \FC\pre($re);
+        
+        $re = $this->MYSQL->table($table)->limit(1)->fetch();
+        \FC\pre($re);        
     }
 
     // 获取数据库中的所有表
