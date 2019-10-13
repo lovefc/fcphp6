@@ -20,7 +20,9 @@ return [
 
     'redis' => '\Main\Test\redis',
 
-    'db' => '\Main\Test\db',      
+    'db' => '\Main\Test\db',  
+
+    'view' => '\Main\Test\view',         
 
     // 正则路由,后面可以跟jquery参数
     '#^html/([0-9]*).html(.*)$#' => function($a){
