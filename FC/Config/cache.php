@@ -1,4 +1,5 @@
 <?php
+
 /*
  * 缓存配置
  * 
@@ -7,6 +8,7 @@
  * @Last Modified by: lovefc
  * @Last Modified time: 2019-10-10 16:44:43
  */
+ 
 return [
 
     // 文件缓存配置
