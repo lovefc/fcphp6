@@ -53,4 +53,14 @@ class db
         $re = $this->MYSQL->table($table)->getAllField();
         \FC\pre($re);
     }
+    
+    // where条件
+    public function getfield($table = 'ceshi', $id = 'id', $value = 1)
+    {
+        $re = $this->SQLITE->table($table)->where([$id=>$value])->fetch();
+        \FC\pre($re);
+        
+        $re = $this->MYSQL->table($table)->where([$id=>$value])->fetch();
+        \FC\pre($re);
+    }    
 }
