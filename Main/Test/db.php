@@ -55,7 +55,7 @@ class db
     }
     
     // where条件
-    public function getfield($table = 'ceshi', $id = 'id', $value = 1)
+    public function where($table = 'ceshi', $id = 'id', $value = 1)
     {
         $re = $this->SQLITE->table($table)->where([$id=>$value])->fetch();
         \FC\pre($re);
