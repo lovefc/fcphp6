@@ -10,7 +10,7 @@ use FC\Db\Query\SqlJoin;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 16:10:16
+ * @Last Modified time: 2019-10-16 17:54:57
  */
 
 abstract class PdoBase
@@ -56,7 +56,7 @@ abstract class PdoBase
         if (!$table) {
             return $this;
         }
-        $this->Table = $this->Prefix . $table;
+        $this->Table = '`'.$this->Prefix . $table.'`';
         return $this;
     }
 
@@ -68,7 +68,7 @@ abstract class PdoBase
         if (!$table) {
             return $this;
         }
-        $this->Table = $table;
+        $this->Table = '`'.$table.'`';
         return $this;
     }
 
@@ -221,7 +221,7 @@ abstract class PdoBase
      */
     final public function value($value)
     {
-        if(empty($value)){
+        if (empty($value)) {
             return false;
         }
         $data = (is_array($value) && count($value) >= 1) ? $value : array_values($this->Data);
@@ -424,5 +424,4 @@ abstract class PdoBase
         }
         return array($sizes, 'B');
     }
-
 }

@@ -8,7 +8,7 @@ namespace FC\Db\Query;
  * @Author: lovefc 
  * @Date: 2017/04/02 15:10
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 10:25:10
+ * @Last Modified time: 2019-10-16 18:00:16
  */
 
 
@@ -455,7 +455,7 @@ trait SqlJoin
                 $sql1 .= ',';
                 $sql2 .= ',';
             }
-            $sql1 .= "$k";
+            $sql1 .= "`{$k}`";
             if ($parsing == true) {
                 $value[] = $v;
                 $sql2 .= '?';
@@ -524,10 +524,10 @@ trait SqlJoin
             foreach ($data as $key => $value) {
                 //这一段检测更新字段加减的
                 if (strpos($value, $key) === 0) {
-                    $str .= $key . '=' . $value . ',';
+                    $str .= '`'.$key . '`=' . $value . ',';
                     unset($data[$key]);
                 } else {
-                    $str .= $key . '=\'' . $value . '\',';
+                    $str .= '`'.$key . '`=\'' . $value . '\',';
                 }
             }
             $strs = rtrim($str, ',');
@@ -554,10 +554,10 @@ trait SqlJoin
             $str = '';
             foreach ($data as $key => $value) {
                 if (strpos($value, $key) === 0) {
-                    $str .= $key . '=' . $value . ',';
+                    $str .= '`'.$key . '`=' . $value . ',';
                     unset($data[$key]);
                 } else {
-                    $str .= $key . '=?,';
+                    $str .= '`'.$key . '`=?,';
                 }
             }
             $strs = rtrim($str, ',');

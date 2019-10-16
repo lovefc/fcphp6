@@ -10,7 +10,7 @@ use FC\Db\Base\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-09 16:00:04
+ * @Last Modified time: 2019-10-16 18:02:49
  */
 
 class MySql extends PdoBase
@@ -143,7 +143,7 @@ class MySql extends PdoBase
      */
     public function cleanTable($table = null)
     {
-        $table = empty($table) ? $this->Table : $table;
+        $table = empty($table) ? $this->Table : '`'.$table.'`';
         if (empty($table)) {
             return false;
         } else {
