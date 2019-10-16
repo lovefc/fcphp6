@@ -776,7 +776,7 @@ class Redis
     /**
      * 获取版本.
      *
-     * @return mixed
+     * @return integer
      */
     public function ver()
     {
@@ -788,7 +788,7 @@ class Redis
     /**
      * redis的运行天数
      *
-     * @return mixed
+     * @return integer
      */
     public function days()
     {
@@ -803,7 +803,7 @@ class Redis
      * @param $key
      * @param $field
      *
-     * @return int
+     * @return integer
      */
     public function hstrlen($key, $field)
     {
@@ -823,7 +823,7 @@ class Redis
      * @param $field
      * @param $value
      *
-     * @return int
+     * @return integer
      */
     public function hincrby($key, $field, $value)
     {
@@ -843,7 +843,7 @@ class Redis
      *
      * @param $key
      *
-     * @return int
+     * @return integer
      */
     public function incr($key)
     {
@@ -860,7 +860,7 @@ class Redis
      *
      * @param $key
      *
-     * @return int
+     * @return integer
      */
     public function decr($key)
     {
@@ -877,7 +877,7 @@ class Redis
      *
      * @param $key
      *
-     * @return int
+     * @return integer
      */
     public function strlen($key)
     {
@@ -911,7 +911,7 @@ class Redis
      * @param $key
      * @param $value
      *
-     * @return int
+     * @return integer
      */
     public function incrby($key, $value)
     {
@@ -930,7 +930,7 @@ class Redis
      * @param $key
      * @param $value
      *
-     * @return int
+     * @return integer
      */
     public function decrby($key, $value)
     {
@@ -950,7 +950,7 @@ class Redis
      * @param [type] $keys
      * @param [type] $numkeys
      *
-     * @return int
+     * @return integer
      */
     public function eval($script, $keys, $numkeys, $args = false)
     {
@@ -961,6 +961,215 @@ class Redis
                 $numkeys,
                 $keys,
                 $args
+            )
+        );
+    }
+
+    /**
+     * 返回列表的长度
+     *
+     * @param $key
+     * 
+     * @return integer
+     */
+    public function llen($key)
+    {
+        return $this->command(
+            'LLEN',
+            array(
+                $key,
+            )
+        );
+    }
+
+    /**
+     * 移除并返回列表的第一个元素
+     *
+     * @param $key
+     * 
+     * @return string
+     */
+    public function lpop($key)
+    {
+        return $this->command(
+            'LPOP',
+            array(
+                $key,
+            )
+        );
+    }
+
+    /**
+     * 移除并返回列表的最后一个元素
+     *
+     * @param $key
+     * 
+     * @return string
+     */
+    public function rpop($key)
+    {
+        return $this->command(
+            'RPOP',
+            array(
+                $key,
+            )
+        );
+    }
+
+    /**
+     * 将一个或多个值插入到列表头部。 如果 key 不存在，一个空列表会被创建并执行 LPUSH 操作
+     *
+     * @param $key
+     * @param $array
+     * 
+     * @return integer
+     */
+    public function lpush($key, $array)
+    {
+        return $this->command(
+            'LPUSH',
+            array(
+                $key,
+                $array
+            )
+        );
+    }
+
+    /**
+     * 将一个或多个值插入到列表尾部。 如果 key 不存在，一个空列表会被创建并执行 LPUSH 操作
+     *
+     * @param $key
+     * @param $array
+     * 
+     * @return integer
+     */
+    public function rpush($key, $array)
+    {
+        return $this->command(
+            'RPUSH',
+            array(
+                $key,
+                $array
+            )
+        );
+    }
+
+    /**
+     * 将一个值插入到已存在的列表头部，列表不存在时操作无效
+     *
+     * @param $key
+     * @param $array
+     * 
+     * @return integer
+     */
+    public function lpushx($key, $array)
+    {
+        return $this->command(
+            'LPUSHX',
+            array(
+                $key,
+                $array
+            )
+        );
+    }
+
+    /**
+     * 将一个值插入到已存在的列表尾部，列表不存在时操作无效
+     *
+     * @param $key
+     * @param $array
+     * 
+     * @return integer
+     */
+    public function rpushx($key, $array)
+    {
+        return $this->command(
+            'RPUSHX',
+            array(
+                $key,
+                $array
+            )
+        );
+    }
+
+    /**
+     * 返回列表中指定区间内的元素，区间以偏移量 START 和 END 指定
+     *
+     * @param $key
+     * @param $start 0代表第一个元素
+     * @param $end 
+     * 
+     * @return array
+     */
+    public function lrange($key, $start, $end)
+    {
+        return $this->command(
+            'LRANGE',
+            array(
+                $key,
+                $start,
+                $end
+            )
+        );
+    }
+
+    /**
+     * 根据参数 COUNT 的值，移除列表中与参数 VALUE 相等的元素
+     *
+     * @param $key
+     * @param $count 0> 从表头开始向表尾搜索，<0 从表尾开始向表头搜索 =0 移除表中所有与 VALUE 相等的值
+     * @param $value 要移除的值
+     * 
+     * @return array
+     */
+    public function lrem($key, $count, $value)
+    {
+        return $this->command(
+            'LREM',
+            array(
+                $key,
+                $count,
+                $value
+            )
+        );
+    }
+
+    /**
+     * 通过索引来设置元素的值
+     *
+     * @param $key
+     * @param $index 索引值
+     * @param $value 值
+     * 
+     * @return array
+     */
+    public function lset($key, $index, $value)
+    {
+        return $this->command(
+            'LSET',
+            array(
+                $key,
+                $index,
+                $value
+            )
+        );
+    }
+
+    /**
+     * 通过索引获取列表中的元素
+     *
+     * @param $key
+     * @param $index 索引值
+     * 
+     * @return array
+     */
+    public function lindex($key, $index)
+    {
+        return $this->command(
+            'LINDEX',
+            array(
+                $key,
+                $index
             )
         );
     }
