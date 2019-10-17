@@ -23,19 +23,34 @@ class order
         $key = 'sku_id';
         $sku_id = 11;
         // 判断有没有redis的值，用于设置库存数量
-        if (!$this->REDIS->exists($key)) {
+
+        $is = $this->REDIS->exists($key); //0|1
+        //$this->setkey($key, 10); 
+        //echo $this->REDIS->lpop($key).FC_EOL;
+        /*
+        echo $is.FC_EOL;
+        //echo $this->REDIS->lpop($key).FC_EOL;
+        echo $this->REDIS->llen($key);
+        die();
+        */
+        if (!$is) {
             $where['sku_id'] =  $sku_id;
             $table = 'store';
             $re = $this->MYSQL->table($table)->getid('number')->where($where)->fetch();
             $number = $re['number'] ?? 0;
-            $this->setkey($key, $number);
+            $this->setkey($key, $number); 
         }
+
         // 使用redis队列，因为pop操作是原子的
-        $count = $this->REDIS->lpop($key);
+        // 获取字段长度
+        $count = $this->REDIS->llen($key);
         if (!$count) {
+            $this->REDIS->set($key, 0); 
             $this->log('库存为0');
             die();
         }
+        // 删除操作
+        $this->REDIS->lpop($key);
         // 插入订单
         $order_sn = $this->build_order_no();
         $data = [
