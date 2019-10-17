@@ -73,10 +73,15 @@ class Redis
         $handle = $this->connection;
         fwrite($handle, $command . "\r\n");
         $fl = fgets($handle); //fl:First Line
+        if (!$fl) return 0;
         $re = false;
         switch ($fl[0]) {
             case '+':
-                $re = true;
+                $re = substr($fl, 1);
+                $array = array('none', 'string', 'set', 'zset', 'hash', 'list');
+                if (!in_array($re, $array)) {
+                    $re = true;
+                }
                 break;
             case '-':
                 throw new \Exception($fl);
@@ -399,13 +404,15 @@ class Redis
      *
      * @param $key
      *
-     * @return none|string|set|zset|hash
+     * @return none|string|set|zset|hash|list
      */
     public function type($key)
     {
-        return $this->command('TYPE', array(
+        $r = $this->command('TYPE', array(
             $key,
         ));
+        echo $r;
+        return $r;
     }
 
     /**
@@ -516,7 +523,7 @@ class Redis
      *
      * @param $key
      *
-     * @return true|false
+     * @return integer
      */
     public function has($key, $field = null)
     {
@@ -538,7 +545,7 @@ class Redis
      *
      * @param $key
      *
-     * @return true|false
+     * @return integer
      */
     public function exists($key)
     {
@@ -552,7 +559,7 @@ class Redis
      *
      * @param $key
      *
-     * @return int 返回被删除的数量
+     * @return integer 返回被删除的数量
      */
     public function del($key, $field)
     {
@@ -571,7 +578,7 @@ class Redis
     /**
      * 删除所有的key.
      *
-     * @return array|bool|int|string
+     * @return void
      */
     public function flushall()
     {
@@ -974,6 +981,11 @@ class Redis
      */
     public function llen($key)
     {
+        /*
+        if($this->type($key)!='list'){
+             return 0;
+        }
+        */
         return $this->command(
             'LLEN',
             array(
@@ -991,6 +1003,9 @@ class Redis
      */
     public function lpop($key)
     {
+        if ($this->type($key) != 'list') {
+            return 0;
+        }
         return $this->command(
             'LPOP',
             array(
@@ -1008,6 +1023,9 @@ class Redis
      */
     public function rpop($key)
     {
+        if ($this->type($key) != 'list') {
+            return 0;
+        }
         return $this->command(
             'RPOP',
             array(
@@ -1064,6 +1082,9 @@ class Redis
      */
     public function lpushx($key, $array)
     {
+        if ($this->type($key) != 'list') {
+            return 0;
+        }
         return $this->command(
             'LPUSHX',
             array(
@@ -1083,6 +1104,9 @@ class Redis
      */
     public function rpushx($key, $array)
     {
+        if ($this->type($key) != 'list') {
+            return 0;
+        }
         return $this->command(
             'RPUSHX',
             array(
@@ -1103,6 +1127,9 @@ class Redis
      */
     public function lrange($key, $start, $end)
     {
+        if ($this->type($key) != 'list') {
+            return 0;
+        }
         return $this->command(
             'LRANGE',
             array(
@@ -1124,6 +1151,9 @@ class Redis
      */
     public function lrem($key, $count, $value)
     {
+        if ($this->type($key) != 'list') {
+            return 0;
+        }
         return $this->command(
             'LREM',
             array(
@@ -1165,6 +1195,9 @@ class Redis
      */
     public function lindex($key, $index)
     {
+        if ($this->type($key) != 'list') {
+            return 0;
+        }
         return $this->command(
             'LINDEX',
             array(
