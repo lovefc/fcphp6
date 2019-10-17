@@ -77,7 +77,7 @@ class Redis
         $re = false;
         switch ($fl[0]) {
             case '+':
-                $re = substr($fl, 1);
+                $re = trim(substr($fl, 1));
                 $array = array('none', 'string', 'set', 'zset', 'hash', 'list');
                 if (!in_array($re, $array)) {
                     $re = true;
@@ -411,7 +411,6 @@ class Redis
         $r = $this->command('TYPE', array(
             $key,
         ));
-        echo $r;
         return $r;
     }
 
@@ -981,11 +980,9 @@ class Redis
      */
     public function llen($key)
     {
-        /*
         if($this->type($key)!='list'){
              return 0;
         }
-        */
         return $this->command(
             'LLEN',
             array(
@@ -1006,12 +1003,13 @@ class Redis
         if ($this->type($key) != 'list') {
             return 0;
         }
-        return $this->command(
+        $r = $this->command(
             'LPOP',
             array(
                 $key,
             )
         );
+        return $r;
     }
 
     /**
