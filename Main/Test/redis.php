@@ -49,7 +49,7 @@ class redis
     }
 
     // 并发锁实例
-    // 可用ab测试 ab -c 1000 -n 1000 https://地址/Main/index.php/redis/lock
+    // 可用ab测试 ab -c 1000 -n 1000 http://地址/Main/index.php/redis/lock
     public function lock()
     {
         $redLock = new RedLock('redis');
