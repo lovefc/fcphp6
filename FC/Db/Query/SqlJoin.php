@@ -11,41 +11,29 @@ namespace FC\Db\Query;
  * @Last Modified time: 2019-10-16 18:00:16
  */
 
-
-
 trait SqlJoin
 {
 
     //获取模式
     public $Mode;
-
     //数据库表名
     public $Table = '';
-
     //join
     public $Joinvar = '';
-
     //条件
     public $Where = '';
-
-    //where条件2
+    //where条件的值
     public $Wdata = array();
-
     //排序
     public $Order = '';
-
     //limit
     public $Limit = '';
-
     //预处理的值
     public $Data = array();
-
     //记录一下每次执行的sql
     public $Sql = '';
-
     //记录一下每次执行的sql,用于本次操作
     public $Sqls = '';
-
     //要获取的字段
     public $Column = '*';
 
@@ -125,9 +113,10 @@ trait SqlJoin
     }
 
     /**
-     * JOIN
+     * JOIN (要加表前缀)
      * user ON article.uid = user.uid
-     * $where 后面的条件
+     * @param $table 表名称
+     * @param $where 后面的条件
      * @param $type的类型如下：
      * null（内连接）：取得两个表中存在连接匹配关系的记录。
      * left（左连接）：取得左表（table1）完全记录，即是右表（table2）并无对应匹配记录。
@@ -139,8 +128,6 @@ trait SqlJoin
         if (!$table) {
             return $this;
         }
-
-        //$where=$this->Where_jx($where);
         switch ($type) {
             case 'left':
                 $join = ' LEFT JOIN ';
@@ -151,22 +138,22 @@ trait SqlJoin
             default:
                 $join = ' INNER JOIN ';
         }
-        $this->Joinvar .= $join . $this->gettable($table) . ' ON ' . $where;
+        $this->Joinvar .= $join . $table . ' ON ' . $where;
         return $this;
     }
 
     /**
      * LIMIT 限定记录返回数量
      *
-     * @param [type] $num  从那开始|记录行数
-     * @param [type] $num2 从那开始|记录行数
+     * @param  $num  从那开始|记录行数
+     * @param  $num2 从那开始|记录行数
      * @return object
      */
     final public function limit($start = null, $num = null)
     {
         if (!is_null($start)) {
             $start = (int) $start;
-            $this->Limit = ' LIMIT ' . $start. ' ';
+            $this->Limit = ' LIMIT ' . $start . ' ';
             if (!is_null($num)) {
                 $num = (int) $num2;
                 $this->Limit .= ',' . $num . ' ';
@@ -186,7 +173,6 @@ trait SqlJoin
         if (!$str) {
             return $str;
         }
-
         $operator = array(
             '=',
             '<',
@@ -219,7 +205,6 @@ trait SqlJoin
             if (count($where) == 0) {
                 return $this;
             }
-
             foreach ($where as $key => $value) {
                 if (is_array($value)) {
                     $value[1] = strtoupper($value[1]);
@@ -382,7 +367,6 @@ trait SqlJoin
                     }
                 }
             }
-
             $where = implode(' && ', $where2) . implode('', $where3);
         }
         return $where;
@@ -391,13 +375,13 @@ trait SqlJoin
     /**
      * 解析where
      *
-     * @param [type] $where
-     * @param [type] $jx
+     * @param array $where 条件数组
+     * @param bool $parsing 解析条件 false为普通解析，true为预处理解析
      * @return string
-     */  
-    public function where_jx($where, $jx)
+     */
+    public function where_jx($where, $parsing)
     {
-        if ($jx == true) {
+        if ($parsing == true) {
             $where = $this->pre_where($where);
         } else {
             $where = $this->pt_where($where);
@@ -441,8 +425,11 @@ trait SqlJoin
 
     /**
      * 组合写入sql
-     * $ignore 是否忽略插入
-     * $jx 是否用预处理
+     *
+     * @param array $data
+     * @param boolean $ignore 是否忽略插入
+     * @param boolean $parsing 是否用预处理
+     * @return object
      */
     public function insert($data, $ignore = false, $parsing = true)
     {
@@ -524,10 +511,10 @@ trait SqlJoin
             foreach ($data as $key => $value) {
                 //这一段检测更新字段加减的
                 if (strpos($value, $key) === 0) {
-                    $str .= '`'.$key . '`=' . $value . ',';
+                    $str .= '`' . $key . '`=' . $value . ',';
                     unset($data[$key]);
                 } else {
-                    $str .= '`'.$key . '`=\'' . $value . '\',';
+                    $str .= '`' . $key . '`=\'' . $value . '\',';
                 }
             }
             $strs = rtrim($str, ',');
@@ -546,7 +533,7 @@ trait SqlJoin
      *
      * @param array $data 数组键名代表字段名，键值表示要更新的值
      * @return object
-     */    
+     */
     public function pre_update($data)
     {
         $datas = array_values($this->Data);
@@ -554,10 +541,10 @@ trait SqlJoin
             $str = '';
             foreach ($data as $key => $value) {
                 if (strpos($value, $key) === 0) {
-                    $str .= '`'.$key . '`=' . $value . ',';
+                    $str .= '`' . $key . '`=' . $value . ',';
                     unset($data[$key]);
                 } else {
-                    $str .= '`'.$key . '`=?,';
+                    $str .= '`' . $key . '`=?,';
                 }
             }
             $strs = rtrim($str, ',');
