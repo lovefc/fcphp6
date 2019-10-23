@@ -23,9 +23,18 @@ class Mysql extends MY
         $this->ReadConf('default');
     }
 
-    // 错误消息
-    public function error($msg)
+    // 错误消息,这里有两个参数
+    public function error($msg, $e = '')
     {
+        if (!empty($e)) {
+            $error = array(
+                'type' => $e->getcode(),
+                'line' => $e->getline(),
+                'message' => $e->getmessage(),
+                'file' => $e->getfile()
+            );
+            \FC\Log::WriteLog($error);
+        }
         \FC\Log::Show($msg);
     }
 }

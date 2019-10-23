@@ -49,31 +49,38 @@ abstract class PdoBase
 
     /**
      * 数据库表名,自动加前缀
+     *
+     * @param string $table
+     * @return object
      */
-
     public function table($table = null)
     {
         if (!$table) {
             return $this;
         }
-        $this->Table = '`'.$this->Prefix . $table.'`';
+        $this->Table = '`' . $this->Prefix . $table . '`';
         return $this;
     }
 
     /**
      * 数据库表名,不加前缀
+     *
+     * @param string $table
+     * @return object
      */
     public function name($table = null)
     {
         if (!$table) {
             return $this;
         }
-        $this->Table = '`'.$table.'`';
+        $this->Table = '`' . $table . '`';
         return $this;
     }
 
     /**
      * 预处理执行sql
+     *
+     * @return object
      */
     public function excute()
     {
@@ -85,14 +92,7 @@ abstract class PdoBase
                 $this->error('SQL:' . $sql . '不能执行');
             }
         } catch (\PDOException $e) {
-            $error = array(
-                'type' => $e->getcode(),
-                'line' => $e->getline(),
-                'message' => $e->getmessage(),
-                'file' => $e->getfile()
-            );
-            \FC\Log::WriteLog($error);
-            $this->error('SQL:' . $sql . '不能执行');
+            $this->error('SQL:' . $sql . '不能执行', $e);
         }
         try {
             $begin = microtime(true);
@@ -101,24 +101,19 @@ abstract class PdoBase
             $this->SqlTime = $this->SqlTime + round($stop - $begin, 6);
             $this->uset();
         } catch (\PDOException $e) {
-            $error = array(
-                'type' => $e->getcode(),
-                'line' => $e->getline(),
-                'message' => $e->getmessage(),
-                'file' => $e->getfile()
-            );
-            \FC\Log::WriteLog($error);
-            $this->error('预处理SQL:' . $sql . '执行失败');
+            $this->error('预处理SQL:' . $sql . '执行失败', $e);
         }
         return $db_preare;
     }
 
     /**
-     * 设置获取的模式
+     * 设置获取数据的结果集格式
+     *
+     * @param int $mode
+     * @return object
      */
-    final public function setMode($mode = null)
+    final public function setMode($mode = 2)
     {
-        $mode = ($mode == null) ? 2 : $mode;
         switch ($mode) {
             case 4:
                 $this->Mode = \PDO::FETCH_BOTH; //默认
@@ -149,9 +144,10 @@ abstract class PdoBase
 
     /**
      * 执行多项查询操作
-     * $data  表示要传入的参数
+     *
+     * @param [type] $value
+     * @return array
      */
-
     final public function fetchall($value = null)
     {
         $data = (is_array($value) && count($value) >= 1) ? $value : array_values($this->Data);
@@ -165,8 +161,9 @@ abstract class PdoBase
      * 适合大数量的sql查询
      * 这里不适合用预处理去操作
      * $db->table('title')->where('id=1',false)->limit($num)->uqfetch();
+     *
+     * @return array
      */
-
     final public function uqfetch()
     {
         $mode = $this->Mode;
@@ -188,9 +185,12 @@ abstract class PdoBase
 
     /**
      * 执行数量查询操作
-     * $a=M('bm_user')->where('id = ?')->number('*',[1])
+     * table('user')->where('id = ?')->number('*',[1])
+     *
+     * @param string $id 字段
+     * @param array $value 
+     * @return void
      */
-
     final public function number($id = '*', $value = null)
     {
         $data = (is_array($value) && count($value) >= 1) ? $value : array_values($this->Data);
@@ -201,9 +201,10 @@ abstract class PdoBase
 
     /**
      * 执行单项查询操作
-     * $value 传参
+     *
+     * @param array $value
+     * @return void
      */
-
     final public function fetch($value = null)
     {
         $data = (is_array($value) && count($value) >= 1) ? $value : array_values($this->Data);
@@ -215,9 +216,9 @@ abstract class PdoBase
 
     /**
      * 获取字段的单个值
-     * User: fc
-     * Date: 2018/5/8
-     * Time: 1:22
+     *
+     * @param string $value 字段名称
+     * @return void
      */
     final public function value($value)
     {
@@ -228,12 +229,13 @@ abstract class PdoBase
         $mode = $this->Mode;
         $db = $this->select()->getid('$value')->excute($data);
         $re = $db->fetch($mode);
-        return isset($re[$value]) ? $re[$value] : 0;
+        return isset($re[$value]) ? $re[$value] : false;
     }
 
     /**
      * 判断查询的数据是否存在
-     * 更新加上了条件限制
+     *
+     * @return boolean
      */
     final public function has()
     {
@@ -246,8 +248,10 @@ abstract class PdoBase
 
     /**
      * 执行删除操作
+     *
+     * @param array $data
+     * @return void
      */
-
     final public function del($data = null)
     {
         $data = (is_array($data) && count($data) >= 1) ? $data : array_values($this->Data);
@@ -256,11 +260,12 @@ abstract class PdoBase
 
     /**
      * 执行写入操作
-     * $data 数组键名代表字段名，键值表示要写入的值
-     * $ignore 是否忽略插入
-     * $jx 是否用预处理
+     *
+     * @param array $data 数组键名代表字段名，键值表示要写入的值
+     * @param boolean $ignore 是否忽略插入
+     * @param boolean $parsing 是否预处理
+     * @return void
      */
-
     final public function add($data, $ignore = false, $parsing = true)
     {
         if (empty($data)) {
@@ -271,21 +276,24 @@ abstract class PdoBase
 
     /**
      * 执行更新操作
-     * $data 数组键名代表字段名，键值表示要更新的值
+     *
+     * @param array $data 数组键名代表字段名，键值表示要更新的值
+     * @param boolean $parsing 是否预处理
+     * @return void
      */
-
-    public function upd($data, $jx = true)
+    final function upd($data,  $parsing = true)
     {
         if (empty($data)) {
             return false;
         }
-        return $this->update($data, $jx)->excute();
+        return $this->update($data,  $parsing)->excute();
     }
 
     /**
-     * 关闭数据库
+     * 关闭数据库,结束掉一个链接
+     *
+     * @return void
      */
-
     final public function dbend()
     {
         $this->DbObj[$this->ConfigName] = null;
@@ -293,8 +301,9 @@ abstract class PdoBase
 
     /**
      * 获取最后执行的sql语句
+     *
+     * @return void
      */
-
     final public function lastsql()
     {
         return $this->Sql;
@@ -302,8 +311,9 @@ abstract class PdoBase
 
     /**
      * 获取最后执行的sql执行时间
+     *
+     * @return void
      */
-
     final public function sqltime()
     {
         return $this->SqlTime;
@@ -311,6 +321,8 @@ abstract class PdoBase
 
     /**
      * 开启事务
+     *
+     * @return void
      */
     final public function brgin()
     {
@@ -319,6 +331,8 @@ abstract class PdoBase
 
     /**
      * 事务回滚
+     *
+     * @return void
      */
     final public function rback()
     {
@@ -327,6 +341,8 @@ abstract class PdoBase
 
     /**
      * 提交事务
+     *
+     * @return void
      */
     final public function comm()
     {
@@ -335,10 +351,13 @@ abstract class PdoBase
 
     /**
      * 执行无需返回值的sql语句
+     *
+     * @param $sql
+     * @return void
      */
-    final public function exec($sql = false)
+    final public function exec($sql = null)
     {
-        $sql = $sql != false ? $sql : $this->Sqls;
+        $sql = $sql != null ? $sql : $this->Sqls;
         if (empty($sql)) {
             $this->error('SQL为空');
         }
@@ -352,24 +371,19 @@ abstract class PdoBase
             $this->uset(); //初始化
             return $query;
         } catch (\PDOException $e) {
-            $error = array(
-                'type' => $e->getcode(),
-                'line' => $e->getline(),
-                'message' => $e->getmessage(),
-                'file' => $e->getfile()
-            );
-
-            \FC\Log::WriteLog($error);
-            $this->error('SQL:' . $sql . '执行失败');
+            $this->error('SQL:' . $sql . '执行失败', $e);
         }
     }
 
     /**
      * 执行sql语句
+     *
+     * @param $sql
+     * @return void
      */
-    final public function query($sql = false)
+    final public function query($sql = null)
     {
-        $sql = $sql != false ? $sql : $this->Sqls;
+        $sql = $sql != null ? $sql : $this->Sqls;
         if (empty($sql)) {
             $this->error('SQL为空');
         }
@@ -386,19 +400,14 @@ abstract class PdoBase
             }
             return $query;
         } catch (\PDOException $e) {
-            $error = array(
-                'type' => $e->getcode(),
-                'line' => $e->getline(),
-                'message' => $e->getmessage(),
-                'file' => $e->getfile()
-            );
-            \FC\Log::WriteLog($error);
-            $this->error('SQL:' . $sql . '执行失败');
+            $this->error('SQL:' . $sql . '执行失败', $e);
         }
     }
 
     /**
      * lastid()返回最后插入数据的ID
+     *
+     * @return int
      */
     final public function lastid()
     {
@@ -407,6 +416,9 @@ abstract class PdoBase
 
     /**
      * 获取字段大小
+     *
+     * @param  $sizes 字段值
+     * @return array
      */
     final function getsize($sizes)
     {
@@ -424,4 +436,23 @@ abstract class PdoBase
         }
         return array($sizes, 'B');
     }
+
+    /**
+     * 输出错误
+     *
+     * @param string $msg
+     * @param object $e 错误异常对象
+     * @return void
+     */
+    public function error($msg, $e = '')
+    {
+        die($msg);
+    }
+
+    /**
+     * 子类必须实现一个link方式用于连接数据库
+     *
+     * @return void
+     */
+    abstract public function link();
 }
