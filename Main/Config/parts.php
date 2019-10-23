@@ -42,5 +42,5 @@ return [
     'MYSQL'    => 'FC\Glue\Mysql',
 
     // Sqlite
-    'SQLITE'   => 'FC\Glue\Sqlite',
+    'SQLITE'   => 'Main\Glue\Sqlite',
 ];

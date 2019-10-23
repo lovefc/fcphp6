@@ -25,5 +25,5 @@ return [
    'FC\Glue\SafeMode'  => 'safemode.php',
    'FC\Glue\Cache'     => 'cache.php',
    'FC\Glue\Mysql'     => 'db/mysql.php',
-   'FC\Glue\Sqlite'    => 'db/sqlite.php',
+   'Main\Glue\Sqlite'  => 'db/sqlite.php',
 ];
