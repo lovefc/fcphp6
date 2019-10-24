@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:52:35 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-16 16:24:25
+ * @Last Modified time: 2019-10-24 16:03:57
  */
 
 return [
@@ -24,7 +24,9 @@ return [
 
     'view' => '\Main\Test\view',
 
-    'order' => '\Main\Test\order',             
+    'order' => '\Main\Test\order',    
+    
+    'curd'  => '\Main\Test\curd',
 
     // 正则路由,后面可以跟jquery参数
     '#^html/([0-9]*).html(.*)$#' => function($a){
