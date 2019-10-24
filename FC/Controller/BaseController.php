@@ -15,17 +15,23 @@ use FC\Route\Execs;
 
 abstract class BaseController
 {
-    //检测值是否存在
-    final public function ($key, $value)
+    // 规则
+    public $rules = array(); 
+    
+    // 检测值是否存在
+    final public function checkValue($key, $value)
     {
         $value = $value;
         $kes = $this->rules[$key];
         try {
             $status = Execs::regularHandle($kes, $value);
         } catch (\Exception $e) {
-            \FC\Log::Show($e->getMessage());
+            $this->error($e->getMessage());
         }
         return $status;
     }
-
+    
+    public function error($msg,$e=''){
+        die($msg);   
+    }
 }
