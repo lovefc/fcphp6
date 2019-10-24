@@ -9,7 +9,7 @@ use FC\Route\Execs;
  * @Author: lovefc 
  * @Date: 2017/1/3 00:27
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-07 00:11:09
+ * @Last Modified time: 2019-10-24 17:30:28
  * *
  */
 
@@ -426,6 +426,7 @@ class Route extends Execs
     // 判断参数
     public static function varHandle($name, $str)
     {
+        // return $str;
         $preg = isset(self::$rule[self::$route][$name]) ? self::$rule[self::$route][$name] : false;
         return parent::regularHandles($preg, $str);
     }

@@ -10,19 +10,18 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-24 16:27:52
+ * @Last Modified time: 2019-10-24 17:19:48
  */
 
 class curd extends BaseController
 {
-    use \FC\Traits\Parts;
     
     public function _init()
     {
-        $this->rules  = [
-            'age' => ['数字','','值必须是数字!']
-        ];
+        // 添加验证规则
+        $this->addRule('age','数字');
     }
+
 
     public function index($a=25)
     {
@@ -32,8 +31,8 @@ class curd extends BaseController
     }
 
     public function test(){
-        $str = 'DESC  `ceshi`';
-        $re = $this->MYSQL->sql($str)->fetchall();
+        $re = $this->MYSQL->getAllField('ceshi');
         print_r($re);
+
     }
 }

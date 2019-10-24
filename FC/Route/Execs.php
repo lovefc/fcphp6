@@ -10,14 +10,15 @@ class Execs
 {
 
     public static $rulearr = [], $errors = []; //错误数组
-    
+
     public static $showError = true;
 
-    public static function errShow(){
-        if(self::$showError == true){
-           throw new \Exception('function does not exist');
-        }else{
-           die();   
+    public static function errShow()
+    {
+        if (self::$showError == true) {
+            throw new \Exception('function does not exist');
+        } else {
+            die();
         }
     }
 
@@ -102,8 +103,8 @@ class Execs
                 self::errShow('Object:' . $func[0] . ' cannot be instantiated');
             }
             // 验证方法是否存在
-            if(!method_exists($func[0],$func[1])){
-               self::errShow('method:'. $func[1] .' does not exist');
+            if (!method_exists($func[0], $func[1])) {
+                self::errShow('method:' . $func[1] . ' does not exist');
             }
             $func = array(
                 $func[0],
@@ -170,9 +171,9 @@ class Execs
     public static function regularHandles($preg, $str)
     {
         $str = trim($str); //过滤字符串  
-        if(empty($str)){
+        if (empty($str)) {
             return '';
-        }            
+        }
         if (!$preg) {
             return $str;
         }
@@ -211,8 +212,8 @@ class Execs
     {
         $default = $errormsg = $pregs = null;
         if (is_array($preg)) {
-            $default = $preg[1]; //获取默认值
-            $errormsg = $preg[2]; //获取错误消息
+            $default  = isset($preg[1]) ? $preg[1] : null; //获取默认值
+            $errormsg = isset($preg[2]) ? $preg[2] : null; //获取错误消息
             $preg = $preg[0]; //获取验证规则
         }
         if (is_array($preg)) {
@@ -238,7 +239,7 @@ class Execs
                 $preg = $preg2[0]; //获取验证规则
                 $default = $preg2[1]; //获取默认值
                 $errormsg = $preg2[2]; //获取错误消息
-            }else{
+            } else {
                 $preg = $preg2;
             }
             if ($preg == 'empty') {
