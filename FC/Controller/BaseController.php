@@ -2,8 +2,6 @@
 
 namespace FC\Controller;
 
-use FC\Route\Execs;
-
 /**
  * 增删改查
  *
@@ -21,8 +19,13 @@ abstract class BaseController
     public $rules = [];
 
     // 增加规则
-    final public function addRule($name, $array)
+    final public function addRule($name, $array='')
     {
+        if(is_array($name)){
+            foreach($name as $k=>$v){
+                $this->rules[$k] = $v;
+            }                
+        }
         if ($name && $array) {
             $this->rules[$name] = $array;
         }
@@ -33,7 +36,7 @@ abstract class BaseController
         $value = $value;
         $kes = $this->rules[$key];
         try {
-            $status = Execs::regularHandles($kes, $value);
+            $status = Check::regularHandles($kes, $value);
         } catch (\Exception $e) {
             $this->error($e->getMessage());
         }
