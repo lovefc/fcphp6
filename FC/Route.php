@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2017/1/3 00:27
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-25 09:34:10
+ * @Last Modified time: 2019-10-25 14:47:26
  * *
  */
 
@@ -360,8 +360,11 @@ class Route
         }
         $url = self::getQuery();
         if (self::isRewrite($url) !== true) {
-            $m = explode(self::$cutting, $url);
-            $end = end($m);
+            $urls = parse_url($url);
+            $path = isset($urls['path'])?$urls['path']:'';
+            $query = isset($urls['query'])?$urls['query']:'';
+            $m = explode(self::$cutting, $path);
+            $end = end($m).'?'.$query;
             $purl = parse_url($end);
             $key = key($m);
             $key2 = $key + 1;
