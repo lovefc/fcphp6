@@ -2,40 +2,154 @@
 
 namespace FC;
 
-use FC\Route\Execs;
-
 /**
  * 通用路由处理类
  * @Author: lovefc 
  * @Date: 2017/1/3 00:27
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-24 17:30:28
+ * @Last Modified time: 2019-10-25 09:34:10
  * *
  */
 
-class Route extends Execs
+class Route
 {
     public static $cutting = '/';
     public static $route, $mode, $rvar;
     public static $counters = false, $handleStatus = false;
     public static $counter = 0, $jsq = 0;
     public static $routeval = [];
-    public static $parameters = [], $rule = [], $returnback = [];
+    public static $parameters = [], $returnback = [];
     public static $reback = true;
     public static $query, $query2;
+    public static $showError = true; // 是否显示错误
+
+    // 错误显示
+    public static function errShow()
+    {
+        if (self::$showError == true) {
+            throw new \Exception('function does not exist');
+        } else {
+            die();
+        }
+    }
+
+    //判读字符串是否为一个可以实例化类
+    public static function isClass($class)
+    {
+        try {
+            $reflectionClass = new \ReflectionClass($class);
+
+            if ($reflectionClass->isInstantiable()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    //判断是不是函数或者匿名函数
+    public static function isFunc($func)
+    {
+        if (empty($func) || is_array($func)) {
+            return false;
+        }
+        if ($func instanceof \Closure) {
+            return true;
+        } else {
+            if (function_exists($func)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //解析函数
+    public static function func($func, $arg = null)
+    {
+        //检查是不是匿名函数
+        if ($func instanceof \Closure) {
+            $r = new \ReflectionFunction($func);
+            call_user_func_array($func, static::getMethodVar($r->getParameters()));
+        } else {
+            if (function_exists($func)) {
+                $r = new \ReflectionFunction($func);
+                $arg = is_array($arg) ? $arg : $r->getParameters();
+                return call_user_func_array($func, static::getMethodVar($arg));
+            } else {
+                self::errShow('function does not exist');
+            }
+        }
+    }
+
+    //解析类方法
+    public static function method($func, $arg = null)
+    {
+        if (empty($func[0]) || empty($func[1])) {
+            self::errShow('Parameter values cannot be null');
+        }
+        try {
+            $r = new \ReflectionMethod($func[0], $func[1]);
+            //分析这个方法是不是静态
+            if (!$r->isStatic()) {
+                if (!is_object($func[0])) {
+                    $func[0] = self::constructor($func[0]); //不是静态属性就实例化
+                }
+            }
+            if ($func[0]) {
+                $func = array(
+                    $func[0],
+                    $func[1]
+                );
+                $arg = is_array($arg) ? $arg : $r->getParameters();
+                return call_user_func_array($func, static::getMethodVar($arg));
+            } else {
+                self::errShow('Object cannot be instantiated');
+            }
+        } catch (\Exception $e) {
+            $func[0] = self::constructor($func[0]); //实例化
+            if (!is_object($func[0])) {
+                self::errShow('Object:' . $func[0] . ' cannot be instantiated');
+            }
+            // 验证方法是否存在
+            if (!method_exists($func[0], $func[1])) {
+                self::errShow('method:' . $func[1] . ' does not exist');
+            }
+            $func = array(
+                $func[0],
+                $func[1]
+            );
+            return call_user_func_array($func, (array) $arg);
+        }
+    }
+
+    //处理构造函数
+    public static function constructor($className)
+    {
+        $reflector = new \ReflectionClass($className); //反射这个类
+        // 检查类是否可实例化, 排除抽象类abstract和对象接口interface
+        if (!$reflector->isInstantiable()) {
+            return false;
+        }
+        //获取类的构造函数
+        $constructor = $reflector->getConstructor();
+        // 若无构造函数，直接实例化并返回
+        if (is_null($constructor)) {
+            return new $className;
+        }
+        return $reflector->newInstanceArgs(static::getMethodVar($constructor->getParameters()));
+    }
+
 
     /*
      * 路由配置
      * @param $name 访问名称
      * @param $value 访问值
-     * @param $array 过滤数组
      */
-    public static function set($name, $value, $array = null)
+    public static function set($name, $value, $group = 'default')
     {
         self::$routeval[$name] = $value;
-        if (!is_null($array) && is_array($array)) {
-            self::$rule[$name] = $array;
-        }
     }
 
     // 判断是否是cgi模式
@@ -52,7 +166,7 @@ class Route extends Execs
         }
     }
 
-    // 判断swoole
+    // 判断swoole(待用)
     public static function IsSwooleHttp()
     {
         if (isset($_SERVER['SERVER_SOFTWARE']) && $_SERVER['SERVER_SOFTWARE'] === 'swoole-http-server') {
@@ -75,7 +189,7 @@ class Route extends Execs
         $orig_path_info = empty($_SERVER['ORIG_PATH_INFO']) ? '' : $_SERVER['ORIG_PATH_INFO'];
         $url = $path_info ? $path_info : $orig_path_info;
         if (!$url) {
-            $url = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING']: '';
+            $url = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
         }
         if (self::$route != '#^([\w\W]*)#') {
             $url = self::strReplaceLimit('&', '?', $url, 1);
@@ -231,7 +345,7 @@ class Route extends Execs
                         return true;
                     }
                 } catch (\Exception $e) {
-                    parent::errShow('Regular Expression Error');
+                    static::errShow('Regular Expression Error');
                 }
             }
         }
@@ -267,7 +381,7 @@ class Route extends Execs
                     $m && parse_str($url, $a2);
                     $_GET = array_merge($a1, $a2);
                 }
-                if (isset($_vatr) && !parent::isFunc($_vatr)) {
+                if (isset($_vatr) && !static::isFunc($_vatr)) {
                     if (!is_array($_vatr)) {
                         self::$query = isset($m[1]) ? $m[1] : null;
                         $var = trim($_vatr);
@@ -313,7 +427,7 @@ class Route extends Execs
         if (class_exists('\FC\Event', false)) {
             // 添加事件
             \FC\Event::trigger('Route', self::$route);
-        }      
+        }
         if (array_key_exists(self::$route, $pz)) {
             if ($reback = self::funcHandle($pz[self::$route])) {
                 self::reback($reback);
@@ -347,7 +461,7 @@ class Route extends Execs
                 }
             } else {
                 if (is_object($reback)) {
-                    parent::errShow('method: does not exist');
+                    static::errShow('method: does not exist');
                 } else {
                     echo $reback;
                 }
@@ -361,7 +475,7 @@ class Route extends Execs
     public static function funcHandle($func)
     {
         if (is_array($func)) {
-            return parent::method($func);
+            return static::method($func);
         } else {
             if (!empty(self::$query2)) {
                 $func = $func . self::$query;
@@ -370,16 +484,16 @@ class Route extends Execs
                     $func,
                     self::$query2,
                 );
-                return parent::method($func);
+                return static::method($func);
             }
             if (!empty(self::$query)) {
                 $func = array(
                     $func,
                     self::$query,
                 );
-                return parent::method($func);
+                return static::method($func);
             }
-            return parent::func($func);
+            return static::func($func);
         }
     }
 
@@ -426,8 +540,6 @@ class Route extends Execs
     // 判断参数
     public static function varHandle($name, $str)
     {
-        // return $str;
-        $preg = isset(self::$rule[self::$route][$name]) ? self::$rule[self::$route][$name] : false;
-        return parent::regularHandles($preg, $str);
+        return $str;
     }
 }
