@@ -10,7 +10,7 @@ use FC\Db\Query\SqlJoin;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-16 17:54:57
+ * @Last Modified time: 2019-10-25 15:45:21
  */
 
 abstract class PdoBase
@@ -117,24 +117,18 @@ abstract class PdoBase
         switch ($mode) {
             case 4:
                 $this->Mode = \PDO::FETCH_BOTH; //默认
-
                 break;
             case 2:
                 $this->Mode = \PDO::FETCH_ASSOC; //数组
-
                 break;
             case 3:
-
                 $this->Mode = \PDO::FETCH_NUM; //数字
-
                 break;
             case 5:
                 $this->Mode = \PDO::FETCH_OBJ; //对象
-
                 break;
             case 7:
                 $this->Mode = \PDO::FETCH_COLUMN;
-
                 break;
             default:
                 $this->Mode = 2; //数组
