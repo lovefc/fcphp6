@@ -10,29 +10,47 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-24 17:19:48
+ * @Last Modified time: 2019-10-25 14:48:24
  */
 
 class curd extends BaseController
 {
-    
+
     public function _init()
     {
         // 添加验证规则
-        $this->addRule('age','数字');
+        $rule = [
+            'age' => [$this, 'a'],
+            'name' => [$this, 'a'],
+            'email' => '/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',
+            'url'   => '/^(http|ftp|https|ftps):\/\/([a-z0-9\-_]+\.)/i'
+        ];
+        $this->addRule($rule);
     }
 
-
-    public function index($a=25)
+    public function a($a)
     {
-        $re = $this->checkValue('age',$a);
-        echo $re.FC_EOL;
+        return 6666;
+    }
+
+    public function index($a = 25)
+    {
+        $re = $this->checkValue('url', $a);
+        echo $re . FC_EOL;
+        $re = $this->checkValue('email', $a);
+        echo $re . FC_EOL;       
         echo 'hello';
     }
 
-    public function test(){
-        $re = $this->MYSQL->getAllField('ceshi');
-        print_r($re);
-
+    public function test()
+    {
+        //$re = $this->DB::getAllField('ceshi');
+        //print_r($re);
+        
+        $table = 'ceshi';
+        
+        echo $this->DB::verSion().PHP_EOL;
+        
+        //echo $this->DB::verSion();      
     }
 }

@@ -43,4 +43,6 @@ return [
 
     // Sqlite
     'SQLITE'   => 'Main\Glue\Sqlite',
+    
+    'DB'       => 'FC\Glue\Db',   
 ];
