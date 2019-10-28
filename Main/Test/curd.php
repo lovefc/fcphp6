@@ -10,7 +10,7 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-25 14:48:24
+ * @Last Modified time: 2019-10-28 09:03:19
  */
 
 class curd extends BaseController
@@ -49,7 +49,7 @@ class curd extends BaseController
         
         $table = 'ceshi';
         
-        echo $this->DB::verSion().PHP_EOL;
+        echo $this->DB::switch('default2')::verSion().PHP_EOL;
         
         //echo $this->DB::verSion();      
     }
