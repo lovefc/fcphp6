@@ -8,7 +8,7 @@ namespace FC\Controller;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:27:36 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 16:18:48
+ * @Last Modified time: 2019-10-28 16:37:49
  */
 
 abstract class BaseController
@@ -36,11 +36,7 @@ abstract class BaseController
     {
         $value = $value;
         $kes = $this->rules[$key];
-        try {
-            $status = Check::regularHandles($kes, $value);
-        } catch (\Exception $e) {
-            $this->error($e->getMessage());
-        }
+        $status = Check::regularHandles($kes, $value);
         return $status;
     }
 
@@ -58,11 +54,7 @@ abstract class BaseController
         if (is_array($this->rules)) {
             foreach ($this->rules as $k => $v) {
                 $value = isset($datas[$k]) ? $datas[$k] : '';
-                try {
-                    $data[$k] = Check::regularHandles($v, $value);
-                } catch (\Exception $e) {
-                    $this->error($e->getMessage());
-                }
+                $data[$k] = Check::regularHandles($v, $value);
             }
         }
         if ($table) {
