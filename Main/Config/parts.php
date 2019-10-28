@@ -38,11 +38,6 @@ return [
     // 验证码类
     'CAPTCHA'  => 'FC\Glue\Captcha',
 
-    // Mysql
-    'MYSQL'    => 'FC\Glue\Mysql',
-
-    // Sqlite
-    'SQLITE'   => 'Main\Glue\Sqlite',
-    
+    // 数据库类
     'DB'       => 'FC\Glue\Db',   
 ];

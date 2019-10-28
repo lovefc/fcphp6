@@ -10,7 +10,7 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 09:03:19
+ * @Last Modified time: 2019-10-28 09:45:17
  */
 
 class curd extends BaseController
@@ -44,13 +44,10 @@ class curd extends BaseController
 
     public function test()
     {
-        //$re = $this->DB::getAllField('ceshi');
-        //print_r($re);
-        
-        $table = 'ceshi';
-        
-        echo $this->DB::switch('default2')::verSion().PHP_EOL;
-        
-        //echo $this->DB::verSion();      
+       // echo 'mysql版本：'.$this->DB::verSion().FC_EOL;        
+       // echo 'sqlite版本：'.$this->DB::switch('default2')::verSion().FC_EOL;
+        $table = 'ceshi2333';
+        $re = $this->DB::table($table)->limit(1)->fetch();
+        \FC\pre($re);
     }
 }

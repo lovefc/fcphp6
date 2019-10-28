@@ -1,7 +1,7 @@
 <?php
 
 /*
- * mysql 数据库配置
+ * 数据库配置
  * @Author: lovefc 
  * @Date: 2019-10-09 16:27:47 
  * @Last Modified by: lovefc
@@ -10,9 +10,7 @@
 
 return [
 
-    //默认链接数据库
 
-    'default' => [
         
         // 主机地址
         'Host' => '127.0.0.1',
@@ -36,7 +34,7 @@ return [
         'Charset' => 'utf8',
 
         // 数据库表前缀
-        'Prefix' => 'fc_',
+        'Prefix' => '',
 
         // 数据库类型
         'DbType' => 'mysql',
@@ -47,6 +45,5 @@ return [
 
         // 统计数据执行时间
         'SqlTime' => 0,
-    ]
 
 ];

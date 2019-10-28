@@ -10,7 +10,7 @@ use FC\Db\Base\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-16 18:02:49
+ * @Last Modified time: 2019-10-28 13:35:59
  */
 
 class MySql extends PdoBase
@@ -99,7 +99,7 @@ class MySql extends PdoBase
      */
     public function getSlowLog($num = 1)
     {
-        $num = (int)$num;
+        $num = (int) $num;
         if ($num > 1) {
             $sql = 'select * from mysql.slow_log order by 1 DESC LIMIT ' . $num;
             $re = $this->sql($sql)->fetchall();
@@ -143,7 +143,7 @@ class MySql extends PdoBase
      */
     public function cleanTable($table = null)
     {
-        $table = empty($table) ? $this->Table : '`'.$table.'`';
+        $table = empty($table) ? $this->Table : '`' . $table . '`';
         if (empty($table)) {
             return false;
         } else {
@@ -246,7 +246,7 @@ class MySql extends PdoBase
         }
         return 0;
     }
-    
+
     /**
      * 获取所有的表名
      *
@@ -335,4 +335,18 @@ class MySql extends PdoBase
         return $this->DbObj[$this->ConfigName];
     }
 
+    // 错误消息,这里有两个参数
+    public function error($msg, $e = '')
+    {
+        if (!empty($e)) {
+            $error = [
+                'type' => $e->getcode(),
+                'line' => $e->getline(),
+                'message' => $e->getmessage(),
+                'file' => $e->getfile()
+            ];
+            \FC\Log::WriteLog($error);
+        }
+        \FC\Log::Show('SQL出错，请检测日志文件');
+    }
 }

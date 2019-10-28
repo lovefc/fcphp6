@@ -10,7 +10,7 @@ use FC\Db\Base\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 15:28:54
+ * @Last Modified time: 2019-10-28 13:35:41
  */
 
 class Sqlite extends PdoBase {
@@ -130,4 +130,19 @@ class Sqlite extends PdoBase {
         return $this->DbObj[$this->ConfigName];
     }
 
+    // 错误消息,这里有两个参数
+    public function error($msg, $e = '')
+    {
+        if (!empty($e)) {
+            $error = [
+                'type' => $e->getcode(),
+                'line' => $e->getline(),
+                'message' => $e->getmessage(),
+                'file' => $e->getfile()
+            ];
+            \FC\Log::WriteLog($error);
+        }
+        \FC\Log::Show('SQL出错，请检测日志文件');
+    }
+    
 }
