@@ -10,10 +10,11 @@ use FC\Db\Base\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 13:35:41
+ * @Last Modified time: 2019-10-28 15:52:18
  */
 
-class Sqlite extends PdoBase {
+class Sqlite extends PdoBase
+{
 
     /**
      * 获取数据库表名
@@ -21,7 +22,8 @@ class Sqlite extends PdoBase {
      * @param [type] $table 表名
      * @return 
      */
-    public function getTable($table = null) {
+    public function getTable($table = null)
+    {
         if (!$table) {
             return false;
         }
@@ -33,7 +35,8 @@ class Sqlite extends PdoBase {
      *
      * @return array
      */
-    public function getDBSize() {
+    public function getDBSize()
+    {
         $file = $this->DbName;
         if (is_file($file)) {
             return $this->getsize(filesize($file));
@@ -46,7 +49,8 @@ class Sqlite extends PdoBase {
      *
      * @return string
      */
-    public function verSion() {
+    public function verSion()
+    {
         $dbh = $this->link();
         $sth = $dbh->prepare('select sqlite_version(*) as ver');
         $sth->execute();
@@ -62,21 +66,21 @@ class Sqlite extends PdoBase {
      */
     public function getAllField($table = null)
     {
-        $table = empty($table) ? $this->Table : $table;
+        $table = empty($table) ? trim($this->Table, '`') : $table;
         $re = $this->sql("PRAGMA table_info([{$table}])")->fetchall();
         if (is_array($re)) {
             $arr = [];
             $i = 0;
-            foreach($re as $v){
+            foreach ($re as $v) {
                 $arr[$i] = $v['name'];
                 $i++;
             }
             return $arr;
         }
         return false;
-    }   
+    }
 
-     /**
+    /**
      * 获取所有的数据库名
      *
      * @return array
@@ -87,7 +91,7 @@ class Sqlite extends PdoBase {
         if (is_array($re)) {
             $arr = [];
             $i = 0;
-            foreach($re as $v){
+            foreach ($re as $v) {
                 $arr[$i] = $v['tbl_name'];
                 $i++;
             }
@@ -101,7 +105,8 @@ class Sqlite extends PdoBase {
      *
      * @return object
      */
-    final public function link() {
+    final public function link()
+    {
         if (isset($this->DbObj[$this->ConfigName])) {
             return $this->DbObj[$this->ConfigName];
         }
@@ -144,5 +149,4 @@ class Sqlite extends PdoBase {
         }
         \FC\Log::Show('SQL出错，请检测日志文件');
     }
-    
 }
