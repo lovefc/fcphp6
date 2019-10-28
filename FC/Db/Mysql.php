@@ -10,7 +10,7 @@ use FC\Db\Base\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 13:35:59
+ * @Last Modified time: 2019-10-28 16:36:06
  */
 
 class MySql extends PdoBase
@@ -200,7 +200,7 @@ class MySql extends PdoBase
     public function getAllField($table = null, $dbname = null)
     {
         $dbname = empty($dbname) ? $this->DbName : $dbname;
-        $table = empty($table) ? $this->Table : $table;
+        $table = empty($table) ? trim($this->Table, '`') : $table;
         $re = $this->sql("select column_name from information_schema.columns where table_schema='" . $dbname . "' and table_name='" . $table . "'")->fetchall();
         if (is_array($re)) {
             return array_column($re, 'column_name');
