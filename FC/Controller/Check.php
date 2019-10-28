@@ -60,7 +60,8 @@ class Check
         //检查是不是匿名函数
         if ($func instanceof \Closure) {
             $r = new \ReflectionFunction($func);
-            call_user_func_array($func, static::getMethodVar($r->getParameters()));
+            $arg = is_array($arg) ? $arg : $r->getParameters();
+            return call_user_func_array($func, static::getMethodVar($arg));
         } else {
             if (function_exists($func)) {
                 $r = new \ReflectionFunction($func);
@@ -78,7 +79,6 @@ class Check
         if (empty($func[0]) || empty($func[1])) {
             self::errShow('Parameter values cannot be null');
         }
-
         try {
             $r = new \ReflectionMethod($func[0], $func[1]);
             //分析这个方法是不是静态
@@ -171,7 +171,6 @@ class Check
                 $val = self::regularHandle($values, $str);
                 return $val;
             }
-
             foreach ($preg as $k => $v) {
                 $values = $v;
                 $val = self::regularHandle($values, $str);
@@ -229,7 +228,7 @@ class Check
         if (empty($rule) || !is_string($rule)) {
             return false;
         }
-        self::$rulearr = array(
+        self::$rulearr = [
             '必填' => '/.+/',
             '邮箱' => '/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',
             '网址' => '/^(http|ftp|https|ftps):\/\/([a-z0-9\-_]+\.)/i',
@@ -248,8 +247,9 @@ class Check
             '帐号' => '/^[a-zA-Z][a-zA-Z0-9_]{3,10}$/',
             '密码' => '/^[a-zA-Z]\w{5,17}$/', //以字母开头，长度在6~18之间，只能包含字母、数字和下划线
             '强密码' => '/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$/', //必须包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间
-            '英数' => '/^[_0-9a-z]+$/i'
-        );
+            '英数' => '/^[_0-9a-z]+$/i',
+            '年龄' => '/^[0-9]{1,2}$/'
+        ];
 
         $preg = isset(self::$rulearr[$rule]) ? self::$rulearr[$rule] : $rule;
         return $preg;

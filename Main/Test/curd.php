@@ -10,7 +10,7 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 09:45:17
+ * @Last Modified time: 2019-10-28 15:02:24
  */
 
 class curd extends BaseController
@@ -20,31 +20,61 @@ class curd extends BaseController
     {
         // 添加验证规则
         $rule = [
-            'age' => [$this, 'a'],
-            'name' => [$this, 'a'],
-            'email' => '/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',
-            'url'   => '/^(http|ftp|https|ftps):\/\/([a-z0-9\-_]+\.)/i'
+            // 常用的封装验证
+            'age'    => '年龄',
+            // 类方法验证
+            'name'   => [$this, 'name'],
+            // 正则验证
+            'email'  => '/^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/',
+            // 匿名函数验证
+            'mobile' => function ($mobile) {
+                if (preg_match("/^((\(\d{3}\))|(\d{3}\-))?1[34578]\d{9}$/", $mobile)) {
+                    return $mobile;
+                }
+            }
         ];
+        // 添加规则
         $this->addRule($rule);
     }
 
-    public function a($a)
+    // 这个是测试验证用户名的类方法
+    public function name($a)
     {
-        return 6666;
+        if ($a == 'fc') {
+            return 'my name is fc';
+        }
     }
 
+    // 全部验证
+    public function check()
+    {
+        $datas = [
+            'mobile'  => 15056003514,
+            'email'   => 'fcphp@qq.com',
+            'age'     => 20,
+            'name'    => 'fc2'
+        ];
+        $re = $this->checkValues($datas);
+        \FC\Pre($re);
+    }    
+
+
+    // 一个个的验证
     public function index($a = 25)
     {
-        $re = $this->checkValue('url', $a);
-        echo $re . FC_EOL;
+        $re = $this->checkValue('mobile', $a);
+        echo '手机：' . $re . FC_EOL;
         $re = $this->checkValue('email', $a);
-        echo $re . FC_EOL;       
-        echo 'hello';
+        echo '邮箱：' . $re . FC_EOL;
+        $re = $this->checkValue('age', $a);
+        echo '年龄：' . $re . FC_EOL;
+        $re = $this->checkValue('name', $a);
+        echo '名称：' . $re . FC_EOL;
     }
 
     public function test()
     {
-        echo 'mysql版本：'.$this->DB::verSion().FC_EOL;        
-        echo 'sqlite版本：'.$this->DB::switch('sqlite')::verSion().FC_EOL;
+        echo 'mysql版本：' . $this->DB::verSion() . FC_EOL;
+        echo 'sqlite版本：' . $this->DB::switch('sqlite')::verSion() . FC_EOL;
     }
 }

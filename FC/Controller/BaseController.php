@@ -8,7 +8,7 @@ namespace FC\Controller;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:27:36 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-24 17:20:15
+ * @Last Modified time: 2019-10-28 14:56:27
  */
 
 abstract class BaseController
@@ -19,12 +19,12 @@ abstract class BaseController
     public $rules = [];
 
     // 增加规则
-    final public function addRule($name, $array='')
+    final public function addRule($name, $array = '')
     {
-        if(is_array($name)){
-            foreach($name as $k=>$v){
+        if (is_array($name)) {
+            foreach ($name as $k => $v) {
                 $this->rules[$k] = $v;
-            }                
+            }
         }
         if ($name && $array) {
             $this->rules[$name] = $array;
@@ -43,6 +43,18 @@ abstract class BaseController
         return $status;
     }
 
+    // 检测值是否存在
+    final public function checkValues($datas)
+    {
+        $data = [];
+        if (is_array($this->rules)) {
+            foreach ($this->rules as $k => $v) {
+                $value = isset($datas[$k]) ? $datas[$k] : '';
+                $data[$k] = Check::regularHandles($v, $value);
+            }
+        }
+        return $data;
+    }
 
     public function error($msg, $e = '')
     {
