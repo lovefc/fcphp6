@@ -8,7 +8,7 @@ namespace FC\Controller;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:27:36 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 16:37:49
+ * @Last Modified time: 2019-10-28 16:41:27
  */
 
 abstract class BaseController
@@ -41,12 +41,12 @@ abstract class BaseController
     }
 
     /**
-     * 验证变量
+     * 验证过滤数组
      *
      * @param [type] $datas 数组
      * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
      * @param string $pz 数据库配置，用于连接不同的配置
-     * @return void
+     * @return array
      */
     final public function checkValues($datas, $table = null, $pz = 'mysql')
     {
@@ -63,7 +63,14 @@ abstract class BaseController
         return $data;
     }
 
-    // 检测键名是否是字段名
+    /**
+     * 验证过滤字段
+     *
+     * @param [type] $datas 数组
+     * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
+     * @param string $pz 数据库配置，用于连接不同的配置
+     * @return array
+     */
     final public function checkFields($datas, $table, $pz = 'mysql')
     {
         $re = $this->DB::switch($pz)::table($table)->getAllField();
@@ -76,10 +83,5 @@ abstract class BaseController
             }
         }
         return $res;
-    }
-
-    public function error($msg, $e = '')
-    {
-        die($msg);
     }
 }
