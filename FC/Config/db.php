@@ -5,12 +5,12 @@
  * @Author: lovefc 
  * @Date: 2019-10-09 16:27:47 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 09:04:21
+ * @Last Modified time: 2019-10-28 13:56:50
  */
 
 return [
 
-        'default' => [
+        'mysql' => [
                 // 主机地址
                 'Host' => '127.0.0.1',
                 // 端口号
@@ -36,7 +36,7 @@ return [
                 'SqlTime' => 0,
         ],
 
-        'default2' => [
+        'sqlite' => [
                 // 数据库路径
                 'DbName' => PATH['NOW'] . '/Sql/ceshi.db',
 

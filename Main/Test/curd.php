@@ -44,10 +44,7 @@ class curd extends BaseController
 
     public function test()
     {
-       // echo 'mysql版本：'.$this->DB::verSion().FC_EOL;        
-       // echo 'sqlite版本：'.$this->DB::switch('default2')::verSion().FC_EOL;
-        $table = 'ceshi2333';
-        $re = $this->DB::table($table)->limit(1)->fetch();
-        \FC\pre($re);
+        echo 'mysql版本：'.$this->DB::verSion().FC_EOL;        
+        echo 'sqlite版本：'.$this->DB::switch('sqlite')::verSion().FC_EOL;
     }
 }
