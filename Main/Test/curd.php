@@ -10,7 +10,7 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 15:02:24
+ * @Last Modified time: 2019-10-28 16:28:45
  */
 
 class curd extends BaseController
@@ -20,6 +20,8 @@ class curd extends BaseController
     {
         // 添加验证规则
         $rule = [
+            // 验证非空
+            'sex'    => 'empty',
             // 常用的封装验证
             'age'    => '年龄',
             // 类方法验证
@@ -41,20 +43,21 @@ class curd extends BaseController
     public function name($a)
     {
         if ($a == 'fc') {
-            return 'my name is fc';
+            return 'lovefc';
         }
     }
 
-    // 全部验证
+    // 验证字段
     public function check()
     {
         $datas = [
+            'sex'     => '',
             'mobile'  => 15056003514,
             'email'   => 'fcphp@qq.com',
             'age'     => 20,
-            'name'    => 'fc2'
+            'name'    => 'fc'
         ];
-        $re = $this->checkValues($datas);
+        $re = $this->checkValues($datas,'ceshi');
         \FC\Pre($re);
     }    
 
