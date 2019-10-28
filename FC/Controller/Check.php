@@ -185,6 +185,8 @@ class Check
     //单一处理
     public static function regularHandle($preg, $str)
     {
+        // 设置错误等级
+        \FC\log::$Level = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32767];
         $default  = null;
         if (is_array($preg)) {
             $str = self::method($preg, (array) $str);
@@ -261,5 +263,9 @@ class Check
         if ($method == 'getMethodVar') {
             return $arg[0];
         }
+    }
+    public function error($msg, $e = '')
+    {
+        die($msg);
     }
 }
