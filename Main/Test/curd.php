@@ -2,6 +2,8 @@
 
 namespace Main\Test;
 
+use FC\Json;
+
 // 控制器类
 use FC\Controller\BaseController;
 
@@ -10,16 +12,19 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 16:43:32
+ * @Last Modified time: 2019-10-29 14:48:24
  */
 
 class curd extends BaseController
 {
+    use \FC\Traits\Parts;
 
     public function _init()
     {
+        // 数据库句柄
+        $this->db = $this->DB;
         // 添加验证规则
-        $rule = [
+        $this->rules = [
             // 验证非空
             'sex'    => 'empty',
             // 常用的封装验证
@@ -35,8 +40,8 @@ class curd extends BaseController
                 }
             }
         ];
-        // 添加规则
-        $this->addRule($rule);
+        // 验证非空，并返回错误
+        $this->not_empty = ['age', 'name'];
     }
 
     // 这个是测试验证用户名的类方法
@@ -54,14 +59,57 @@ class curd extends BaseController
             'sex'     => '',
             'mobile'  => 15056003514,
             'email'   => 'fcphp@qq.com',
-            'age'     => 20,
+            'age'     => '20',
             'name'    => 'fc'
         ];
-        $re = $this->checkValues($datas,'ceshi','sqlite');
+        $re = $this->checkValues($datas, 'ceshi', 'sqlite');
         \FC\Pre($re);
-    }    
+    }
 
+    // 保存数据
+    public function add($age=20,$name = 'fc')
+    {
+        $datas = [
+            'age'     => $age,
+            'name'    => $name
+        ];
+        if ($this->save($datas, 'ceshi')) {
+            echo '插入成功';
+        } else {
+            echo '插入失败';
+        }
+    }
 
+    // 自动更新数据，要带主键
+    public function upd()
+    {
+        $datas = [
+            'id'      => 1,
+            'age'     => '33',
+            'name'    => 'fc'
+        ];
+        if ($this->save($datas, 'ceshi')) {
+            echo '更新成功';
+        } else {
+            echo '更新失败';
+        }
+    }
+
+    // 更新数据,带where
+    public function upd2($age = '20')
+    {
+        $datas = [
+            'age'     => '10',
+            'name'    => 'fc'
+        ];
+        $where['age'] = $age; // 也可以这样写 $where = 'age=20';
+        // 如果数据不存在，会返回空值，否则会返回被影响的行数。
+        if ($this->save($datas, 'ceshi', $where)) {
+            echo '更新成功';
+        } else {
+            echo '更新失败';
+        }
+    }
     // 一个个的验证
     public function index($a = 25)
     {
@@ -74,10 +122,8 @@ class curd extends BaseController
         $re = $this->checkValue('name', $a);
         echo '名称：' . $re . FC_EOL;
     }
-
-    public function test()
-    {
-        echo 'mysql版本：' . $this->DB::verSion() . FC_EOL;
-        echo 'sqlite版本：' . $this->DB::switch('sqlite')::verSion() . FC_EOL;
+    // 清空数据库
+    public function clean(){
+        $this->DB::cleanTable('ceshi');
     }
 }
