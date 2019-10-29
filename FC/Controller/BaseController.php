@@ -10,7 +10,7 @@ use FC\Json;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:27:36 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-29 13:51:13
+ * @Last Modified time: 2019-10-29 17:28:42
  */
 
 abstract class BaseController
@@ -21,6 +21,12 @@ abstract class BaseController
     public $not_empty = [];
     // 数据库操作句柄
     public $db;
+    // 是否允许清空数据
+    public $clean = false;
+    // 保留不被删除的值
+    public $keep  = [];
+    // 主键名称
+    public $primary = '';
 
     // 增加规则
     final public function addRule($name, $array = '')
@@ -125,7 +131,7 @@ abstract class BaseController
             $re = $this->db::where($where)->upd($data);
             return $re;
         }
-        $this->db::add($data, 'replace');
+        $this->db::name($table)->add($data, 'replace');
         $id = $this->db::lastid();
         return $id;
     }
@@ -140,7 +146,9 @@ abstract class BaseController
      */
     final public function checkFields($datas, $table, $pz = 'mysql')
     {
-        $re = $this->DB::switch($pz)::table($table)->getAllField();
+        $re = $this->DB::switch($pz)::getAllField($table);
+        // 获取主键
+        $this->primary = $this->DB::switch($pz)::getPK($table);
         $res = [];
         if (is_array($re) && is_array($datas)) {
             foreach ($datas as $k => $v) {
