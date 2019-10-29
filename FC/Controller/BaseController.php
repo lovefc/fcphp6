@@ -2,21 +2,25 @@
 
 namespace FC\Controller;
 
+use FC\Json;
+
 /**
- * 增删改查
+ * 父类控制器，基础的控制器
  *
  * @Author: lovefc 
  * @Date: 2019-10-12 14:27:36 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 16:41:27
+ * @Last Modified time: 2019-10-29 13:51:13
  */
 
 abstract class BaseController
 {
-    use \FC\Traits\Parts;
-
     // 规则
     public $rules = [];
+    // 非空
+    public $not_empty = [];
+    // 数据库操作句柄
+    public $db;
 
     // 增加规则
     final public function addRule($name, $array = '')
@@ -31,7 +35,40 @@ abstract class BaseController
         }
     }
 
-    // 单独验证一个值
+    /**
+     * 检测非空
+     *
+     * @param [type] $msg
+     * @return void
+     */
+    public function error($msg)
+    {
+        $code = 1;
+        $msg = "{$msg}值错误";
+        Json::error($code, $msg);
+    }
+
+    /**
+     * 检测非空
+     *
+     * @param [type] $datas
+     * @return void
+     */
+    final public function notEmpty($datas)
+    {
+        foreach ($this->not_empty as $v) {
+            if (!isset($datas[$v]) || $datas[$v] == null) {
+                $this->error($v);
+            }
+        }
+    }
+    /**
+     * 单独验证一个值
+     *
+     * @param [type] $key 值名称
+     * @param [type] $value 值
+     * @return bool
+     */
     final public function checkValue($key, $value)
     {
         $value = $value;
@@ -51,16 +88,46 @@ abstract class BaseController
     final public function checkValues($datas, $table = null, $pz = 'mysql')
     {
         $data = [];
-        if (is_array($this->rules)) {
-            foreach ($this->rules as $k => $v) {
-                $value = isset($datas[$k]) ? $datas[$k] : '';
-                $data[$k] = Check::regularHandles($v, $value);
+        if (is_array($datas)) {
+            foreach ($datas as $k => $v) {
+                if (isset($this->rules[$k])) {
+                    $preg = $this->rules[$k];
+                    $data[$k] = Check::regularHandles($preg, $v);
+                } else {
+                    $data[$k] = $v;
+                }
             }
+        }
+        if ($this->not_empty) {
+            $this->notEmpty($data);
         }
         if ($table) {
             $data = $this->checkFields($data, $table, $pz);
         }
         return $data;
+    }
+
+    /**
+     * 保存数据
+     *
+     * @param [type] $datas 数组
+     * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
+     * @param string $pz 数据库配置，用于连接不同的配置
+     * @return array|int
+     */
+    final public function save($datas, $table, $where = '', $pz = 'mysql')
+    {
+        $data = $this->checkValues($datas, $table, $pz);
+        if (!empty($where)) {
+            if (!$this->db::where($where)->has()) {
+                return 0;
+            }
+            $re = $this->db::where($where)->upd($data);
+            return $re;
+        }
+        $this->db::add($data, 'replace');
+        $id = $this->db::lastid();
+        return $id;
     }
 
     /**
