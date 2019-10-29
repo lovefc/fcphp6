@@ -8,7 +8,7 @@ namespace Main\Test;
  * @Author: lovefc 
  * @Date: 2019-10-16 16:08:04 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-16 17:42:06
+ * @Last Modified time: 2019-10-29 08:44:37
  */
 
 class order
@@ -75,18 +75,18 @@ class order
     private function log($event, $type = 0)
     {
         $sql = "insert into log(event,type)values('{$event}','{$type}')";
-        $this->MYSQL->query($sql);
+        $this->DB::query($sql);
         echo $event;
     }
     
     // 初始化所有变量
     public function clean(){
         // 清空商品数据表
-        $this->MYSQL->cleanTable('order');
+        $this->DB::cleanTable('order');
         // 清空日志数据表
-        $this->MYSQL->cleanTable('log');        
+        $this->DB::cleanTable('log');        
         // 重新设置库存
-        $this->MYSQL->table('store')->where(['sku_id'=>11])->upd(['number'=>500]);
+        $this->DB::table('store')->where(['sku_id'=>11])->upd(['number'=>500]);
         // 删除所有的key
         $this->REDIS->flushall();
         $this->setkey('sku_id', 500); 

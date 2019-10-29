@@ -10,7 +10,7 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 16:28:45
+ * @Last Modified time: 2019-10-28 16:43:32
  */
 
 class curd extends BaseController
@@ -57,7 +57,7 @@ class curd extends BaseController
             'age'     => 20,
             'name'    => 'fc'
         ];
-        $re = $this->checkValues($datas,'ceshi');
+        $re = $this->checkValues($datas,'ceshi','sqlite');
         \FC\Pre($re);
     }    
 
