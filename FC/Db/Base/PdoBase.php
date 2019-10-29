@@ -10,7 +10,7 @@ use FC\Db\Query\SqlJoin;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-25 16:25:25
+ * @Last Modified time: 2019-10-29 13:36:44
  */
 
 abstract class PdoBase
@@ -84,6 +84,7 @@ abstract class PdoBase
      */
     public function excute()
     {
+        $this->return = false;
         $sql = $this->Sqls;
         $data = array_merge($this->Data, $this->Wdata);
         $db = $this->link();
@@ -96,7 +97,7 @@ abstract class PdoBase
         }
         try {
             $begin = microtime(true);
-            $db_preare->execute($data);
+            $this->return = $db_preare->execute($data);
             $stop = microtime(true);
             $this->SqlTime = $this->SqlTime + round($stop - $begin, 6);
             $this->uset();
@@ -160,6 +161,7 @@ abstract class PdoBase
      */
     final public function uqfetch()
     {
+        $this->return = false;
         $mode = $this->Mode;
         $db = $this->link();
         $this->select();
@@ -256,16 +258,17 @@ abstract class PdoBase
      * 执行写入操作
      *
      * @param array $data 数组键名代表字段名，键值表示要写入的值
-     * @param boolean $ignore 是否忽略插入
+     * @param boolean $mode 插入方式
      * @param boolean $parsing 是否预处理
      * @return void
      */
-    final public function add($data, $ignore = false, $parsing = true)
+    final public function add($data, $mode = 'insert', $parsing = true)
     {
         if (empty($data)) {
             return false;
         }
-        return $this->insert($data, $ignore, $parsing)->excute();
+        $this->insert($data, $mode, $parsing)->excute();
+        return $this->return;
     }
 
     /**
@@ -280,7 +283,8 @@ abstract class PdoBase
         if (empty($data)) {
             return false;
         }
-        return $this->update($data,  $parsing)->excute();
+        $this->update($data,  $parsing)->excute();
+        return $this->return;
     }
 
     /**
@@ -351,6 +355,7 @@ abstract class PdoBase
      */
     final public function exec($sql = null)
     {
+        $this->return = false;
         $sql = $sql != null ? $sql : $this->Sqls;
         if (empty($sql)) {
             $this->error('SQL为空');
@@ -359,7 +364,7 @@ abstract class PdoBase
         try {
             $db = $this->link();
             $begin = microtime(true);
-            $query = $db->exec($sql);
+            $this->return = $query = $db->exec($sql);
             $stop = microtime(true);
             $this->SqlTime = $this->SqlTime + round($stop - $begin, 6);
             $this->uset(); //初始化
@@ -377,6 +382,7 @@ abstract class PdoBase
      */
     final public function query($sql = null)
     {
+        $this->return = false;
         $sql = $sql != null ? $sql : $this->Sqls;
         if (empty($sql)) {
             $this->error('SQL为空');
@@ -385,7 +391,7 @@ abstract class PdoBase
         try {
             $db = $this->link();
             $begin = microtime(true);
-            $query = $db->query($sql);
+            $this->return = $query = $db->query($sql);
             $stop = microtime(true);
             $this->SqlTime = $this->SqlTime + round($stop - $begin, 6);
             $this->uset(); //初始化

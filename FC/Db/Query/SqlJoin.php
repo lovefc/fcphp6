@@ -8,7 +8,7 @@ namespace FC\Db\Query;
  * @Author: lovefc 
  * @Date: 2017/04/02 15:10
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-16 18:00:16
+ * @Last Modified time: 2019-10-29 13:37:00
  */
 
 trait SqlJoin
@@ -36,6 +36,8 @@ trait SqlJoin
     public $Sqls = '';
     //要获取的字段
     public $Column = '*';
+    // 返回值
+    public $return = false;
 
     /**
      * 数据库表名
@@ -427,11 +429,11 @@ trait SqlJoin
      * 组合写入sql
      *
      * @param array $data
-     * @param boolean $ignore 是否忽略插入
+     * @param boolean $mode 插入方式
      * @param boolean $parsing 是否用预处理
      * @return object
      */
-    public function insert($data, $ignore = false, $parsing = true)
+    public function insert($data, $mode = 'insert', $parsing = true)
     {
         if (!is_array($data)) {
             return false;
@@ -450,7 +452,19 @@ trait SqlJoin
                 $sql2 .= "'" . $v . "'";
             }
         }
-        $_sql = $ignore ? 'INSERT IGNORE INTO' : 'INSERT INTO';
+        switch ($mode) {
+            case 'insert':
+                $_sql = 'INSERT INTO';
+                break;
+            case 'ignore':
+                $_sql = 'INSERT IGNORE INTO';
+                break;
+            case 'replace':
+                $_sql = 'REPLACE INTO';
+                break;
+            default:
+                $_sql = 'INSERT INTO';
+        }
         $this->Sql = $this->Sqls = $_sql . " {$this->Table}({$sql1}) VALUES ({$sql2})";
         !is_null($value) && $this->Data = $value;
         return $this;
