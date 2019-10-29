@@ -8,7 +8,7 @@ namespace FC\Db\Query;
  * @Author: lovefc 
  * @Date: 2017/04/02 15:10
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-29 13:37:00
+ * @Last Modified time: 2019-10-29 17:15:39
  */
 
 trait SqlJoin
@@ -23,13 +23,13 @@ trait SqlJoin
     //条件
     public $Where = '';
     //where条件的值
-    public $Wdata = array();
+    public $Wdata = [];
     //排序
     public $Order = '';
     //limit
     public $Limit = '';
     //预处理的值
-    public $Data = array();
+    public $Data = [];
     //记录一下每次执行的sql
     public $Sql = '';
     //记录一下每次执行的sql,用于本次操作
@@ -37,7 +37,9 @@ trait SqlJoin
     //要获取的字段
     public $Column = '*';
     // 返回值
-    public $return = false;
+    public $Return = false;
+    // 主键名
+    public $Primary = [];
 
     /**
      * 数据库表名

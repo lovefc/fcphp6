@@ -67,6 +67,8 @@ class Sqlite extends PdoBase
     public function getAllField($table = null)
     {
         $table = empty($table) ? trim($this->Table, '`') : $table;
+        $type = $this->DbType;
+        $keyname = "{$type}{$table}";
         $re = $this->sql("PRAGMA table_info([{$table}])")->fetchall();
         if (is_array($re)) {
             $arr = [];
@@ -74,12 +76,41 @@ class Sqlite extends PdoBase
             foreach ($re as $v) {
                 $arr[$i] = $v['name'];
                 $i++;
+                if($v['pk'] == 1){
+                    $this->Primary[$keyname] = $v['name'];
+                }
             }
             return $arr;
         }
         return false;
     }
-
+    
+    /**
+     * 获取主键名
+     *
+     * @param [type] $table
+     * @return string
+     */
+    public function getPK($table = null)
+    {
+        $table = empty($table) ? trim($this->Table, '`') : $table;
+        $type = $this->DbType;
+        $keyname = "{$type}{$table}";
+        if(isset($this->Primary[$keyname]) && !empty($this->Primary[$keyname])){
+            return $this->Primary[$keyname];
+        }
+        $re = $this->sql("PRAGMA table_info([{$table}])")->fetchall();
+        if (is_array($re)) {
+            foreach ($re as $v) {
+                if($v['pk'] == 1){
+                    $this->Primary[$keyname] = $v['name'];
+                }
+            }
+            return $this->Primary[$keyname];
+        }
+        return false;
+    }
+    
     /**
      * 获取所有的数据库名
      *

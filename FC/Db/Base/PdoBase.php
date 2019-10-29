@@ -10,7 +10,7 @@ use FC\Db\Query\SqlJoin;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-29 13:36:44
+ * @Last Modified time: 2019-10-29 17:29:23
  */
 
 abstract class PdoBase
@@ -84,7 +84,7 @@ abstract class PdoBase
      */
     public function excute()
     {
-        $this->return = false;
+        $this->Return = false;
         $sql = $this->Sqls;
         $data = array_merge($this->Data, $this->Wdata);
         $db = $this->link();
@@ -97,7 +97,7 @@ abstract class PdoBase
         }
         try {
             $begin = microtime(true);
-            $this->return = $db_preare->execute($data);
+            $this->Return = $db_preare->execute($data);
             $stop = microtime(true);
             $this->SqlTime = $this->SqlTime + round($stop - $begin, 6);
             $this->uset();
@@ -161,7 +161,7 @@ abstract class PdoBase
      */
     final public function uqfetch()
     {
-        $this->return = false;
+        $this->Return = false;
         $mode = $this->Mode;
         $db = $this->link();
         $this->select();
@@ -268,7 +268,7 @@ abstract class PdoBase
             return false;
         }
         $this->insert($data, $mode, $parsing)->excute();
-        return $this->return;
+        return $this->Return;
     }
 
     /**
@@ -284,7 +284,7 @@ abstract class PdoBase
             return false;
         }
         $this->update($data,  $parsing)->excute();
-        return $this->return;
+        return $this->Return;
     }
 
     /**
@@ -355,7 +355,7 @@ abstract class PdoBase
      */
     final public function exec($sql = null)
     {
-        $this->return = false;
+        $this->Return = false;
         $sql = $sql != null ? $sql : $this->Sqls;
         if (empty($sql)) {
             $this->error('SQL为空');
@@ -364,7 +364,7 @@ abstract class PdoBase
         try {
             $db = $this->link();
             $begin = microtime(true);
-            $this->return = $query = $db->exec($sql);
+            $this->Return = $query = $db->exec($sql);
             $stop = microtime(true);
             $this->SqlTime = $this->SqlTime + round($stop - $begin, 6);
             $this->uset(); //初始化
@@ -382,7 +382,7 @@ abstract class PdoBase
      */
     final public function query($sql = null)
     {
-        $this->return = false;
+        $this->Return = false;
         $sql = $sql != null ? $sql : $this->Sqls;
         if (empty($sql)) {
             $this->error('SQL为空');
@@ -391,7 +391,7 @@ abstract class PdoBase
         try {
             $db = $this->link();
             $begin = microtime(true);
-            $this->return = $query = $db->query($sql);
+            $this->Return = $query = $db->query($sql);
             $stop = microtime(true);
             $this->SqlTime = $this->SqlTime + round($stop - $begin, 6);
             $this->uset(); //初始化
@@ -463,4 +463,10 @@ abstract class PdoBase
      */
     abstract public function getAllField();
 
+    /**
+     * 子类必须实现获取主键名的方法
+     *
+     * @return void
+     */
+    abstract public function getPK();
 }

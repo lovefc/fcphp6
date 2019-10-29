@@ -201,13 +201,53 @@ class MySql extends PdoBase
     {
         $dbname = empty($dbname) ? $this->DbName : $dbname;
         $table = empty($table) ? trim($this->Table, '`') : $table;
-        $re = $this->sql("select column_name from information_schema.columns where table_schema='" . $dbname . "' and table_name='" . $table . "'")->fetchall();
+        $type = $this->DbType;
+        $keyname = "{$type}{$dbname}{$table}";
+        //$re = $this->sql("select column_name from information_schema.columns where table_schema='" . $dbname . "' and table_name='" . $table . "'")->fetchall();
+        $re = $this->sql("SHOW FULL COLUMNS FROM `{$dbname}`.`{$table}`")->fetchall();
         if (is_array($re)) {
-            return array_column($re, 'column_name');
+            $arr = [];
+            $i = 0;
+            foreach ($re as $v) {
+                $arr[$i] = $v['Field'];
+                $i++;
+                if($v['Key'] == 'PRI'){
+                    $this->Primary[$keyname] = $v['Field'];
+                }
+            }
+            return $arr;
         }
         return false;
     }
-
+    
+    /**
+     * 获取主键名
+     *
+     * @param [type] $table
+     * @param [type] $dbname
+     * @return string
+     */
+    public function getPK($table = null, $dbname = null)
+    {
+        $dbname = empty($dbname) ? $this->DbName : $dbname;
+        $table = empty($table) ? trim($this->Table, '`') : $table;
+        $type = $this->DbType;
+        $keyname = "{$type}{$dbname}{$table}";
+        if(isset($this->Primary[$keyname]) && !empty($this->Primary[$keyname])){
+            return $this->Primary[$keyname];
+        }        
+        $re = $this->sql("SHOW FULL COLUMNS FROM `{$dbname}`.`{$table}`")->fetchall();
+        if (is_array($re)) {
+            foreach ($re as $v) {
+                if($v['Key'] == 'PRI'){
+                    $this->Primary[$keyname] = $v['Field'];
+                }
+            }
+            return $this->Primary[$keyname];
+        }
+        return false;
+    }
+    
     /**
      * 获取数据库表的大小,参数都为空，获取所有的表大小
      *
