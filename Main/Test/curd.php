@@ -12,7 +12,7 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-29 14:48:24
+ * @Last Modified time: 2019-10-29 17:24:26
  */
 
 class curd extends BaseController
@@ -23,6 +23,7 @@ class curd extends BaseController
     {
         // 数据库句柄
         $this->db = $this->DB;
+
         // 添加验证规则
         $this->rules = [
             // 验证非空
@@ -40,6 +41,7 @@ class curd extends BaseController
                 }
             }
         ];
+        
         // 验证非空，并返回错误
         $this->not_empty = ['age', 'name'];
     }
@@ -62,7 +64,7 @@ class curd extends BaseController
             'age'     => '20',
             'name'    => 'fc'
         ];
-        $re = $this->checkValues($datas, 'ceshi', 'sqlite');
+        $re = $this->checkValues($datas, 'ceshi');
         \FC\Pre($re);
     }
 
