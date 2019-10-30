@@ -10,7 +10,7 @@ use FC\Json;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:27:36 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-30 17:28:30
+ * @Last Modified time: 2019-10-30 17:34:49
  */
 
 abstract class BaseController
@@ -260,6 +260,14 @@ abstract class BaseController
         }
     }
 
+    /**
+     * 分页
+     *
+     * @param [type] $max
+     * @param integer $page
+     * @param integer $limit
+     * @return string
+     */
     public function page($max, $page = 1, $limit = 10)
     {
         if ($max == 0 || $limit == 0) {
