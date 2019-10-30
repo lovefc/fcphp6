@@ -2,7 +2,13 @@
 
 namespace Main\Test;
 
-use FC\Json;
+/*
+ * 继承框架提供的控制器
+ * @Author: lovefc 
+ * @Date: 2019-10-30 15:42:03 
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-10-30 15:42:36
+ */
 
 // 控制器类
 use FC\Controller\BaseController;
