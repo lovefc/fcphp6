@@ -8,7 +8,7 @@ namespace FC\Db\Query;
  * @Author: lovefc 
  * @Date: 2017/04/02 15:10
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-29 17:15:39
+ * @Last Modified time: 2019-10-30 17:27:33
  */
 
 trait SqlJoin
@@ -156,7 +156,7 @@ trait SqlJoin
     final public function limit($start = null, $num = null)
     {
         if (!is_null($start)) {
-            $start = (int) $start;
+            $start = $start;
             $this->Limit = ' LIMIT ' . $start . ' ';
             if (!is_null($num)) {
                 $num = (int) $num2;
