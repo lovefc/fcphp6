@@ -10,7 +10,7 @@ use FC\Json;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:27:36 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-29 17:28:42
+ * @Last Modified time: 2019-10-30 09:45:06
  */
 
 abstract class BaseController
@@ -27,6 +27,10 @@ abstract class BaseController
     public $keep  = [];
     // 主键名称
     public $primary = '';
+    // 表名
+    public $table = '';
+    // 跨域访问控制
+    public $cross = false;
 
     // 增加规则
     final public function addRule($name, $array = '')
@@ -39,6 +43,51 @@ abstract class BaseController
         if ($name && $array) {
             $this->rules[$name] = $array;
         }
+    }
+
+    // 初始化设置
+    public function _start()
+    {
+        if ($this->cross === true) {
+            \FC\setOrigin(false, 'POST,GET,OPTIONS,PUT,DELETE', true);
+        }
+    }
+
+    // 清空数据库
+    public function clean()
+    {
+        if ($this->clean === true) {
+            $table = $this->table;
+            $this->db::cleanTable($table);
+        }
+    }
+
+    // 删除操作
+    public function delete($id, $field = '', $pz = 'mysql')
+    {
+        $ids = (array) $id;
+        $table = $this->table;
+        // 获取主键
+        if (!$this->primary) {
+            $this->primary = $this->DB::switch($pz)::getPK($table);
+        }
+        $res = [];
+        foreach ($ids as $k => $kid) {
+            if (in_array($kid, $this->keep)) {
+                continue;
+            }
+            if (!$field) {
+                $where[$this->primary] = $kid;
+            } else {
+                $where[$field] = $kid;
+            }
+            $res[$k] = $this->db::name($table)->where($where)->del();
+        }
+        $str = implode($res, '');
+        if (strpos($str, '0') === false) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -93,6 +142,7 @@ abstract class BaseController
      */
     final public function checkValues($datas, $table = null, $pz = 'mysql')
     {
+
         $data = [];
         if (is_array($datas)) {
             foreach ($datas as $k => $v) {
@@ -121,14 +171,15 @@ abstract class BaseController
      * @param string $pz 数据库配置，用于连接不同的配置
      * @return array|int
      */
-    final public function save($datas, $table, $where = '', $pz = 'mysql')
+    final public function save($datas, $where = '', $pz = 'mysql')
     {
+        $table = $this->table;
         $data = $this->checkValues($datas, $table, $pz);
         if (!empty($where)) {
-            if (!$this->db::where($where)->has()) {
+            if (!$this->db::name($table)->where($where)->has()) {
                 return 0;
             }
-            $re = $this->db::where($where)->upd($data);
+            $re = $this->db::name($table)->where($where)->upd($data);
             return $re;
         }
         $this->db::name($table)->add($data, 'replace');
