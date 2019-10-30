@@ -10,7 +10,7 @@ use FC\Json;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:27:36 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-30 09:45:06
+ * @Last Modified time: 2019-10-30 17:28:30
  */
 
 abstract class BaseController
@@ -63,13 +63,13 @@ abstract class BaseController
     }
 
     // 删除操作
-    public function delete($id, $field = '', $pz = 'mysql')
+    public function delete($id, $field = '')
     {
         $ids = (array) $id;
         $table = $this->table;
         // 获取主键
         if (!$this->primary) {
-            $this->primary = $this->DB::switch($pz)::getPK($table);
+            $this->primary = $this->db::getPK($table);
         }
         $res = [];
         foreach ($ids as $k => $kid) {
@@ -137,10 +137,9 @@ abstract class BaseController
      *
      * @param [type] $datas 数组
      * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
-     * @param string $pz 数据库配置，用于连接不同的配置
      * @return array
      */
-    final public function checkValues($datas, $table = null, $pz = 'mysql')
+    final public function checkValues($datas, $table = null)
     {
 
         $data = [];
@@ -158,7 +157,34 @@ abstract class BaseController
             $this->notEmpty($data);
         }
         if ($table) {
-            $data = $this->checkFields($data, $table, $pz);
+            $data = $this->checkFields($data, $table);
+        }
+        return $data;
+    }
+
+    /**
+     * 验证过滤输出
+     *
+     * @param [type] $datas 数组
+     * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
+     * @return array
+     */
+    final public function checkInputs($datas, $table = null)
+    {
+
+        $data = [];
+        if (is_array($datas)) {
+            foreach ($datas as $k => $v) {
+                if (isset($this->rules[$k])) {
+                    $preg = $this->rules[$k];
+                    $data[$k] = Check::regularHandles($preg, $v);
+                } else {
+                    $data[$k] = $v;
+                }
+            }
+        }
+        if ($table) {
+            $data = $this->checkFields($data, $table);
         }
         return $data;
     }
@@ -168,13 +194,12 @@ abstract class BaseController
      *
      * @param [type] $datas 数组
      * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
-     * @param string $pz 数据库配置，用于连接不同的配置
      * @return array|int
      */
-    final public function save($datas, $where = '', $pz = 'mysql')
+    final public function save($datas, $where = '')
     {
         $table = $this->table;
-        $data = $this->checkValues($datas, $table, $pz);
+        $data = $this->checkValues($datas, $table);
         if (!empty($where)) {
             if (!$this->db::name($table)->where($where)->has()) {
                 return 0;
@@ -192,14 +217,13 @@ abstract class BaseController
      *
      * @param [type] $datas 数组
      * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
-     * @param string $pz 数据库配置，用于连接不同的配置
      * @return array
      */
-    final public function checkFields($datas, $table, $pz = 'mysql')
+    final public function checkFields($datas, $table)
     {
-        $re = $this->DB::switch($pz)::getAllField($table);
+        $re = $this->db::getAllField($table);
         // 获取主键
-        $this->primary = $this->DB::switch($pz)::getPK($table);
+        $this->primary = $this->db::getPK($table);
         $res = [];
         if (is_array($re) && is_array($datas)) {
             foreach ($datas as $k => $v) {
@@ -209,5 +233,44 @@ abstract class BaseController
             }
         }
         return $res;
+    }
+
+    /**
+     * rertful-get 获取数据
+     *
+     * @return void
+     */
+    public function get()
+    {
+        $datas = $_GET;
+        $page  = (int)  isset($_GET['page']) ? $_GET['page'] : 1;
+        $limit = (int) isset($_GET['limit']) ? $_GET['limit'] : 10;
+        $table = $this->table;
+        // 检测变量值
+        $where  = $this->checkInputs($datas, $table);
+        // 获取数量
+        $numbers   = $this->db::name($table)->where($where)->number();
+        $limit = $this->page($numbers, $page, $limit);
+        $res   = $this->db::name($table)->where($where)->limit($limit)->fetchall();
+        //echo $this->db::lastsql();
+        if ($res) {
+            Json::result($res);
+        } else {
+            Json::error(400, '没有数据');
+        }
+    }
+
+    public function page($max, $page = 1, $limit = 10)
+    {
+        if ($max == 0 || $limit == 0) {
+            return 0;
+        }
+        $total = ceil($max / $limit);
+        if ($page > $total) {
+            $page = 1;
+        }
+        $low = $limit * ($page - 1);
+        $low = $low < 0 ? 0 : $low;
+        return "{$low},{$limit}";
     }
 }
