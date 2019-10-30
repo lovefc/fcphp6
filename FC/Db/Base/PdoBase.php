@@ -10,7 +10,7 @@ use FC\Db\Query\SqlJoin;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-29 17:29:23
+ * @Last Modified time: 2019-10-30 09:38:12
  */
 
 abstract class PdoBase
@@ -250,8 +250,9 @@ abstract class PdoBase
      */
     final public function del($data = null)
     {
-        $data = (is_array($data) && count($data) >= 1) ? $data : array_values($this->Data);
-        return $this->delete()->excute($data);
+        $data = !empty($data) ? (array) $data : array_values($this->Data);
+        $this->delete()->excute($data);
+        return $this->Return;
     }
 
     /**
