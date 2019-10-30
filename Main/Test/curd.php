@@ -7,7 +7,7 @@ namespace Main\Test;
  * @Author: lovefc 
  * @Date: 2019-10-30 15:42:03 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-30 15:42:36
+ * @Last Modified time: 2019-10-30 16:24:21
  */
 
 // 控制器类
@@ -28,7 +28,7 @@ class curd extends BaseController
     public function _init()
     {
         // 数据库句柄
-        $this->db = $this->DB;
+        $this->db = $this->DB::switch('mysql');
 
         // 表名
         $this->table = 'ceshi';
