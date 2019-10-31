@@ -2,6 +2,8 @@
 
 namespace Main\Test;
 
+use FC\Json;
+
 /*
  * 继承框架提供的控制器
  * @Author: lovefc 
@@ -29,20 +31,17 @@ class curd extends BaseController
     {
         // 数据库句柄
         $this->db = $this->DB::switch('mysql');
-
         // 表名
         $this->table = 'ceshi';
-
         // 是否允许数据表被清空
         $this->clean = true;
-
         // 保留的数据
         $this->keep = [1];
-
         // 是否可以跨域
         $this->cross = true;
-
-        // 添加验证规则
+        // 验证非空，并返回错误
+        $this->not_empty = ['age', 'name'];
+        // 添加验证规则     
         $this->rules = [
             // 验证非空
             'sex'    => 'empty',
@@ -59,9 +58,6 @@ class curd extends BaseController
                 }
             }
         ];
-
-        // 验证非空，并返回错误
-        $this->not_empty = ['age', 'name'];
     }
 
     // 这个是测试验证用户名的类方法
@@ -93,14 +89,14 @@ class curd extends BaseController
             'age'     => $age,
             'name'    => $name
         ];
-        if ($this->save($datas)) {
+        if ($this->checkSave($datas)) {
             echo '插入成功';
         } else {
             echo '插入失败';
         }
     }
 
-    // 自动更新数据，要带主键
+    // 保存并更新数据，要带主键
     public function upd()
     {
         $datas = [
@@ -108,7 +104,7 @@ class curd extends BaseController
             'age'     => '33',
             'name'    => 'fc'
         ];
-        if ($this->save($datas)) {
+        if ($this->checkSave($datas)) {
             echo '更新成功';
         } else {
             echo '更新失败';
@@ -124,24 +120,10 @@ class curd extends BaseController
         ];
         $where['age'] = $age; // 也可以这样写 $where = 'age=20';
         // 如果数据不存在，会返回空值，否则会返回被影响的行数。
-        if ($this->save($datas, $where)) {
-            echo '更新成功';
+        if ($id = $this->checkUpdate($datas, $where)) {
+            Json::result('', '更新成功');
         } else {
-            echo '更新失败';
-        }
-    }
-
-    // 删除数据
-    public function del()
-    {
-        $id = [
-            1, 6, 7
-        ];
-        //$field = '字段名'; $this->delete($id,$field);
-        if ($this->delete($id)) {
-            echo '删除成功';
-        } else {
-            echo '删除失败';
+            Json::error(400, '更新失败');
         }
     }
 
@@ -160,6 +142,6 @@ class curd extends BaseController
 
     public function clean()
     {
-        parent::clean();
+        $this->checkClean();
     }
 }
