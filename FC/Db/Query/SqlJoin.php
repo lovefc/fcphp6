@@ -101,17 +101,17 @@ trait SqlJoin
     /**
      * 排序
      * 
-     * @param [type] $ziduan 字段名
+     * @param [type] $field 字段名
      * @param string $sort desc 降序 asc 升序
      * @return object
      */
-    final public function order($ziduan, $sort = 'desc')
+    final public function order($field, $sort = 'desc')
     {
         $sort = strtoupper($sort) != 'DESC' ? 'ASC' : 'DESC';
         if (empty($this->Order)) {
-            $this->Order = ' ORDER BY ' . $ziduan . ' ' . $sort;
+            $this->Order = ' ORDER BY ' . $field . ' ' . $sort;
         } else {
-            $this->Order .= ',' . $ziduan . ' ' . $sort;
+            $this->Order .= ',' . $field . ' ' . $sort;
         }
         return $this;
     }
