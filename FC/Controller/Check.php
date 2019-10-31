@@ -156,6 +156,10 @@ class Check
      */
     public static function regularHandles($preg, $str)
     {
+        // 如果是数组
+        if(is_array($str)){
+            return $str;
+        }
         $str = trim($str); //过滤字符串  
         if (empty($str)) {
             return '';
