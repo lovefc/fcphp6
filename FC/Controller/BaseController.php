@@ -54,7 +54,7 @@ abstract class BaseController
     }
 
     // 清空数据库
-    public function clean()
+    public function checkClean()
     {
         if ($this->clean === true) {
             $table = $this->table;
@@ -63,8 +63,11 @@ abstract class BaseController
     }
 
     // 删除操作
-    public function delete($id, $field = '')
+    public function checkDel($id, $field = '')
     {
+        if (empty($id)) {
+            return false;
+        }
         $ids = (array) $id;
         $table = $this->table;
         // 获取主键
@@ -72,13 +75,20 @@ abstract class BaseController
             $this->primary = $this->db::getPK($table);
         }
         $res = [];
+        // 获取所有字段名
+        $fields = $this->db::getAllField($table);
         foreach ($ids as $k => $kid) {
             if (in_array($kid, $this->keep)) {
+                $res[$k] = 0;
                 continue;
             }
             if (!$field) {
                 $where[$this->primary] = $kid;
             } else {
+                if (in_array($field, $fields)) {
+                    $res[$k] = 0;
+                    continue;
+                }
                 $where[$field] = $kid;
             }
             $res[$k] = $this->db::name($table)->where($where)->del();
@@ -89,6 +99,8 @@ abstract class BaseController
         }
         return false;
     }
+
+
 
     /**
      * 检测非空
@@ -141,7 +153,6 @@ abstract class BaseController
      */
     final public function checkValues($datas, $table = null)
     {
-
         $data = [];
         if (is_array($datas)) {
             foreach ($datas as $k => $v) {
@@ -196,20 +207,47 @@ abstract class BaseController
      * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
      * @return array|int
      */
-    final public function save($datas, $where = '')
+    final public function checkSave($datas)
     {
+        if (empty($datas)) {
+            return 0;
+        }
+        $table = $this->table;
+        $data = $this->checkValues($datas, $table);
+        $this->db::name($table)->add($data, 'replace');
+        $id = $this->db::lastid();
+        return $id;
+    }
+
+
+    /**
+     * 更新数据
+     *
+     * @param [type] $datas 数组
+     * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
+     * @return array|int
+     */
+    final public function checkUpdate($datas, $where = '')
+    {
+        if (empty($datas)) {
+            return false;
+        }
         $table = $this->table;
         $data = $this->checkValues($datas, $table);
         if (!empty($where)) {
+            if (is_array($where)) {
+                $where = $this->checkInputs($where, $table);
+                if (empty($where)) {
+                    return false;
+                }
+            }
             if (!$this->db::name($table)->where($where)->has()) {
-                return 0;
+                return false;
             }
             $re = $this->db::name($table)->where($where)->upd($data);
             return $re;
         }
-        $this->db::name($table)->add($data, 'replace');
-        $id = $this->db::lastid();
-        return $id;
+        return false;
     }
 
     /**
@@ -242,19 +280,40 @@ abstract class BaseController
      */
     public function get()
     {
-        $datas = $_GET;
-        $page  = (int)  isset($_GET['page']) ? $_GET['page'] : 1;
-        $limit = (int) isset($_GET['limit']) ? $_GET['limit'] : 10;
+        $datas  = $_GET;
+        $page   = (int)  isset($_GET['page']) ? $_GET['page'] : 1;
+        $limit  = (int) isset($_GET['limit']) ? $_GET['limit'] : 10;
+        $offset = (int) isset($_GET['offset']) ? $_GET['offset'] : 0;
+        $skey   = isset($_GET['skey']) ? $_GET['skey'] : '';
+        $sname  = isset($_GET['sname']) ? $_GET['sname'] : '';
+        unset($datas['sname']); 
+        unset($datas['skey']);
+        unset($datas['page']);         
+        // 表名
         $table = $this->table;
         // 检测变量值
-        $where  = $this->checkInputs($datas, $table);
+        if (!empty($skey) && !empty($sname)) {
+                // 搜索这个值
+                $datas[$skey] = array('', 'LOCATE', $sname);
+        }          
+        $where  = $this->checkInputs($datas, $table);               
+        // 排序方式
+        $order  = (isset($_GET['order']) && $_GET['order'] === 'desc') ? 'desc'  : 'asc';
+        // 排序字段 $this->primary这个值只有调用getAllField函数才会有值，所以放在后面检测
+        $sortby = isset($_GET['sortby']) ? $_GET['sortby'] : $this->primary;
         // 获取数量
-        $numbers   = $this->db::name($table)->where($where)->number();
-        $limit = $this->page($numbers, $page, $limit);
-        $res   = $this->db::name($table)->where($where)->limit($limit)->fetchall();
+        $number   = $this->db::name($table)->where($where)->number();
+        // 获取分页值
+        list($total, $offset2) = $this->page($number, $page, $limit);
+        // 看看从哪里开始
+        if ($offset != 0) {
+            $offset2 = $offset;
+        }
+        $limit = $offset2 . ',' . $limit;
+        $res   = $this->db::name($table)->where($where)->order($sortby, $order)->limit($limit)->fetchall();
         //echo $this->db::lastsql();
         if ($res) {
-            Json::result($res);
+            Json::result($res, '', ['page' => $page, 'number' => $number, 'total' => $total, 'offset' => $offset]);
         } else {
             Json::error(400, '没有数据');
         }
@@ -271,14 +330,86 @@ abstract class BaseController
     public function page($max, $page = 1, $limit = 10)
     {
         if ($max == 0 || $limit == 0) {
-            return 0;
+            return [0, 0];
         }
         $total = ceil($max / $limit);
         if ($page > $total) {
             $page = 1;
         }
-        $low = $limit * ($page - 1);
-        $low = $low < 0 ? 0 : $low;
-        return "{$low},{$limit}";
+        $offset = $limit * ($page - 1);
+        $offset = $offset < 0 ? 0 : $offset;
+        return [$total, $offset];
+    }
+
+    /**
+     * rertful-post 新增数据
+     *
+     * @return void
+     */
+    public function post()
+    {
+        $datas = isset($_POST) ? $_POST : '';
+        if ($id = $this->checkSave($datas)) {
+            Json::result($res, '成功', ['id' => $id]);
+        } else {
+            Json::error(400, '失败');
+        }
+    }
+
+    /**
+     * rertful-put 更新数据,全部数据
+     *
+     * @return void
+     */
+    public function put()
+    {
+        $datas = isset($_POST) ? $_POST : '';
+        if ($id = $this->checkSave($datas)) {
+            Json::result('', '成功', ['id' => $id]);
+        } else {
+            Json::error(400, '失败');
+        }
+    }
+
+
+    /**
+     * rertful-patch 根据条件更新数据
+     *
+     * @return void
+     */
+    public function patch()
+    {
+        $datas = isset($_POST) ? $_POST : '';
+        $data  = isset($datas['data']) ? $datas['data'] : '';
+        $where = isset($datas['where']) ? $datas['where'] : '';
+        if ($this->checkUpdate($datas, $where)) {
+            Json::result('', '成功');
+        } else {
+            Json::error(400, '失败');
+        }
+    }
+
+    /**
+     * rertful-delete 删除数据
+     *
+     * @return void
+     */
+    public function delete()
+    {
+        $datas = isset($_GET) ? $_GET : '';
+        $id = '';
+        $field = isset($datas['field']) ? $datas['field'] : '';
+        if (isset($datas['id'])) {
+            if (is_array($datas['id'])) {
+                $id = $datas['id'];
+            } else {
+                $id = explode(',', $datas['id']);
+            }
+        }
+        if ($this->checkDel($id, $field)) {
+            Json::result('', '删除成功');
+        } else {
+            Json::error(400, '删除失败');
+        }
     }
 }
