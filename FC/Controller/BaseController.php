@@ -100,20 +100,27 @@ abstract class BaseController
         return false;
     }
 
-
-
     /**
-     * 检测非空
+     * 错误提示
      *
      * @param [type] $msg
      * @return void
      */
-    public function error($msg)
+    public function error($code, $msg)
     {
-        $code = 1;
-        $msg = "{$msg}值错误";
         Json::error($code, $msg);
     }
+
+     /**
+     * 成功提示
+     *
+     * @param [type] $msg
+     * @return void
+     */
+    public function success($data,$msg,$append=[])
+    {
+        Json::result($data,$msg,$append);
+    }   
 
     /**
      * 检测非空
@@ -125,7 +132,8 @@ abstract class BaseController
     {
         foreach ($this->not_empty as $v) {
             if (!isset($datas[$v]) || $datas[$v] == null) {
-                $this->error($v);
+                $str = $v."值错误";
+                $this->error(1,$str);
             }
         }
     }
@@ -280,7 +288,7 @@ abstract class BaseController
      */
     public function get()
     {
-        $datas  = $_GET;
+        $datas  = \FC\input($_GET);
         $page   = (int)  isset($_GET['page']) ? $_GET['page'] : 1;
         $limit  = (int) isset($_GET['limit']) ? $_GET['limit'] : 10;
         $offset = (int) isset($_GET['offset']) ? $_GET['offset'] : 0;
@@ -313,9 +321,9 @@ abstract class BaseController
         $res   = $this->db::name($table)->where($where)->order($sortby, $order)->limit($limit)->fetchall();
         //echo $this->db::lastsql();
         if ($res) {
-            Json::result($res, '', ['page' => $page, 'number' => $number, 'total' => $total, 'offset' => $offset]);
+            $this->success($res, '', ['page' => $page, 'number' => $number, 'total' => $total, 'offset' => $offset]);
         } else {
-            Json::error(400, '没有数据');
+            $this->error(400, '没有数据');
         }
     }
 
@@ -348,11 +356,11 @@ abstract class BaseController
      */
     public function post()
     {
-        $datas = isset($_POST) ? $_POST : '';
+        $datas  = \FC\input($_POST);
         if ($id = $this->checkSave($datas)) {
-            Json::result($res, '成功', ['id' => $id]);
+            $this->success($res, '成功', ['id' => $id]);
         } else {
-            Json::error(400, '失败');
+            $this->error(400, '失败');
         }
     }
 
@@ -363,11 +371,11 @@ abstract class BaseController
      */
     public function put()
     {
-        $datas = isset($_POST) ? $_POST : '';
+        $datas  = \FC\input($_POST);
         if ($id = $this->checkSave($datas)) {
-            Json::result('', '成功', ['id' => $id]);
+            $this->success('', '成功', ['id' => $id]);
         } else {
-            Json::error(400, '失败');
+            $this->error(400, '失败');
         }
     }
 
@@ -379,13 +387,13 @@ abstract class BaseController
      */
     public function patch()
     {
-        $datas = isset($_POST) ? $_POST : '';
+        $datas  = \FC\input($_POST);
         $data  = isset($datas['data']) ? $datas['data'] : '';
         $where = isset($datas['where']) ? $datas['where'] : '';
         if ($this->checkUpdate($datas, $where)) {
-            Json::result('', '成功');
+            $this->success('', '成功');
         } else {
-            Json::error(400, '失败');
+            $this->error(400, '失败');
         }
     }
 
@@ -396,7 +404,7 @@ abstract class BaseController
      */
     public function delete()
     {
-        $datas = isset($_GET) ? $_GET : '';
+        $datas = \FC\input($_POST);
         $id = '';
         $field = isset($datas['field']) ? $datas['field'] : '';
         if (isset($datas['id'])) {
@@ -407,9 +415,9 @@ abstract class BaseController
             }
         }
         if ($this->checkDel($id, $field)) {
-            Json::result('', '删除成功');
+            $this->success('', '删除成功');
         } else {
-            Json::error(400, '删除失败');
+            $this->error(400, '删除失败');
         }
     }
 }
