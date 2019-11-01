@@ -137,6 +137,7 @@ abstract class BaseController
             }
         }
     }
+    
     /**
      * 单独验证一个值
      *
