@@ -291,7 +291,7 @@ abstract class BaseController
     {
         $datas  = \FC\input($_GET);
         $page   = (int)  isset($_GET['page']) ? $_GET['page'] : 1;
-        $limit  = (int) isset($_GET['limit']) ? $_GET['limit'] : 10;
+        $limit  = (int) isset($_GET['limit']) ? $_GET['limit'] : 0;
         $offset = (int) isset($_GET['offset']) ? $_GET['offset'] : 0;
         $skey   = isset($_GET['skey']) ? $_GET['skey'] : '';
         $sname  = isset($_GET['sname']) ? $_GET['sname'] : '';
