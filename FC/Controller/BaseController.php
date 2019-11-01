@@ -137,7 +137,7 @@ abstract class BaseController
             }
         }
     }
-    
+
     /**
      * 单独验证一个值
      *
@@ -303,7 +303,7 @@ abstract class BaseController
         // 检测变量值
         if (!empty($skey) && !empty($sname)) {
                 // 搜索这个值
-                $datas[$skey] = array('', 'LOCATE', $sname);
+                $datas[$skey] = ['', 'LOCATE', $sname];
         }          
         $where  = $this->checkInputs($datas, $table);               
         // 排序方式
