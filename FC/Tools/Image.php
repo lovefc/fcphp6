@@ -1,6 +1,6 @@
 <?php
 
-namespace fcphp\extend;
+namespace FC\Tools;
 
 /**
  * 图片处理类
@@ -11,28 +11,13 @@ class Image
     // 当前图片
     protected $img;
 
-    public $width;//验证码宽度
-
-    public $height;//验证码高度
-
-    public $nums;//验证码个数
-
-    public $code;//随机数
-
-    public $fonturl;//字体路径
-
-    public $session;//session名称
-
-    protected $status;//检测图片的缩放地址是否已经存在
+    protected $status = 0; //检测图片的缩放地址是否已经存在
 
     // 常用图像types 对应表
-    protected $types = array(1 => 'gif', 2 => 'jpg', 3 => 'png', 6 => 'bmp');
-
-    // 是否设置gif
-    public $_config = array('do_gif' => 1);
+    protected $types = [1 => 'gif', 2 => 'jpg', 3 => 'png', 6 => 'bmp'];
 
     //设置原图
-    public function setimg($img)
+    public function setImg($img)
     {
         $this->img = $img;
         return $this;
@@ -58,7 +43,17 @@ class Image
         return $info;
     }
 
-    // thumb(新图地址, 宽, 高, 裁剪, 允许放大, 清淅度)
+    /**
+     * 处理图片
+     *
+     * @param [type] $filename 新图地址
+     * @param integer $new_w 宽
+     * @param integer $new_h 高
+     * @param integer $cut 裁剪
+     * @param integer $big 允许放大
+     * @param integer $pct 清晰度
+     * @return void
+     */
     public function thumb($filename, $new_w = 160, $new_h = 120, $cut = 0, $big = 0, $pct = 100)
     {
         if ($this->status == 1) {
@@ -78,10 +73,6 @@ class Image
             $result['width'] = $old_w;
             $result['height'] = $old_h;
             $just_copy = false;
-            // 是否处理GIF
-            if ($ext == 'gif' && !$this->_config['do_gif']) {
-                $just_copy = true;
-            }
             // 如果原图比缩略图小 并且不允许放大
             if ($old_w < $new_h && $old_h < $new_w && !$big) {
                 $just_copy = true;
@@ -97,8 +88,8 @@ class Image
             // 裁剪图片
             if ($cut == 0) { // 等比列
                 $scale = min($new_w / $old_w, $new_h / $old_h); // 计算缩放比例
-                $width = (int)($old_w * $scale); // 缩略图尺寸
-                $height = (int)($old_h * $scale);
+                $width = (int) ($old_w * $scale); // 缩略图尺寸
+                $height = (int) ($old_h * $scale);
                 $start_w = $start_h = 0;
                 $end_w = $old_w;
                 $end_h = $old_h;
@@ -174,7 +165,15 @@ class Image
         return false;
     }
 
-    // water(保存地址,水印图片,水印位置,透明度)
+    /**
+     * 水印处理
+     *
+     * @param [type] $filename 保存地址
+     * @param [type] $water 水印图片
+     * @param integer $pos 水印位置
+     * @param integer $pct 透明度
+     * @return void
+     */
     public function water($filename, $water, $pos = 0, $pct = 80)
     {
         // 加载水印图片
@@ -200,11 +199,6 @@ class Image
         } else {
             return false;
         }
-        // 是否处理GIF
-        if ($ext == 'gif' && !$this->_config['do_gif']) {
-            return false;
-        }
-
         // 剪切水印
         $water_w > $old_w && $water_w = $old_w;
         $water_h > $old_h && $water_h = $old_h;
@@ -277,7 +271,6 @@ class Image
         return $filename;
     }
 
-
     /**
      * 创建一个文件或者目录
      * @param $dir 目录名或者文件名
@@ -313,154 +306,6 @@ class Image
             return true;
         }
         return false;
-    }
-
-
-    /**
-     * 新创建一个图片
-     * $string 文字，支持中文
-     * $w  宽度
-     * $h  高度
-     * $size
-     */
-
-    public function creimg($string, $w = 500, $h = 500, $size = '50', $font = '')
-    {
-        $len = 1;
-        $start = 0;
-        $strlen = $count = mb_strlen($string, 'utf-8');
-        while ($strlen) {
-            $array[] = mb_substr($string, $start, $len, "utf8");
-            $string = mb_substr($string, $len, $strlen, "utf8");
-            $strlen = mb_strlen($string);
-        }
-        $im = imagecreatetruecolor($w, $h); //创建画布
-
-        $white = imagecolorallocate($im, 255, 255, 255);
-        $grey = imagecolorallocate($im, 128, 128, 128);
-        $black = imagecolorallocate($im, 0, 0, 0);
-
-        imagefilledrectangle($im, 0, 0, $w, $h, $white); //输出一个使用白色填充的矩形作为背景
-
-        $y = floor($h / 2) + floor($h / $size);
-        $fontsize = rand(25, 30);
-        $counts = $count;
-        for ($i = 0; $i < $counts; $i++) {
-            $char = $array[$i];
-            $x = floor($w / $counts) * $i + 2;
-            $jiaodu = rand(-30, 30);
-            $color = ImageColorAllocate($im, rand(0, 50), rand(50, 100), rand(100, 140));
-            imagettftext($im, $size, $jiaodu, $x, $y, $color, $font, $char);
-        }
-
-        header("Content-type: image/png");
-        imagepng($im);
-        imagedestroy($im);
-        exit;
-    }
-
-
-    //输出图片
-    public function Imageout($sessionname = 'YZM')
-    {
-        $this->session = $this->sessionCode();
-        $_SESSION[$sessionname] = strtolower($this->session);
-        $im = $this->createimagesource();
-        $this->setbackgroundcolor($im);
-        $this->setCode($im);
-        $this->setdistrubecode($im);
-        Header("Content-type: image/png");
-        Imagepng($im);
-        ImageDestroy($im);
-        exit;
-    }
-
-    //创建个画布
-    public function createimagesource()
-    {
-        return imagecreate($this->width, $this->height);
-    }
-
-    //设置背景颜色
-    public function setbackgroundcolor($im)
-    {
-        $bgcolor = ImageColorAllocate($im, rand(200, 255), rand(200, 255), rand(200, 255));
-        imagefill($im, 0, 0, $bgcolor);
-    }
-
-    //加入随机数
-    public function setdistrubecode($im)
-    {
-        $count_h = $this->height;
-        $cou = floor($count_h * 1);
-        for ($i = 0; $i < $cou; $i++) {
-            $x = rand(0, $this->width);
-            $y = rand(0, $this->height);
-            $jiaodu = rand(0, 360);//设置角度
-            $fontsize = rand(8, 12);//设置字体大小
-            $fonturl = $this->fonturl;//使用的字体
-            $originalcode = 'zxcvbnmasdfghjklqwertyuiop1234567890';//随机字符串
-            $countdistrub = strlen($originalcode);
-            $dscode = $originalcode[rand(0, $countdistrub - 1)];
-            $color = ImageColorAllocate($im, rand(40, 140), rand(40, 140), rand(40, 140));
-            imagettftext($im, $fontsize, $jiaodu, $x, $y, $color, $fonturl, $dscode);
-        }
-    }
-
-    //生成图片
-    public function setCode($im)
-    {
-        $width = $this->width;
-        $height = $this->height;
-        $string = $this->session;
-        $len = 1;
-        $start = 0;
-        $strlen = $count = mb_strlen($string, 'utf-8');
-        while ($strlen) {
-            $array[] = mb_substr($string, $start, $len, "utf8");
-            $string = mb_substr($string, $len, $strlen, "utf8");
-            $strlen = mb_strlen($string);
-        }
-        $y = floor($height / 2) + floor($height / 4);
-        $fontsize = rand(20, 30);
-        $fonturl = $this->fonturl;
-        $counts = $count;
-        for ($i = 0; $i < $counts; $i++) {
-            $char = $array[$i];
-            $x = floor($width / $counts) * $i + 2;
-            $jiaodu = rand(-30, 30);
-            $color = ImageColorAllocate($im, rand(0, 50), rand(50, 100), rand(100, 140));
-            imagettftext($im, $fontsize, $jiaodu, $x, $y, $color, $fonturl, $char);
-        }
-    }
-
-    //生成session
-    public function sessionCode()
-    {
-        $len = 1;
-        $start = 0;
-        $string = $this->code;
-        $strlen = $num = mb_strlen($string, 'utf-8');
-        while ($strlen) {
-            $array[] = mb_substr($string, $start, $len, "utf-8");
-            $string = mb_substr($string, $len, $strlen, "utf-8");
-            $strlen = mb_strlen($string, 'utf-8');
-        }
-        $originalcode = $array;
-        $_dscode = "";
-        $counts = $this->nums;
-        for ($j = 0; $j < $counts; $j++) {
-            $rand = rand(0, $num - 1);
-            $dscode = $originalcode[$rand];
-            $_dscode .= $dscode;
-        }
-        return $_dscode;
-    }
-
-    //获取验证码
-    public function getVerCode($name = null)
-    {
-        return isset($_SESSION[$name]) ? $_SESSION[$name] : '';
     }
 
     //打印错误
