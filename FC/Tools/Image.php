@@ -11,7 +11,7 @@ class Image
     // 当前图片
     protected $img;
 
-    protected $status = 0; //检测图片的缩放地址是否已经存在
+    protected $is_file = false; //检测图片的缩放地址是否已经存在
 
     // 常用图像types 对应表
     protected $types = [1 => 'gif', 2 => 'jpg', 3 => 'png', 6 => 'bmp'];
@@ -56,7 +56,7 @@ class Image
      */
     public function thumb($filename, $new_w = 160, $new_h = 120, $cut = 0, $big = 0, $pct = 100)
     {
-        if ($this->status == 1) {
+        if ($this->is_file) {
             if (file_exists($filename)) {
                 return true;
             }
