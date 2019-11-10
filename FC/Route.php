@@ -22,6 +22,7 @@ class Route
     public static $reback = true;
     public static $query, $query2;
     public static $showError = true; // 是否显示错误
+    public static $suffix = '';
 
     // 错误显示
     public static function errShow()
@@ -361,10 +362,10 @@ class Route
         $url = self::getQuery();
         if (self::isRewrite($url) !== true) {
             $urls = parse_url($url);
-            $path = isset($urls['path'])?$urls['path']:'';
-            $query = isset($urls['query'])?$urls['query']:'';
+            $path = isset($urls['path']) ? $urls['path'] : '';
+            $query = isset($urls['query']) ? $urls['query'] : '';
             $m = explode(self::$cutting, $path);
-            $end = end($m).'?'.$query;
+            $end = end($m) . '?' . $query;
             $purl = parse_url($end);
             $key = key($m);
             $key2 = $key + 1;
@@ -477,26 +478,30 @@ class Route
     // 判断解析
     public static function funcHandle($func)
     {
+        if (static::isFunc($func)) {
+            return static::func($func);
+        }
         if (is_array($func)) {
             return static::method($func);
         } else {
             if (!empty(self::$query2)) {
+                self::$query2 = self::$query2 . self::$suffix; 
                 $func = $func . self::$query;
-
                 $func = array(
                     $func,
                     self::$query2,
                 );
                 return static::method($func);
             }
-            if (!empty(self::$query)) {
-                $func = array(
-                    $func,
-                    self::$query,
-                );
-                return static::method($func);
+            if (empty(self::$query)) {
+                self::$query = 'index';
             }
-            return static::func($func);
+            self::$query = self::$query . self::$suffix;
+            $func = array(
+                $func,
+                self::$query,
+            );
+            return static::method($func);
         }
     }
 
