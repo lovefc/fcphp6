@@ -15,7 +15,7 @@ class captcha
     use \FC\Traits\Parts;
 
     // 显示验证码
-    public function show()
+    public function index()
     {
         // 获取验证码字符串
         $code = $this->CAPTCHA->getCode();
