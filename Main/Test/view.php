@@ -15,10 +15,10 @@ class view
     use \FC\Traits\Parts;
 
     // 打印信息
-    public function index()
+    public function index($arr)
     {
-        $text = '我爱你封尘';
-        $this->VIEW->assign('text', $text);
+        $arr = empty($arr) ? ['我','爱','你','封','尘'] : [];
+        $this->VIEW->assign('res', $arr);
         $this->VIEW->display('index');
     }
 }
