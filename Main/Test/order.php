@@ -4,7 +4,7 @@ namespace Main\Test;
 
 /*
  * 订单高并发测试案例
- * 需要导入Sql/order.sql,需要redis
+ * 需要导入Sql/order.sql,需要redis，经过测试，协议类亦可用
  * @Author: lovefc 
  * @Date: 2019-10-16 16:08:04 
  * @Last Modified by: lovefc
@@ -20,17 +20,6 @@ class order
     {
         $key = 'sku_id';
         $sku_id = 11;
-        // 判断有没有redis的值，用于设置库存数量
-        /*
-        if ($is == 1) {
-            $where['sku_id'] =  $sku_id;
-            $table = 'store';
-            $re = $this->MYSQL->table($table)->getid('number')->where($where)->fetch();
-            $number = $re['number'] ?? 0;
-            $this->setkey($key, $number); 
-        }
-        */
-
         // 使用redis队列，因为pop操作是原子的
         // 获取字段长度
         $count = $this->REDIS->lpop($key);
@@ -89,6 +78,7 @@ class order
         $this->DB::table('store')->where(['sku_id'=>11])->upd(['number'=>500]);
         // 删除所有的key
         $this->REDIS->flushall();
+        // 在redis中设置一下sku的数量。
         $this->setkey('sku_id', 500); 
     }
 }
