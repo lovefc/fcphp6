@@ -1,0 +1,21 @@
+{
+    "name": "lovefc/fcphp6",
+    "description": "FCPHP框架",
+    "keywords": ["php","fcphp","php框架","framework"],
+    "version": "0.0.1",
+    "homepage": "https://github.com/lovefc/fcphp6.git",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.0.0"
+    },
+    "authors": [
+      {
+        "name": "lovefc",
+        "email": "fcphp@qq.com",
+        "role": "Developer"
+      }
+    ],
+	"autoload": {
+	   "psr-4": { "FC\\": "FC"}
+	}
+}
