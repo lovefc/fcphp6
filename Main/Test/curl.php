@@ -15,9 +15,9 @@ class curl
     use \FC\Traits\Parts;
 
     // 演示拉取图片接口
-    public function pic()
+    public function index()
     {
-        $url = 'https://www.apiopen.top/meituApi?page=1';
+        $url = 'http://t.weather.sojson.com/api/weather/city/101190101';
         $arr = $this->CURL->ua('widowns')->url($url)->results('json'); // 获取内容
         // 打印
         \FC\pre($arr);
