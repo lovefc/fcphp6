@@ -72,7 +72,11 @@ class Cache
         } else {
             $obj = new \FC\Cache\Memcache();
         }
-        $obj->connect($this->Path, $this->Port) or $this->error('Memcache 链接出错，请检查配置');
+        try {
+            $obj->connect($this->Path, $this->Port);
+        } catch (\Exception $e) {
+            $this->error('Memcache 链接出错，请检查配置');
+        }
         return $obj;
     }
 
@@ -89,7 +93,11 @@ class Cache
         } else {
             $obj = new \FC\Cache\Redis();
         }
-        $obj->connect($this->Path, $this->Port) or $this->error('Redis 链接出错，请检查配置');
+        try {
+            $obj->connect($this->Path, $this->Port);
+        } catch (\Exception $e) {
+            $this->error('Redis 链接出错，请检查配置');
+        }
         return $obj;
     }
 
