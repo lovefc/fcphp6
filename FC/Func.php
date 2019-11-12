@@ -196,7 +196,7 @@ function getIP()
                 ) {
                     $ip = $_SERVER['REMOTE_ADDR'];
                 } else {
-                    $ip = "unknown";
+                    $ip = "0.0.0.0";
                 }
             }
         }
@@ -407,4 +407,31 @@ function pre($vars, $label = '', $return = false)
         return $content;
     }
     echo $content;
+}
+
+/**
+ * 隐藏电话号码中间4位和邮箱
+ *
+ * @param [type] $phone 手机号码或者邮箱
+ * @return string
+ */
+function hide4PhoneEmail($phone)
+{
+    //隐藏邮箱
+    if (strpos($phone, '@')) {
+        $email_array = explode("@", $phone);
+        $prevfix = (strlen($email_array[0]) < 4) ? "" : substr($phone, 0, 3); //邮箱前缀
+        $count = 0;
+        $str = preg_replace('/([\d\w+_-]{0,100})@/', '***@', $phone, -1, $count);
+        $rs = $prevfix . $str;
+        return $rs;
+    } else {
+        //隐藏联系方式中间4位
+        $Istelephone = preg_match('/(0[0-9]{2,3}[\-]?[2-9][0-9]{6,7}[\-]?[0-9]?)/i', $phone); //固定电话
+        if ($Istelephone) {
+            return preg_replace('/(0[0-9]{2,3}[\-]?[2-9])[0-9]{3,4}([0-9]{3}[\-]?[0-9]?)/i', '$1****$2', $phone);
+        } else {
+            return preg_replace('/(1[0-9]{1}[0-9])[0-9]{4}([0-9]{4})/i', '$1****$2', $phone);
+        }
+    }
 }
