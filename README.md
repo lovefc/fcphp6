@@ -1,16 +1,16 @@
 <p align="center">
     <img src="logo.png" width="280" alt="FCPHP" align="center" />
 </p>
-<p align="center">FCPHP是一个轻量级、简单化的PHP框架。</p>
 <p align="center">
+     FCPHP是一个轻量级、简单化的PHP框架。<br />
 	<a href="">
 	    <img src="https://img.shields.io/badge/license-Apache-blue" />
 	</a>
 	<a href="">
-	    <img src="https://img.shields.io/badge/fcphp-v6.0.0-blue" />
+	    <img src="https://img.shields.io/badge/fcphp-v6.0.0-red" />
 	</a>
 	<a href="">
-	    <img src="https://img.shields.io/badge/php->%3D7.0.0-blue" />
+	    <img src="https://img.shields.io/badge/php->%3D%207.0.0-brightgreen" />
 	</a>
 </p>
 ## 特点
