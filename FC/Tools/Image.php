@@ -3,7 +3,11 @@
 namespace FC\Tools;
 
 /**
- * 图片处理类
+ *  汉字转拼音库
+ * @Author: Anonymous
+ * @Date: 2019-10-10 13:23:37 
+ * @Last Modified by: lovefc
+ * @Last Modified time: 2019-11-12 15:59:50
  */
 
 class Image
