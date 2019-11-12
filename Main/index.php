@@ -10,7 +10,7 @@ define('DEBUG', true);
 define('LOG_DIR',__DIR__.'/Log');
 
 try {
-    $obj = FC\Obj('FC\Glue\Route');
+    $obj = FC\obj('FC\Glue\Route');
     $obj::run();
 } catch (\Exception $e) {
     \FC\Log::Show($e->getMessage());
