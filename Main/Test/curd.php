@@ -4,15 +4,7 @@ namespace Main\Test;
 
 use FC\Json;
 
-/*
- * 继承框架提供的控制器
- * @Author: lovefc 
- * @Date: 2019-10-30 15:42:03 
- * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-30 16:24:21
- */
-
-// 控制器类
+// 控制器基类
 use FC\Controller\BaseController;
 
 /*
@@ -140,6 +132,7 @@ class curd extends BaseController
         echo '名称：' . $re . FC_EOL;
     }
 
+    // 清空数据库
     public function clean()
     {
         $this->checkClean();
