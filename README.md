@@ -2,7 +2,17 @@
     <img src="logo.png" width="280" alt="FCPHP" align="center" />
 </p>
 <p align="center">FCPHP是一个轻量级、简单化的PHP框架。</p>
-
+<p align="center">
+	<a href="">
+	    <img src="https://img.shields.io/badge/license-Apache-blue" />
+	</a>
+	<a href="">
+	    <img src="https://img.shields.io/badge/fcphp-v6.0.0-blue" />
+	</a>
+	<a href="">
+	    <img src="https://img.shields.io/badge/php->%3D7.0.0-blue" />
+	</a>
+</p>
 ## 特点
 - 多配置、配置分离
 - 惰性加载、单例实例
