@@ -24,7 +24,8 @@ DB快速操作、简单、快捷<br />
 </p>
 <p align="center">
 直接下载源码或者git clone
-<br />QQ群号：572905973
+<br />QQ群号：572905973<br />
+<a href="https://gitee.com/lovefc/fcphp6/wikis/为什么重复造轮子">为什么重复造轮子</a>
 </p>
 
 
