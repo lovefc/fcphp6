@@ -4,5 +4,3 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^(.*)$ index.php?$1 [QSA,PT,L]
 </IfModule>
-order deny,allow
-deny from 113.195.93.99
