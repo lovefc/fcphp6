@@ -3,11 +3,11 @@
 namespace FC\Tools;
 
 /**
- *  汉字转拼音库
+ * 汉字转拼音库
  * @Author: Anonymous
  * @Date: 2019-10-10 13:23:37 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-11-12 16:00:20
+ * @Last Modified time: 2019-11-13 16:27:32
  */
 
 class Pinyin
