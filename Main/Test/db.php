@@ -7,7 +7,7 @@ namespace Main\Test;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-16 16:12:01
+ * @Last Modified time: 2019-11-13 14:24:14
  */
 
 class db
@@ -19,7 +19,7 @@ class db
     {
         $size = $this->DB::switch('sqlite')::getDBSize();
         echo 'Sqlite版本：' . $this->DB::switch('sqlite')::verSion() . ' 大小：' . $size[0] . $size[1] . FC_EOL;
-        
+
         $size = $this->DB::getDBSize();
         echo 'Mysql版本：' . $this->DB::verSion() . ' 大小：' . $size[0] . $size[1] . FC_EOL;
     }
@@ -29,9 +29,9 @@ class db
     {
         $re = $this->DB::switch('sqlite')::table($table)->limit(1)->fetch();
         \FC\pre($re);
-        
+
         $re = $this->DB::table($table)->limit(1)->fetch();
-        \FC\pre($re);        
+        \FC\pre($re);
     }
 
     // 获取数据库中的所有表
@@ -49,18 +49,38 @@ class db
     {
         $re = $this->DB::switch('sqlite')::table($table)->getAllField();
         \FC\pre($re);
-        
+
         $re = $this->DB::table($table)->getAllField();
         \FC\pre($re);
     }
-    
+
     // where条件
     public function where($table = 'ceshi', $id = 'id', $value = 1)
     {
-        $re = $this->DB::switch('sqlite')::table($table)->where([$id=>$value])->fetch();
+        $re = $this->DB::switch('sqlite')::table($table)->where([$id => $value])->fetch();
         \FC\pre($re);
-        
-        $re = $this->DB::table($table)->where([$id=>$value])->fetch();
+
+        $re = $this->DB::table($table)->where([$id => $value])->fetch();
         \FC\pre($re);
-    }    
+    }
+
+    // 创建用户，创建数据库
+    public function creuser()
+    {
+        // 此处必要要root权限才行
+        $user = 'lovefc';
+        $pass = '123456';
+        if ($this->DB::newUser($user, $pass)) {
+            echo '用户创建成功';
+        } else {
+            echo '用户创建失败';
+        };
+        // 创建数据库
+        $newdb = 'db123';
+        if ($this->DB::newDB($newdb)) {
+            echo '创建数据库成功';
+        } else {
+            echo '创建数据库失败';
+        }
+    }
 }
