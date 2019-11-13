@@ -7,7 +7,7 @@ namespace Main\Test;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-11-13 14:24:14
+ * @Last Modified time: 2019-11-13 14:30:22
  */
 
 class db
@@ -63,6 +63,15 @@ class db
         $re = $this->DB::table($table)->where([$id => $value])->fetch();
         \FC\pre($re);
     }
+
+     // 不使用where
+     public function sql()
+     {
+         $sql = 'select * from ceshi';
+         $re = $this->DB::switch('sqlite')::sql($sql)->fetchall();
+         echo 'SQL：'.$this->DB::switch('sqlite')::lastsql();
+         \FC\pre($re);
+     }   
 
     // 创建用户，创建数据库
     public function creuser()
