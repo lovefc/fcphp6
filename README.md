@@ -2,7 +2,7 @@
     <img src="logo.png" width="280" alt="FCPHP" align="center" />
 </p>
 <p align="center">
-     轻量小巧、兼容性强、随心所欲<br />
+     轻量小巧、兼容性强、简单易懂<br />
 	<a href="">
 	    <img src="https://img.shields.io/badge/license-Apache-blue" />
 	</a>
