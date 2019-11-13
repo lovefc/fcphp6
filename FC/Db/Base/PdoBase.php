@@ -10,7 +10,7 @@ use FC\Db\Query\SqlJoin;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-30 09:38:12
+ * @Last Modified time: 2019-11-13 14:09:29
  */
 
 abstract class PdoBase
@@ -61,7 +61,7 @@ abstract class PdoBase
         $this->Table = '`' . $this->Prefix . $table . '`';
         return $this;
     }
-
+    
     /**
      * 数据库表名,不加前缀
      *
@@ -75,6 +75,35 @@ abstract class PdoBase
         }
         $this->Table = '`' . $table . '`';
         return $this;
+    }
+
+    /**
+     * 设置数据库表名
+     *
+     * @param string $table
+     * @return object
+     */
+    public function setTable($table = null)
+    {
+        if (!$table) {
+            return $this;
+        }
+        $this->Table =  $table;
+        return $this;
+    }
+
+    /**
+     * 获取数据库表名
+     *
+     * @param  string $table
+     * @return string
+     */
+    public function getTable($table = null)
+    {
+        if (!$table) {
+            return false;
+        }
+        return $table;
     }
 
     /**

@@ -10,11 +10,14 @@ use FC\Db\Base\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 16:36:06
+ * @Last Modified time: 2019-11-13 14:20:24
  */
 
 class MySql extends PdoBase
 {
+
+    // 存储所有的数据库名
+    public $Dbnames = [];
 
     /**
      * 创建新用户,创建的用户拥有所有权限
@@ -49,20 +52,6 @@ class MySql extends PdoBase
         } else {
             return false;
         }
-    }
-
-    /**
-     * 获取数据库表名
-     *
-     * @param  string $table
-     * @return string
-     */
-    public function getTable($table = null)
-    {
-        if (!$table) {
-            return false;
-        }
-        return $this->Prefix . $table;
     }
 
     /**
@@ -114,6 +103,27 @@ class MySql extends PdoBase
     }
 
     /**
+     * 创建一个数据库
+     *
+     * @param [type] $dbname
+     * @return bool
+     */
+    public function newDB($dbname = null)
+    {
+        $dbnames = $this->getAllDBName();
+        if (empty($newtable) || in_array($dbname, $dbnames)) {
+            return false;
+        } else {
+            $sql = 'CREATE DATABASE ' . $dbname;
+            if ($this->sql($sql)->query()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    /**
      * 复制一张表
      *
      * @param [type] $newtable
@@ -162,13 +172,13 @@ class MySql extends PdoBase
      * @param [type] $table 旧的表名
      * @return bool
      */
-    public function newTableName($newtable = null, $table = null)
+    public function reNameTable($newtable = null, $table = null)
     {
         $table = empty($table) ? $this->Table : $table;
         if (empty($table) || empty($newtable)) {
             return false;
         } else {
-            if ($this->sql('alter table ' . $table . ' rename to ' . $newtable)->query()) {
+            if ($this->sql('alter table `' . $table . '` rename to `' . $newtable . '`')->query()) {
                 return true;
             } else {
                 return false;
@@ -185,7 +195,8 @@ class MySql extends PdoBase
     {
         $re = $this->sql("SELECT SCHEMA_NAME FROM information_schema.SCHEMATA")->fetchall();
         if (is_array($re)) {
-            return array_column($re, 'SCHEMA_NAME');
+            $this->Dbnames = array_column($re, 'SCHEMA_NAME');
+            return $this->Dbnames;
         }
         return false;
     }
@@ -211,7 +222,7 @@ class MySql extends PdoBase
             foreach ($re as $v) {
                 $arr[$i] = $v['Field'];
                 $i++;
-                if($v['Key'] == 'PRI'){
+                if ($v['Key'] == 'PRI') {
                     $this->Primary[$keyname] = $v['Field'];
                 }
             }
@@ -219,7 +230,7 @@ class MySql extends PdoBase
         }
         return false;
     }
-    
+
     /**
      * 获取主键名
      *
@@ -233,13 +244,13 @@ class MySql extends PdoBase
         $table = empty($table) ? trim($this->Table, '`') : $table;
         $type = $this->DbType;
         $keyname = "{$type}{$dbname}{$table}";
-        if(isset($this->Primary[$keyname]) && !empty($this->Primary[$keyname])){
+        if (isset($this->Primary[$keyname]) && !empty($this->Primary[$keyname])) {
             return $this->Primary[$keyname];
-        }        
+        }
         $re = $this->sql("SHOW FULL COLUMNS FROM `{$dbname}`.`{$table}`")->fetchall();
         if (is_array($re)) {
             foreach ($re as $v) {
-                if($v['Key'] == 'PRI'){
+                if ($v['Key'] == 'PRI') {
                     $this->Primary[$keyname] = $v['Field'];
                 }
             }
@@ -247,7 +258,7 @@ class MySql extends PdoBase
         }
         return false;
     }
-    
+
     /**
      * 获取数据库表的大小,参数都为空，获取所有的表大小
      *
