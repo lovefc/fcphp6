@@ -20,7 +20,7 @@
 DB快速操作、高效、快捷<br />
 多继承、简单扩展、模块分离<br />
 此作者会不断的更新、修补BUG<br />
-并没有文档参考、使用请看案例<br />
+<a href="https://www.kancloud.cn/lovefc/fckj">没有完善的文档</a>、使用请看案例<br />
 </p>
 <p align="center">
 直接下载源码或者git clone
