@@ -117,9 +117,9 @@ abstract class BaseController
      * @param [type] $msg
      * @return void
      */
-    public function success($data,$msg,$append=[])
+    public function success($data, $msg = '',$append=[])
     {
-        Json::result($data,$msg,$append);
+        Json::result($data,0,$msg,$append);
     }   
 
     /**
@@ -233,7 +233,7 @@ abstract class BaseController
      * 更新数据
      *
      * @param [type] $datas 数组
-     * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
+     * @param [type] $where 表名，用于验证数组中是否有和字段一样的键名
      * @return array|int
      */
     final public function checkUpdate($datas, $where = '')
@@ -282,19 +282,20 @@ abstract class BaseController
         return $res;
     }
 
+
     /**
-     * rertful-get 获取数据
+     * 获取数据
      *
      * @return void
      */
-    public function get()
+    public function query(array $datas = [])
     {
-        $datas  = \FC\input($_GET);
-        $page   = (int)  isset($_GET['page']) ? $_GET['page'] : 1;
-        $limit  = (int) isset($_GET['limit']) ? $_GET['limit'] : 0;
-        $offset = (int) isset($_GET['offset']) ? $_GET['offset'] : 0;
-        $skey   = isset($_GET['skey']) ? $_GET['skey'] : '';
-        $sname  = isset($_GET['sname']) ? $_GET['sname'] : '';
+        $datas  = \FC\input($datas);
+        $page   = (int)  isset($datas['page']) ? $datas['page'] : 1;
+        $limit  = (int) isset($datas['limit']) ? $datas['limit'] : 0;
+        $offset = (int) isset($datas['offset']) ? $datas['offset'] : 0;
+        $skey   = isset($datas['skey']) ? $datas['skey'] : '';
+        $sname  = isset($datas['sname']) ? $datas['sname'] : '';
         unset($datas['sname']); 
         unset($datas['skey']);
         unset($datas['page']);         
@@ -303,13 +304,13 @@ abstract class BaseController
         // 检测变量值
         if (!empty($skey) && !empty($sname)) {
                 // 搜索这个值
-                $datas[$skey] = ['', 'LOCATE', $sname];
+                $datas[$skey] = ['LOCATE', $sname];
         }          
         $where  = $this->checkInputs($datas, $table);               
         // 排序方式
-        $order  = (isset($_GET['order']) && $_GET['order'] === 'desc') ? 'desc'  : 'asc';
+        $order  = (isset($datas['order']) && $datas['order'] === 'desc') ? 'desc'  : 'asc';
         // 排序字段 $this->primary这个值只有调用getAllField函数才会有值，所以放在后面检测
-        $sortby = isset($_GET['sortby']) ? $_GET['sortby'] : $this->primary;
+        $sortby = isset($datas['sortby']) ? $datas['sortby'] : $this->primary;
         // 获取数量
         $number   = $this->db::name($table)->where($where)->number();
         // 获取分页值
@@ -322,9 +323,25 @@ abstract class BaseController
         $res   = $this->db::name($table)->where($where)->order($sortby, $order)->limit($limit)->fetchall();
         //echo $this->db::lastsql();
         if ($res) {
-            $this->success($res, '', ['page' => $page, 'number' => $number, 'total' => $total, 'offset' => $offset]);
+            return ['data' => $res, 'page' => ['page' => $page, 'number' => $number, 'total' => $total, 'offset' => $offset]];
         } else {
-            $this->error(400, '没有数据');
+            return null;
+        }
+    }
+
+    /**
+     * rertful-get 获取数据
+     *
+     * @return void
+     */
+    public function get()
+    {
+           $datas = \FC\input($_GET);
+           $res = $this->query($datas);
+           if($res){
+               $this->success($res['data'], '', $res['page']);
+           } else {
+               $this->error(400, '没有数据');
         }
     }
 
