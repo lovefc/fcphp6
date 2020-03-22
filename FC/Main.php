@@ -111,16 +111,22 @@ require $FC_PATH . '/Load/LoaderClass.php';
 require $FC_PATH . '/Func.php';
 
 // 加载框架类库
-FC\Load\LoaderClass::AddPsr4('FC', __DIR__);
+\FC\Load\LoaderClass::AddPsr4('FC', __DIR__);
 
 // 自动加载
-FC\Load\LoaderClass::register();
+\FC\Load\LoaderClass::register();
+
+//加载初始化类
+$load = \FC\obj('FC\Glue\Load');
+
+//第三方扩展设置
+$load->ExtendConfig(PATH['FC_CONFIG'] . '/config.php');
 
 // 触发事件设置
 \FC\obj('FC\Glue\Event')->run();
 
 // 添加事件
-FC\Event::trigger('OnLoad');
+\FC\Event::trigger('OnLoad');
 
 // 错误处理和记录
 register_shutdown_function(['\FC\Log', 'Error']);
