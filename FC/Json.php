@@ -20,9 +20,9 @@ class Json
      * @param string $msg 提示消息
      * @param array $append
      */
-    public static function result($data, $msg = '', $append = array())
+    public static function result($data, $code = 0, $msg = '', $append = array())
     {
-        self::apiJsonResponse($data, '200', $msg, $append);
+        self::apiJsonResponse($data, $code, $msg, $append);
     }
 
     /**
