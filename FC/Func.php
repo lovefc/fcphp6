@@ -61,6 +61,23 @@ function inArray($item, $array, $status = true)
 }
 
 /**
+ * 获取数组键名
+ * @param $config 数组
+ * @param $array 键名，多个
+ */
+function ImpArray($config, $array)
+{
+	if(!is_array($config)) return false;
+    if (is_array($array) && count($array) > 0) {
+        foreach ($array as $value) {
+            $config = isset($config[$value]) ? $config[$value] : null;
+        }
+        return $config;
+    }
+    return $config;
+}
+
+/**
  * 转义变量,检测变量
  * 
  * @param $input 要转义的值，可以是一个值或者是一个数组,或者是某一个数组的键名
@@ -131,14 +148,14 @@ function setOrigin($allow_origin = false, $method = 'GET', $credentials = false)
         }
         header('Access-Control-Allow-Origin:*');
         header('Access-Control-Allow-Methods:' . $method);
-        header('Access-Control-Allow-Headers:x-requested-with,content-type');
+        header('Access-Control-Allow-Headers:Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
     } elseif (in_array($origin, $allow_origin)) {
         if ($credentials === true) {
             header("Access-Control-Allow-Credentials: true");
         }
         header('Access-Control-Allow-Origin:' . $origin);
         header('Access-Control-Allow-Methods:' . $method);
-        header('Access-Control-Allow-Headers:x-requested-with,content-type');
+        header('Access-Control-Allow-Headers:Content-Type, Content-Length, Authorization, Accept, X-Requested-With , yourHeaderFeild');
     } else {
         head(400);
         die(); //不允许访问
@@ -341,11 +358,11 @@ function head($status = 200)
         502 => 'HTTP/1.1 502 Bad Gateway',
         503 => 'HTTP/1.1 503 Service Unavailable',
         504 => 'HTTP/1.1 504 Gateway Time-out',
-        'css' => 'Content-type: text/css',
+        'css' => 'Content-type:  application/css',
         'json' => 'Content-type: application/json',
-        'js' => 'Content-type: text/javascript',
-        'xml' => 'Content-type: text/xml',
-        'text' => 'Content-Type: text/plain',
+        'js' => 'Content-type:  application/javascript',
+        'xml' => 'Content-type:  application/xml',
+        'text' => 'Content-Type:  application/plain',
         'zip' => 'Content-Type: application/zip',
         'pdf' => 'Content-Type: application/pdf',
         'jpeg' => 'Content-Type: image/jpeg',
