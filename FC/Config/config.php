@@ -25,4 +25,5 @@ return [
    'FC\Glue\SafeMode'  => 'safemode.php',
    'FC\Glue\Cache'     => 'cache.php',
    'FC\Glue\Db'        => 'db.php',
+   'FC\Glue\Parts'     => 'parts.php',
 ];
