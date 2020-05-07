@@ -134,6 +134,12 @@ register_shutdown_function(['\FC\Log', 'Error']);
 // 获取当前地址，兼容方案
 define('NOW_URL', FC\requestUri());
 
+// 获取主域名
+define('HOST_DOMAIN',FC\getHostDomain());
+
+// 获取目录名
+define('HOST_DIR', dirname($_SERVER['PHP_SELF']));
+
 // 安全过滤
 \FC\obj('FC\Glue\SafeMode')->run();
 
