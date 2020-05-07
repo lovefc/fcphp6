@@ -10,6 +10,9 @@ namespace FC;
  * @Last Modified time: 2019-10-12 15:27:32
  */
 
+
+
+
 /**
  * 获取类的对象
  *
@@ -18,7 +21,7 @@ namespace FC;
  * @param string $mode
  * @return void
  */
-function obj($class, $mode = 'cache')
+function obj($class, $arg = null, $mode = 'cache')
 {
     if (!$class) {
         return false;
@@ -31,13 +34,13 @@ function obj($class, $mode = 'cache')
     if (class_exists($class)) {
         switch ($mode) {
             case 'cache':
-                $fcobj[$class] = new $class;
+                $fcobj[$class] = \FC\Route\Execs::_constructor($class, $arg);
                 break;
             case  'notcache':
-                return new $class;
+                return \FC\Route\Execs::_constructor($class, $arg);
                 break;
             default:
-                $fcobj[$class] = new $class;
+                $fcobj[$class] = \FC\Route\Execs::_constructor($class, $arg);
         }
         return $fcobj[$class];
     }
@@ -171,9 +174,8 @@ function setOrigin($allow_origin = false, $method = 'GET', $credentials = false)
  */
 function requestUri()
 {
-    $scheme = $_SERVER['REQUEST_SCHEME'] ?? '';
     $host = $_SERVER['HTTP_HOST'] ?? '';
-    $purl = $scheme . '://' . $host;
+    $purl = getHttpType() . $host;
     if (isset($_SERVER['REQUEST_URI'])) {
         $uri = $_SERVER['REQUEST_URI'];
         if (!strstr($uri, 'http://') || !strstr($uri, 'http://')) {
@@ -187,6 +189,27 @@ function requestUri()
         }
     }
     return $uri;
+}
+
+
+/**
+ * 获取主域名
+ *
+ * @return string
+ */
+function getHostDomain()
+{
+    return getHttpType() . $_SERVER['SERVER_NAME'];
+}
+ 
+/**
+ * 获取 HTTPS协议类型
+ *
+ * @return string
+ */
+function getHttpType()
+{
+    return $type = ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
 }
 
 /**
