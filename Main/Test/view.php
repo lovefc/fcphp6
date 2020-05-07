@@ -2,6 +2,8 @@
 
 namespace Main\Test;
 
+use FC\Controller\BaseController;
+
 /*
  * template 操作类
  * @Author: lovefc 
@@ -10,10 +12,8 @@ namespace Main\Test;
  * @Last Modified time: 2019-10-13 09:46:07
  */
 
-class view
+class view extends BaseController
 {
-    use \FC\Traits\Parts;
-
     // 打印信息
     public function index($arr)
     {

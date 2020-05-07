@@ -2,6 +2,8 @@
 
 namespace Main\Test;
 
+use FC\Controller\BaseController;
+
 /*
  * db 操作类
  * @Author: lovefc 
@@ -10,10 +12,8 @@ namespace Main\Test;
  * @Last Modified time: 2019-11-13 14:30:22
  */
 
-class db
+class db extends BaseController
 {
-    use \FC\Traits\Parts;
-
     // 打印信息
     public function index()
     {

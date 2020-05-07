@@ -2,6 +2,8 @@
 
 namespace Main\Test;
 
+use FC\Controller\BaseController;
+
 use \FC\Tools\RedLock;
 
 /*
@@ -12,10 +14,8 @@ use \FC\Tools\RedLock;
  * @Last Modified time: 2019-10-12 10:45:43
  */
 
-class redis
+class redis extends BaseController
 {
-    use \FC\Traits\Parts;
-
     // 设置redis的值
     public function set($k = 'a', $v = 'hello')
     {

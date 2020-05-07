@@ -2,6 +2,8 @@
 
 namespace Main\Test;
 
+use FC\Controller\BaseController;
+
 /*
  * 订单高并发测试案例
  * 需要导入Sql/order.sql,需要redis，经过测试，协议类亦可用
@@ -11,10 +13,8 @@ namespace Main\Test;
  * @Last Modified time: 2019-10-29 08:44:37
  */
 
-class order
+class order extends BaseController
 {
-    use \FC\Traits\Parts;
-
     // 模拟下单 并发测试 ab -c 6000 -n 5000 http://地址/Main/index.php/order/new
     public function new()
     {

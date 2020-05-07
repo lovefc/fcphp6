@@ -2,6 +2,8 @@
 
 namespace Main\Test;
 
+use FC\Controller\BaseController;
+
 /*
  * 验证码 demo类
  * @Author: lovefc 
@@ -10,10 +12,8 @@ namespace Main\Test;
  * @Last Modified time: 2019-10-12 17:00:21
  */
 
-class captcha
+class captcha extends BaseController
 {
-    use \FC\Traits\Parts;
-
     // 显示验证码
     public function index()
     {

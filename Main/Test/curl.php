@@ -2,6 +2,8 @@
 
 namespace Main\Test;
 
+use FC\Controller\BaseController;
+
 /*
  * CURL demo类
  * @Author: lovefc 
@@ -10,11 +12,9 @@ namespace Main\Test;
  * @Last Modified time: 2019-10-12 17:14:17
  */
 
-class curl
+class curl extends BaseController
 {
-    use \FC\Traits\Parts;
-
-    // 演示拉取图片接口
+    // 演示拉取天气接口
     public function index()
     {
         $url = 'http://t.weather.sojson.com/api/weather/city/101190101';
