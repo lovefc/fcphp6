@@ -132,7 +132,29 @@ class Execs
         }
         return $reflector->newInstanceArgs(static::getMethodVar($constructor->getParameters()));
     }
+	
+    //处理构造函数二
+    public static function _constructor($className,$args='')
+    {
+        $reflector = new \ReflectionClass($className); //反射这个类
+        // 检查类是否可实例化, 排除抽象类abstract和对象接口interface
+        if (!$reflector->isInstantiable()) {
+            return false;
+        }
 
+        //获取类的构造函数
+        $constructor = $reflector->getConstructor();
+
+        // 若无构造函数，直接实例化并返回
+        if (is_null($constructor)) {
+            return new $className;
+        }
+		if(!$args){
+            return $reflector->newInstanceArgs($constructor->getParameters());
+		}
+		return $reflector->newInstanceArgs($args);
+    }
+	
     //魔术方法__callStatic,检测getMethodVar方法是否存在的
     public static function __callStatic($method, $arg)
     {
