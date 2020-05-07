@@ -115,7 +115,6 @@ trait Parents
     /*
     public function __call($method, $args)
     {
-		echo 111;
         $perfix = substr($method, 0, 3);
         $property = substr($method, 3);
         if (empty($perfix) || empty($property)) {
