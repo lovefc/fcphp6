@@ -45,7 +45,7 @@ class Json
      * @param   string $msg
      * @return  void
      */
-    private static function apiJsonResponse($data = '', $code = '200', $msg = '', $append = array())
+    private static function apiJsonResponse($data = '', $code = '200', $msg = '', $append = [])
     {
 
         $res = array('code' => $code, 'msg' => $msg, 'data' => $data);
