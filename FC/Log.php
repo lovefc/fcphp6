@@ -19,7 +19,7 @@ class Log
     public static $ErrorShow;
 
     // 要记录的错误等级(错误等级都是倍数递增)
-    public static $Level = [1, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32767];
+    public static $Level = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32767];
     
     // 错误文件模版
     public static $ViewFile = PATH['FC'] . '/Error.html';
@@ -156,8 +156,6 @@ class Log
         // 读取临时错误文件
         if (is_file($temp_path)) {
             $temp = file_get_contents($temp_path);
-        } else {
-            file_put_contents($temp_path, $lasterror['message'], LOCK_EX);
         }
         // 创建文件
         if (!is_file($path)) {
@@ -172,6 +170,7 @@ class Log
             $file = fopen($path, 'a+b');
             fwrite($file, $str, 4096);
             fclose($file);
+			file_put_contents($temp_path, $lasterror['message'], LOCK_EX);
         }
     }
 
