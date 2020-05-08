@@ -33,13 +33,13 @@ abstract class BaseModel
     {
         // db配置名称
         $db_conf_name = $this->db_config_name ?? 'mysql';
-        
+
         // 实例化数据库基类
         $db =  new \FC\Glue\Db();
-        
+
         // 数据库句柄
         $this->db = $db::switch($db_conf_name);
-        
+
         // 表名
         $this->table = $db->Prefix . strtolower(basename(str_replace('\\', '/', get_class($this))));
     }
@@ -105,11 +105,11 @@ abstract class BaseModel
     }
 
     /**
-    * 判断是不是函数或者匿名函数
-    *
-    * @param [type] $datas
-    * @return bool
-    */
+     * 判断是不是函数或者匿名函数
+     *
+     * @param [type] $datas
+     * @return bool
+     */
     public function isFunc($func)
     {
         if (empty($func) || is_array($func)) {
@@ -132,12 +132,28 @@ abstract class BaseModel
      * @param [type] $value 值
      * @return bool
      */
-    final public function checkValue($key, $value)
+    final public function checkInput($key, $value)
     {
         $value = $value;
+        //$key = $this->handleKey($key);
         $kes = $this->rules[$key];
         $status = Check::regularHandles($kes, $value);
         return $status;
+    }
+
+    /**
+     * 处理key的值
+     *
+     * @param [type] $key 值名称
+     * @return string
+     */
+    final public function handleKey($key)
+    {
+        if (empty($key)) {
+            return null;
+        }
+        $key = explode('.', $key);
+        return end($key);
     }
 
     /**
@@ -147,21 +163,11 @@ abstract class BaseModel
      * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
      * @return array
      */
-    final public function checkValues($datas, $table = null)
+    final public function checkValues($datas, $table)
     {
         $data = [];
-        if (is_array($datas)) {
-            foreach ($datas as $k => $v) {
-                if (isset($this->rules[$k])) {
-                    $preg = $this->rules[$k];
-                    $data[$k] = Check::regularHandles($preg, $v);
-                } else {
-                    $data[$k] = $v;
-                }
-            }
-        }
         if ($table) {
-            $data = $this->checkFields($data, $table);
+            $data = $this->checkFields($datas, $table);
         }
         return $data;
     }
@@ -173,21 +179,19 @@ abstract class BaseModel
      * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
      * @return array
      */
-    final public function checkInputs($datas, $table = null)
+    final public function checkInputs($datas)
     {
         $data = [];
         if (is_array($datas)) {
             foreach ($datas as $k => $v) {
-                if (isset($this->rules[$k])) {
-                    $preg = $this->rules[$k];
+				$k2 = $this->handleKey($k);
+                if (isset($this->rules[$k2])) {
+                    $preg = $this->rules[$k2];
                     $data[$k] = Check::regularHandles($preg, $v);
                 } else {
                     $data[$k] = $v;
                 }
             }
-        }
-        if ($table) {
-            $data = $this->checkFields($data, $table);
         }
         return $data;
     }
@@ -225,10 +229,10 @@ abstract class BaseModel
             return false;
         }
         $table = $this->table;
-        $data = $this->checkValues($datas, $table);
+        $data = $this->checkInputs($datas);
         if (!empty($where)) {
             if (is_array($where)) {
-                $where = $this->checkInputs($where, $table);
+                $where = $this->checkValues($where, $table);
                 if (empty($where)) {
                     return false;
                 }
@@ -257,7 +261,8 @@ abstract class BaseModel
         $res = [];
         if (is_array($re) && is_array($datas)) {
             foreach ($datas as $k => $v) {
-                if (in_array($k, $re) && $v != null) {
+                $k2 = $this->handleKey($k);
+                if (in_array($k2, $re) && $v != null) {
                     $res[$k] = $v;
                 }
             }
@@ -270,11 +275,11 @@ abstract class BaseModel
      *
      * @return void
      */
-    public function getOnly(array $datas = [], $getid= '*')
+    public function getOnly(array $datas = [], $getid = '*')
     {
         // 表名
         $table = $this->table;
-        $where  = $this->checkInputs($datas, $table);
+        $where  = $this->checkValues($datas, $table);
         $res   = $this->db::name($table)->getid($getid)->where($where)->limit(1)->fetch();
         if ($res) {
             return $res;
@@ -327,7 +332,7 @@ abstract class BaseModel
             // 搜索这个值
             $datas[$skey] = ['LOCATE', $sname];
         }
-        $where  = $this->checkInputs($datas, $table);
+        $where  = $this->checkValues($datas, $table);
         // 排序方式
         $order  = (isset($datas['order']) && $datas['order'] === 'desc') ? 'desc'  : 'asc';
         // 排序字段 $this->primary这个值只有调用getAllField函数才会有值，所以放在后面检测
