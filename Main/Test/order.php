@@ -38,7 +38,7 @@ class order extends BaseController
         ];
         //库存减少
         $sql2 = "update store set number=number-1 where sku_id='{$sku_id}'";
-        if ($this->DB::table('order')->add($data,false,false) && $this->DB::query($sql2)) {
+        if ($this->DB::table('order')->add($data) && $this->DB::query($sql2)) {
             $this->log('下单成功');
         } else {
             $this->log('下单失败');
