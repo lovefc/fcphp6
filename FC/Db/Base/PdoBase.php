@@ -53,12 +53,15 @@ abstract class PdoBase
      * @param string $table
      * @return object
      */
-    public function table($table = null)
+    public function table($table = null, $asname=null)
     {
         if (!$table) {
             return $this;
         }
         $this->Table = '`' . $this->Prefix . $table . '`';
+		if(!empty($asname)){
+			$this->Table .= ' as '.$asname;
+		}		
         return $this;
     }
     
@@ -68,12 +71,15 @@ abstract class PdoBase
      * @param string $table
      * @return object
      */
-    public function name($table = null)
+    public function name($table = null, $asname=null)
     {
         if (!$table) {
             return $this;
         }
         $this->Table = '`' . $table . '`';
+		if(!empty($asname)){
+			$this->Table .= ' as '.$asname;
+		}
         return $this;
     }
 

@@ -139,7 +139,7 @@ trait SqlJoin {
     * @return object
     */
 
-    public function join( $table, $where, $type = null )
+    public function join( $table, $where, $type = null, $asname=null )
  {
         if ( !$table ) {
             return $this;
@@ -154,6 +154,10 @@ trait SqlJoin {
             default:
             $join = ' INNER JOIN ';
         }
+        $table = '`' . $this->Prefix . $table . '`';
+		if(!empty($asname)){
+			$table .= ' as '.$asname;
+		}		
         $this->Joinvar .= $join . $table . ' ON ' . $where;
         return $this;
     }
