@@ -22,15 +22,33 @@ class curd extends BaseController
     {
         $datas = [
             'sex'     => '',
-            'mobile'  => 15056003514,
+            'mobile'  => 15056003514, // 假的号码
             'email'   => 'fcphp@qq.com',
             'age'     => '20',
             'name'    => 'fc'
         ];
-        $re = $this->ceshi_model->checkValues($datas, $this->table);
+        $re = $this->ceshi_model->checkInputs($datas);
         \FC\Pre($re);
     }
-
+	
+    // 过滤字段,匹配跟数据库中字段一样的键名名称
+    public function filter()
+    {
+        $datas = [
+            'sex'     => '',
+            'mobile'  => 15056003514,
+            'email'   => 'fcphp@qq.com',
+            'age'     => '20',
+            'name'    => 'fc',
+			'xxxx'    => '123',
+			'type'    => '456',
+			'url'     => 'https://lovefc.cn'
+        ];
+        $re = $this->ceshi_model->filterValue($datas, $this->ceshi_model->table);
+        \FC\Pre($re);
+    }
+	
+	
     // 保存数据
     public function add($age = 20, $name = 'fc')
     {
@@ -79,13 +97,13 @@ class curd extends BaseController
     // 一个个的验证
     public function index($a = 25)
     {
-        $re = $this->ceshi_model->checkValue('mobile', $a);
+        $re = $this->ceshi_model->checkInput('mobile', $a);
         echo '手机：' . $re . FC_EOL;
-        $re = $this->ceshi_model->checkValue('email', $a);
+        $re = $this->ceshi_model->checkInput('email', $a);
         echo '邮箱：' . $re . FC_EOL;
-        $re = $this->ceshi_model->checkValue('age', $a);
+        $re = $this->ceshi_model->checkInput('age', $a);
         echo '年龄：' . $re . FC_EOL;
-        $re = $this->ceshi_model->checkValue('name', $a);
+        $re = $this->ceshi_model->checkInput('name', $a);
         echo '名称：' . $re . FC_EOL;
     }
 
