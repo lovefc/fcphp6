@@ -157,13 +157,13 @@ abstract class BaseModel
     }
 
     /**
-     * 验证过滤数组
+     * 过滤数组
      *
      * @param [type] $datas 数组
      * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
      * @return array
      */
-    final public function checkValues($datas, $table)
+    final public function filterValue($datas, $table)
     {
         $data = [];
         if ($table) {
@@ -173,7 +173,7 @@ abstract class BaseModel
     }
 
     /**
-     * 验证过滤输出
+     * 验证输入
      *
      * @param [type] $datas 数组
      * @param [type] $table 表名，用于验证数组中是否有和字段一样的键名
@@ -209,7 +209,7 @@ abstract class BaseModel
             return 0;
         }
         $table = $this->table;
-        $data = $this->checkValues($datas, $table);
+        $data = $this->filterValue($datas, $table);
         $this->db::name($table)->add($data, 'replace');
         $id = $this->db::lastid();
         return $id;
@@ -232,7 +232,7 @@ abstract class BaseModel
         $data = $this->checkInputs($datas);
         if (!empty($where)) {
             if (is_array($where)) {
-                $where = $this->checkValues($where, $table);
+                $where = $this->filterValue($where, $table);
                 if (empty($where)) {
                     return false;
                 }
@@ -279,7 +279,7 @@ abstract class BaseModel
     {
         // 表名
         $table = $this->table;
-        $where  = $this->checkValues($datas, $table);
+        $where  = $this->filterValue($datas, $table);
         $res   = $this->db::name($table)->getid($getid)->where($where)->limit(1)->fetch();
         if ($res) {
             return $res;
@@ -332,7 +332,7 @@ abstract class BaseModel
             // 搜索这个值
             $datas[$skey] = ['LOCATE', $sname];
         }
-        $where  = $this->checkValues($datas, $table);
+        $where  = $this->filterValue($datas, $table);
         // 排序方式
         $order  = (isset($datas['order']) && $datas['order'] === 'desc') ? 'desc'  : 'asc';
         // 排序字段 $this->primary这个值只有调用getAllField函数才会有值，所以放在后面检测
