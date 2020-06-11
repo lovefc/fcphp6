@@ -497,12 +497,5 @@ abstract class PdoBase
      *
      * @return void
      */
-    abstract public function getAllField();
-
-    /**
-     * 子类必须实现获取主键名的方法
-     *
-     * @return void
-     */
-    abstract public function getPK();
+    abstract public function getTableInfo();
 }

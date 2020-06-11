@@ -59,57 +59,43 @@ class Sqlite extends PdoBase
     }
 
     /**
-     * 获取所有的字段名
+     * 获取表信息
      *
      * @param [type] $table
      * @return array
      */
-    public function getAllField($table = null)
+    public function getTableInfo($table = null)
     {
         $table = empty($table) ? trim($this->Table, '`') : $table;
         $type = $this->DbType;
         $keyname = "{$type}{$table}";
-        $re = $this->sql("PRAGMA table_info([{$table}])")->fetchall();
-        if (is_array($re)) {
-            $arr = [];
-            $i = 0;
-            foreach ($re as $v) {
+        $tableinfo = $this->sql("PRAGMA table_info([{$table}])")->fetchall();
+        if ($tableinfo) {
+            return $tableinfo;
+        }
+        return false;
+    }
+	
+    /**
+     * 设置主键
+     *
+     * @param [type] $tableinfo
+     * @return void
+     */	
+	public function setPK($tableinfo){
+        if ($tableinfo) {
+			$i = 0;
+			$arr = [];
+            foreach ($tableinfo as $v) {
                 $arr[$i] = $v['name'];
                 $i++;
-                if($v['pk'] == 1){
-                    $this->Primary[$keyname] = $v['name'];
+                if ($v['pk'] == 1) {
+                    $this->Primary = $v['name'];
                 }
             }
-            return $arr;
-        }
-        return false;
-    }
-    
-    /**
-     * 获取主键名
-     *
-     * @param [type] $table
-     * @return string
-     */
-    public function getPK($table = null)
-    {
-        $table = empty($table) ? trim($this->Table, '`') : $table;
-        $type = $this->DbType;
-        $keyname = "{$type}{$table}";
-        if(isset($this->Primary[$keyname]) && !empty($this->Primary[$keyname])){
-            return $this->Primary[$keyname];
-        }
-        $re = $this->sql("PRAGMA table_info([{$table}])")->fetchall();
-        if (is_array($re)) {
-            foreach ($re as $v) {
-                if($v['pk'] == 1){
-                    $this->Primary[$keyname] = $v['name'];
-                }
-            }
-            return $this->Primary[$keyname];
-        }
-        return false;
-    }
+			$this->Fields = $arr;		
+        }		
+	}	
     
     /**
      * 获取所有的数据库名
