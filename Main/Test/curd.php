@@ -44,7 +44,7 @@ class curd extends BaseController
 			'type'    => '456',
 			'url'     => 'https://lovefc.cn'
         ];
-        $re = $this->ceshi_model->filterValue($datas, $this->ceshi_model->table);
+        $re = $this->ceshi_model->filterValue($datas);
         \FC\Pre($re);
     }
 	
