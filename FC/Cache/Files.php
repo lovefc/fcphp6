@@ -72,6 +72,7 @@ class Files
     public function set($key, $value, $expire = 60)
     {
         $expire = (0 == $expire) ? $this->Time : $expire;
+		$value = serialize($value);
         return $this->file_set($key, $value, $expire);
     }
 
@@ -86,7 +87,8 @@ class Files
         if (!$this->has($key)) {
             return false;
         }
-        return $this->file_get($key);
+        $value = $this->file_get($key);
+		return unserialize($value);
 
     }
 
@@ -121,7 +123,7 @@ class Files
      * 文件形式的参数设置
      */
 
-    public function file_set($key, $value, $time = 0)
+    private function file_set($key, $value, $time = 0)
     {
         if (true == $this->IsMd5) {
             $key = md5($key);
@@ -139,7 +141,7 @@ class Files
      * 文件形式的参数读取
      */
 
-    public function file_get($key)
+    private function file_get($key)
     {
         if (true == $this->IsMd5) {
             $key = md5($key);
@@ -156,7 +158,7 @@ class Files
      * 文件形式的参数删除
      */
 
-    public function file_dele($key)
+    private function file_dele($key)
     {
         if (true == $this->IsMd5) {
             $key = md5($key);
