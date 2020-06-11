@@ -21,7 +21,7 @@ return [
         'Mode' => 'file',
 
         //针对文件缓存的过期时间,redis和memcache设置这个选项无效
-        'Time' => 10
+        'Time' => 999999
 
     ],
 

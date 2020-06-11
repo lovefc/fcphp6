@@ -15,13 +15,13 @@ return [
     'files' => [
 
         //缓存目录
-        'Path' => dirname(PATH['FC']) . '/Cache',
+        'Path' => PATH['NOW'] . '/Cache',
 
         //缓存方式，有三种情况，memcache,redis，file
         'Mode' => 'file',
 
         //针对文件缓存的过期时间,redis和memcache设置这个选项无效
-        'Time' => 10
+        'Time' => 999999
 
     ],
 
