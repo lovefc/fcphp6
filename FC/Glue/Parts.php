@@ -35,11 +35,15 @@ class Parts
     public function _GetObj($name)
     {
         if (is_array($this->P_Config[$name]) && count($this->P_Config[$name]) > 0) {
-            $method = (bool) isset($this->P_Config[$name][1]) ? $this->P_Config[$name][1] : false;
+            $method = isset($this->P_Config[$name][1]) ? $this->P_Config[$name][1] : false;
+			$values = isset($this->P_Config[$name][2]) ? $this->P_Config[$name][2] : false;
             $obj = \FC\obj($this->P_Config[$name][0]);
             if ($method) {
                 try {
-                    return $obj->$method();
+					if($values){
+                        return $obj->$method($values);
+					}
+					return $obj->$method();
                 } catch (\Exception $e) {
                     \FC\Log::Show($e->getMessage());
                 }
