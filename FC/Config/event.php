@@ -10,7 +10,7 @@
 
 return [
 
-  // 页面开始的触发事件
+  // 开始的触发事件
   'OnLoad' => [function () {
     $v = $_GET['fc'] ?? '';
     if ($v) {
@@ -19,13 +19,16 @@ return [
   }],
   
   // 页面结束时要执行的事件函数
-  'UnLoad' => [],  
+  'Error' => [],  
 
   // 路由访问前的设置,可以来设置一些权限等等
-  'Route'     =>[function($route){
+  'RouteStart'     =>[function($route){
     if($route == '#^html/([0-9]*).html(.*)$#'){
        echo '你当前访问的路由是 '.$route.FC_EOL;
     }
   }],
+
+  // 路由返回值处理
+  'RouteBack'     =>[function($back){}],
 
 ];
