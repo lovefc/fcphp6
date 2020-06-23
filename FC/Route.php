@@ -54,6 +54,9 @@ class Route
     //解析函数
     public static function func($func, $arg = null)
     {
+        if (empty($func) || is_array($func)) {
+            return false;
+        }		
         //检查是不是匿名函数
         if (($func instanceof \Closure) || function_exists($func)) {
             $r = new \ReflectionFunction($func);
