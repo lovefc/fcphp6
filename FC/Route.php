@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2017/1/3 00:27
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-25 14:47:26
+ * @Last Modified time: 2020-06-23 14:12:26
  * *
  */
 
@@ -18,21 +18,10 @@ class Route
     public static $counters = false, $handleStatus = false;
     public static $counter = 0, $jsq = 0;
     public static $routeval = [];
-    public static $parameters = [], $returnback = [];
-    public static $reback = true;
+    public static $parameters = [];
     public static $query, $query2;
-    public static $showError = true; // 是否显示错误
     public static $suffix = '';
 
-    // 错误显示
-    public static function errShow()
-    {
-        if (self::$showError == true) {
-            throw new \Exception('function does not exist');
-        } else {
-            die();
-        }
-    }
 
     //判读字符串是否为一个可以实例化类
     public static function isClass($class)
@@ -56,12 +45,8 @@ class Route
         if (empty($func) || is_array($func)) {
             return false;
         }
-        if ($func instanceof \Closure) {
+        if (($func instanceof \Closure) || function_exists($func)) {
             return true;
-        } else {
-            if (function_exists($func)) {
-                return true;
-            }
         }
         return false;
     }
@@ -70,17 +55,12 @@ class Route
     public static function func($func, $arg = null)
     {
         //检查是不是匿名函数
-        if ($func instanceof \Closure) {
+        if (($func instanceof \Closure) || function_exists($func)) {
             $r = new \ReflectionFunction($func);
-            call_user_func_array($func, static::getMethodVar($r->getParameters()));
+            $arg = is_array($arg) ? $arg : $r->getParameters();
+            return call_user_func_array($func, static::getMethodVar($arg));
         } else {
-            if (function_exists($func)) {
-                $r = new \ReflectionFunction($func);
-                $arg = is_array($arg) ? $arg : $r->getParameters();
-                return call_user_func_array($func, static::getMethodVar($arg));
-            } else {
-                self::errShow('function does not exist');
-            }
+            return false;
         }
     }
 
@@ -88,41 +68,29 @@ class Route
     public static function method($func, $arg = null)
     {
         if (empty($func[0]) || empty($func[1])) {
-            self::errShow('Parameter values cannot be null');
+            return false;
         }
-        try {
-            $r = new \ReflectionMethod($func[0], $func[1]);
-            //分析这个方法是不是静态
-            if (!$r->isStatic()) {
-                if (!is_object($func[0])) {
-                    $func[0] = self::constructor($func[0]); //不是静态属性就实例化
-                }
+        list($class, $method) = $func;
+        $r = new \ReflectionMethod($class, $method);
+        //分析这个方法是不是静态
+        if (!$r->isStatic()) {
+            if (!is_object($class)) {
+                $class = self::constructor($class); //不是静态属性就实例化
             }
-            if ($func[0]) {
-                $func = array(
-                    $func[0],
-                    $func[1]
-                );
-                $arg = is_array($arg) ? $arg : $r->getParameters();
-                return call_user_func_array($func, static::getMethodVar($arg));
-            } else {
-                self::errShow('Object cannot be instantiated');
-            }
-        } catch (\Exception $e) {
-            $func[0] = self::constructor($func[0]); //实例化
-            if (!is_object($func[0])) {
-                self::errShow('Object:' . $func[0] . ' cannot be instantiated');
-            }
-            // 验证方法是否存在
-            if (!method_exists($func[0], $func[1])) {
-                self::errShow('method:' . $func[1] . ' does not exist');
-            }
-            $func = array(
-                $func[0],
-                $func[1]
-            );
-            return call_user_func_array($func, (array) $arg);
         }
+        if (!is_object($class)) {
+            return false;
+        }
+        // 验证方法是否存在
+        if (!method_exists($class, $method)) {
+            return false;
+        }
+        $func = array(
+            $class,
+            $method
+        );
+        $arg = is_array($arg) ? $arg : $r->getParameters();
+        return call_user_func_array($func, static::getMethodVar($arg));
     }
 
     //处理构造函数
@@ -346,7 +314,7 @@ class Route
                         return true;
                     }
                 } catch (\Exception $e) {
-                    static::errShow('Regular Expression Error');
+                    return false;
                 }
             }
         }
@@ -430,7 +398,7 @@ class Route
         $pz = self::$routeval;
         if (class_exists('\FC\Event', false)) {
             // 添加事件
-            \FC\Event::trigger('Route', self::$route);
+            \FC\Event::trigger('RouteStart', self::$route);
         }
         if (array_key_exists(self::$route, $pz)) {
             if ($reback = self::funcHandle($pz[self::$route])) {
@@ -456,36 +424,30 @@ class Route
     // 返回值处理
     public static function reback($reback)
     {
-        if (self::$reback == true) {
-            if (is_array($reback)) {
-                if (self::isCli() === true) {
-                    print_r($reback);
-                } else {
-                    echo '<pre>' . htmlspecialchars(print_r($reback, true)) . '</pre>';
-                }
-            } else {
-                if (is_object($reback)) {
-                    static::errShow('method: does not exist');
-                } else {
-                    echo $reback;
-                }
-            }
-        } else {
-            self::$returnback[self::$route] = $reback;
+        if (class_exists('\FC\Event', false)) {
+            // 添加事件
+            \FC\Event::trigger('RouteBack', self::$route);
+        }
+        if (is_string($reback) || is_int($reback) || is_numeric($reback) || is_float($reback) || is_bool($reback) || is_null($reback)) {
+            echo $reback;
+        } elseif (is_array($reback)) {
+            print_r($reback);
+        } elseif (is_object($reback)) {
+            var_dump($reback);
         }
     }
 
     // 判断解析
     public static function funcHandle($func)
     {
-        if (static::isFunc($func)) {
-            return static::func($func);
+        if ($re = static::func($func)) {
+            return $re;
         }
         if (is_array($func)) {
             return static::method($func);
         } else {
             if (!empty(self::$query2)) {
-                self::$query2 = self::$query2 . self::$suffix; 
+                self::$query2 = self::$query2 . self::$suffix;
                 $func = $func . self::$query;
                 $func = array(
                     $func,
