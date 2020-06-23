@@ -220,10 +220,10 @@ abstract class BaseModel
     }
 
     /**
-     * 保存数据
+     * 保存数据(有主键则为更新操作)
      *
      * @param [type] $datas 数组
-     * @return array|int
+     * @return int|bool
      */
     final public function checkSave($datas)
     {
@@ -253,8 +253,8 @@ abstract class BaseModel
      * 根据条件更新数据
      *
      * @param [type] $datas 数组
-     * @param [type] $where 表名，用于验证数组中是否有和字段一样的键名
-     * @return array|int
+     * @param [array] $where 条件
+     * @return array|bool
      */
     final public function checkUpdate($datas, $where = '')
     {
@@ -361,7 +361,6 @@ abstract class BaseModel
         $where  = $this->filterValue($datas);
         // 排序方式
         $order  = (isset($datas['order']) && $datas['order'] === 'desc') ? 'desc'  : 'asc';
-        // 排序字段 $this->primary这个值只有调用getAllField函数才会有值，所以放在后面检测
         $sortby = isset($datas['sortby']) ? $datas['sortby'] : $this->primary;
         // 获取数量
         $number   = $this->db->where($where)->number();
