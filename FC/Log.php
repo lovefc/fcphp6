@@ -38,8 +38,11 @@ class Log
         }
         if ($lasterror) {
             // 添加监听错误的事件l
-            \FC\Event::trigger('UnLoad', $lasterror);
+            \FC\Event::trigger('Error', $lasterror);
         }
+		if(defined('DEBUG') && (DEBUG === false)){
+			die();
+		}		
         if (IS_AJAX === true || IS_CLI === true) {
             if ($lasterror) {
                 ob_clean();
@@ -81,7 +84,7 @@ class Log
             die($err);
         } elseif (IS_CLI === true) {
             die((IS_WIN === true) ? iconv('UTF-8', 'GBK', $err) : $err);
-        }
+        }		
         $error['message'] = $err;
         require(self::$ViewFile);
         die();
