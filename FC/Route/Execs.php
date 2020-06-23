@@ -11,17 +11,6 @@ class Execs
 
     public static $rulearr = [], $errors = []; //错误数组
 
-    public static $showError = true;
-
-    public static function errShow()
-    {
-        if (self::$showError == true) {
-            throw new \Exception('function does not exist');
-        } else {
-            die();
-        }
-    }
-
     //判读字符串是否为一个可以实例化类
     public static function isClass($class)
     {
@@ -44,12 +33,8 @@ class Execs
         if (empty($func) || is_array($func)) {
             return false;
         }
-        if ($func instanceof \Closure) {
+        if (($func instanceof \Closure) || function_exists($func)) {
             return true;
-        } else {
-            if (function_exists($func)) {
-                return true;
-            }
         }
         return false;
     }
@@ -58,17 +43,12 @@ class Execs
     public static function func($func, $arg = null)
     {
         //检查是不是匿名函数
-        if ($func instanceof \Closure) {
+        if (($func instanceof \Closure) || function_exists($func)) {
             $r = new \ReflectionFunction($func);
-            call_user_func_array($func, static::getMethodVar($r->getParameters()));
+            $arg = is_array($arg) ? $arg : $r->getParameters();
+            return call_user_func_array($func, static::getMethodVar($arg));
         } else {
-            if (function_exists($func)) {
-                $r = new \ReflectionFunction($func);
-                $arg = is_array($arg) ? $arg : $r->getParameters();
-                return call_user_func_array($func, static::getMethodVar($arg));
-            } else {
-                self::errShow('function does not exist');
-            }
+            return false;
         }
     }
 
@@ -76,42 +56,29 @@ class Execs
     public static function method($func, $arg = null)
     {
         if (empty($func[0]) || empty($func[1])) {
-            self::errShow('Parameter values cannot be null');
+            return false;
         }
-
-        try {
-            $r = new \ReflectionMethod($func[0], $func[1]);
-            //分析这个方法是不是静态
-            if (!$r->isStatic()) {
-                if (!is_object($func[0])) {
-                    $func[0] = self::constructor($func[0]); //不是静态属性就实例化
-                }
+        list($class, $method) = $func;
+        $r = new \ReflectionMethod($class, $method);
+        //分析这个方法是不是静态
+        if (!$r->isStatic()) {
+            if (!is_object($class)) {
+                $class = self::constructor($class); //不是静态属性就实例化
             }
-            if ($func[0]) {
-                $func = array(
-                    $func[0],
-                    $func[1]
-                );
-                $arg = is_array($arg) ? $arg : $r->getParameters();
-                return call_user_func_array($func, static::getMethodVar($arg));
-            } else {
-                self::errShow('Object cannot be instantiated');
-            }
-        } catch (\Exception $e) {
-            $func[0] = self::constructor($func[0]); //实例化
-            if (!is_object($func[0])) {
-                self::errShow('Object:' . $func[0] . ' cannot be instantiated');
-            }
-            // 验证方法是否存在
-            if (!method_exists($func[0], $func[1])) {
-                self::errShow('method:' . $func[1] . ' does not exist');
-            }
-            $func = array(
-                $func[0],
-                $func[1]
-            );
-            return call_user_func_array($func, (array) $arg);
         }
+        if (!is_object($class)) {
+            return false;
+        }
+        // 验证方法是否存在
+        if (!method_exists($class, $method)) {
+            return false;
+        }
+        $func = array(
+            $class,
+            $method
+        );
+        $arg = is_array($arg) ? $arg : $r->getParameters();
+        return call_user_func_array($func, static::getMethodVar($arg));
     }
 
     //处理构造函数
