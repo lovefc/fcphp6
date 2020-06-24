@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2017/1/3 00:27
  * @Last Modified by: lovefc
- * @Last Modified time: 2020-06-23 14:12:26
+ * @Last Modified time: 2020-06-24 16:17:26
  * *
  */
 
@@ -21,6 +21,7 @@ class Route
     public static $parameters = [];
     public static $query, $query2;
     public static $suffix = '';
+    public static $index_name = 'index';
 
 
     //判读字符串是否为一个可以实例化类
@@ -54,15 +55,11 @@ class Route
     //解析函数
     public static function func($func, $arg = null)
     {
-        if (empty($func) || is_array($func)) {
-            return false;
-        }		
-        //检查是不是匿名函数
-        if (($func instanceof \Closure) || function_exists($func)) {
+        try {
             $r = new \ReflectionFunction($func);
             $arg = is_array($arg) ? $arg : $r->getParameters();
             return call_user_func_array($func, static::getMethodVar($arg));
-        } else {
+        } catch (\Exception $e) {
             return false;
         }
     }
@@ -443,8 +440,8 @@ class Route
     // 判断解析
     public static function funcHandle($func)
     {
-        if ($re = static::func($func)) {
-            return $re;
+        if (static::isFunc($func)) {
+            return static::func($func);
         }
         if (is_array($func)) {
             return static::method($func);
@@ -459,7 +456,7 @@ class Route
                 return static::method($func);
             }
             if (empty(self::$query)) {
-                self::$query = 'index';
+                self::$query = self::$index_name;
             }
             self::$query = self::$query . self::$suffix;
             $func = array(
