@@ -3,18 +3,17 @@
 // 报错显示
 define('DEBUG', true);
 
-// 引入框架
-require dirname(__DIR__) . '/FC/Main.php';
-
 // 定义错误日志
 define('LOG_DIR',__DIR__.'/Log');
 
-try {
-    $obj = FC\obj('FC\Glue\Route');
-    $obj::run();
-} catch (\Exception $e) {
-    \FC\Log::Show($e->getMessage());
-}
+// 引入框架
+require dirname(__DIR__) . '/FC/Main.php';
+
+// 框架初始化
+\FC\Main::init();
+
+// 运行框架
+\FC\Main::run();
 
 //echo FC_EOL;
 
