@@ -52,7 +52,34 @@ class LoaderClass
             }
         }
     }
+	
+    /*
+     * psr0的增加，要求必须是路径最后的字符串等于命名空间名,其实是psr-4的简写
+     * @param $base_dir 路径名
+     * @param $filext 文件后缀
+     * @param $prepend 优先级
+     */
 
+    public static function AddPsr0($base_dir, $filext = null, $prepend = false)
+    {
+        $base_dirs = rtrim($base_dir, '/');
+        $base_dir = $base_dirs . '/';
+        $dirs = explode('/', $base_dirs);
+        $prefix = end($dirs);
+        //die($prefix.'<br />'.$base_dir);
+        if (isset(self::$prefixes[$prefix]) === false) {
+            self::$prefixes[$prefix] = array();
+        }
+        if ($prepend) {
+            array_unshift(self::$prefixes[$prefix], $base_dir);
+        } else {
+            array_push(self::$prefixes[$prefix], $base_dir);
+        }
+        if (empty($filext)) {
+            self::$filext[$prefix] = $filext;
+        }
+    }
+	
     /*
      * $prefix 命名空间名
      * @param $base_dir 地址路径

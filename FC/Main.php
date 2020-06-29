@@ -136,8 +136,8 @@ class Main
         // 引入函数库
         require $FC_PATH . '/Func.php';
 
-        // 加载框架类库
-        Load\LoaderClass::AddPsr4('FC', __DIR__);
+        // 加载类库
+        Load\LoaderClass::AddPsr0($NOW_PATH,null,true);
 
         // 自动加载
         Load\LoaderClass::register();
