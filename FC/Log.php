@@ -32,7 +32,7 @@ class Log
     public static function Error()
     {
         $lasterror = error_get_last();
-        $type = isset($lasterror['type']) ?? '';
+        $type = isset($lasterror['type']) ? $lasterror['type'] : '';
         if (!in_array($type, self::$Level)) {
             $lasterror = '';
         }

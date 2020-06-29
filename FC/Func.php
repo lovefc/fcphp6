@@ -205,7 +205,7 @@ function requestUri()
  */
 function getHostDomain()
 {
-    return getHttpType() . isset($_SERVER['SERVER_NAME']) ?? '';
+    return getHttpType() . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '');
 }
  
 /**
