@@ -14,7 +14,7 @@ namespace FC;
 class Main
 {
 	// 启动
-    public static function start($call = '')
+    public static function run($call = '')
     {
         try {
             $obj = obj('FC\Glue\Route');
