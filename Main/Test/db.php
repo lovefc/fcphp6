@@ -20,8 +20,8 @@ class db extends BaseController
         $size = $this->DB::switch('sqlite')::getDBSize();
         echo 'Sqlite版本：' . $this->DB::switch('sqlite')::verSion() . ' 大小：' . $size[0] . $size[1] . FC_EOL;
 
-        $size = $this->DB::getDBSize();
-        echo 'Mysql版本：' . $this->DB::verSion() . ' 大小：' . $size[0] . $size[1] . FC_EOL;
+        $size = $this->DB::switch('mysql')::getDBSize();
+        echo 'Mysql版本：' . $this->DB::switch('mysql')::verSion() . ' 大小：' . $size[0] . $size[1] . FC_EOL;
     }
 
     // 获取表的一个值
@@ -30,7 +30,7 @@ class db extends BaseController
         $re = $this->DB::switch('sqlite')::table($table)->limit(1)->fetch();
         \FC\pre($re);
 
-        $re = $this->DB::table($table)->limit(1)->fetch();
+        $re = $this->DB::switch('mysql')::table($table)->limit(1)->fetch();
         \FC\pre($re);
     }
 
@@ -40,7 +40,7 @@ class db extends BaseController
         $re = $this->DB::switch('sqlite')::getAllTable();
         \FC\pre($re);
 
-        $re = $this->DB::getAllTable();
+        $re = $this->DB::switch('mysql')::getAllTable();
         \FC\pre($re);
     }
 
@@ -50,7 +50,7 @@ class db extends BaseController
         $re = $this->DB::switch('sqlite')::table($table)->getAllField();
         \FC\pre($re);
 
-        $re = $this->DB::table($table)->getAllField();
+        $re = $this->DB::switch('mysql')::table($table)->getAllField();
         \FC\pre($re);
     }
 
@@ -60,7 +60,7 @@ class db extends BaseController
         $re = $this->DB::switch('sqlite')::table($table)->where([$id => $value])->fetch();
         \FC\pre($re);
 
-        $re = $this->DB::table($table)->where([$id => $value])->fetch();
+        $re = $this->DB::switch('mysql')::table($table)->where([$id => $value])->fetch();
         \FC\pre($re);
     }
 
@@ -79,7 +79,7 @@ class db extends BaseController
         // 此处必要要root权限才行
         $user = 'lovefc';
         $pass = '123456';
-        if ($this->DB::newUser($user, $pass)) {
+        if ($this->DB::switch('mysql')::newUser($user, $pass)) {
             echo '用户创建成功';
         } else {
             echo '用户创建失败';
