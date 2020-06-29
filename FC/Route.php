@@ -358,8 +358,7 @@ class Route
                         self::$query = isset($m[1]) ? $m[1] : null;
                         $var = trim($_vatr);
                         $len = strlen($var) - 1;
-                        if ($var{
-                            $len} == '\\') {
+                        if ($var[$len] == '\\') {
                             self::$query2 = isset($m[2]) ? $m[2] : null;
                             unset($m[2]);
                         }
