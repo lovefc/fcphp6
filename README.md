@@ -11,7 +11,7 @@
 ````
 {
     "require": {
-        "lovefc/fcphp": "6.0.1"
+        "lovefc/fcphp": "6.0.2"
     }		
 }
 ````
