@@ -46,7 +46,7 @@ if (!function_exists("fastcgi_finish_request")) {
 
 // 判断get_magic_quotes_gpc
 if (function_exists('get_magic_quotes_gpc')) {
-    define('MAGIC_QUOTES_GPC', get_magic_quotes_gpc());
+    define('MAGIC_QUOTES_GPC', 1);
 } else {
     define('MAGIC_QUOTES_GPC', 0);
 }
