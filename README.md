@@ -1,5 +1,3 @@
-# FCPHP框架
-
 ![avatar](/logo.png)
 
 一款简单的php框架,基于php7,强大的路由分发(支持正则).
@@ -40,7 +38,9 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 ### 交流讨论
 
-QQ群号：474310505
+扣扣群号：572905973
+
+文档链接: https://www.kancloud.cn/lovefc/fckj
 
 
 
