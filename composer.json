@@ -2,8 +2,8 @@
     "name": "lovefc/fcphp",
     "description": "FCPHP框架",
     "keywords": ["php","fcphp","php框架","framework"],
-    "version": "6.0.0",
-    "homepage": "https://github.com/lovefc/fcphp6.git",
+    "version": "6.0.1",
+    "homepage": "https://gitee.com/lovefc/fcphp6.git",
     "license": "MIT",
     "require": {
         "php": ">=7.0.0"
