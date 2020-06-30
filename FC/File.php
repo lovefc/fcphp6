@@ -146,41 +146,24 @@ class File
      * 创建一个文件或者目录
      * 
      * @param $dir 目录名或者文件名
-     * @param $file 如果是文件，则设为true
      * @param $mode 文件的权限
-     * @return false|true
+     * @return bool
      */
-    public static function create($dir, $file = false, $mode = 0775)
+    public static function create($path, $mode = 0775)
     {
-        $path = str_replace("\\", "/", $dir);
+		if(empty($path)) return false;
+        $path = str_replace("\\", "/", $path);
+		list($dirname,$basename,$filename) = array_values(pathinfo($path));
+		if(file_exists($path)){
+			$fileperms = substr(base_convert(fileperms($path), 10, 8), 1);
+			if($fileperms!=$mode){
+				return @chmod($path, $mode);
+			}
+			return true;
+		}
 
-        if ($file) {
-            if (is_file($path)) {
-                return true;
-            }
-            $temp_arr = explode('/', $path);
-            array_pop($temp_arr);
-            $file = $path;
-            $path = implode('/', $temp_arr);
-        }
-
-        if (!is_dir($path)) {
-            @mkdir($path, $mode, true);
-        } else {
-            @chmod($path, $mode);
-        }
-        if ($file) {
-            $fh = fopen($file, 'a');
-            if ($fh) {
-                fclose($fh);
-                return true;
-            }
-        }
-
-        if (is_dir($path)) {
-            return true;
-        }
-        return false;
+		$dir = $dirname.'/'.$basename;
+        return @mkdir($dir, $mode, true);
     }
 
     /**
@@ -293,8 +276,8 @@ class File
         if (!is_dir($oldDir)) {
             return false;
         }
-        if (!file_exists($aimDir)) {
-            self::create($aimDir);
+        if (!self::create($aimDir)) {
+            return false;
         }
         $dirHandle = opendir($oldDir);
         while (false !== ($file = readdir($dirHandle))) {

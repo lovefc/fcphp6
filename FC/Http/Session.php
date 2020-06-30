@@ -57,10 +57,7 @@ class Session
         if (!isset($_SESSION)) {
             // 如果是文件模式
             if ($this->save_handler === 'files') { 
-                if(!is_dir($this->save_path)){
-                    File::create($this->save_path);
-                }
-                if(!is_writable($this->save_path)){
+                if(!File::create($this->save_path)){
                     throw new \Exception('Session不可写');
                 }
             }

@@ -36,8 +36,8 @@ class Files
     public function connect($Path = '', $IsMd5 = false, $Ext = '.cache', $Time = 60)
     {
         $this->Path = $Path;
-        if (!is_dir($Path)) {
-            File::create($Path);
+        if (!File::create($Path)) {
+            throw new \Exception('目录不可写');
         }
         $this->IsMd5 = $IsMd5;
         $this->Ext = $Ext;
@@ -129,7 +129,7 @@ class Files
             $key = md5($key);
         }
         $path = $this->Path.'/'.$key.$this->Ext;
-        File::create($path, true);
+        File::create($path);
         if (file_put_contents($path, $value)) {
             return true;
         } else {

@@ -386,51 +386,37 @@ class Eztpl
 
     /**
      * 创建一个文件或者目录
+     * 
      * @param $dir 目录名或者文件名
-     * @param $file 如果是文件，则设为true
      * @param $mode 文件的权限
-     * @return false|true
+     * @return bool
      */
-    public function create($dir, $file = false, $mode = 0777)
+    public function create($path, $mode = 0775)
     {
-        $path = str_replace("\\", "/", $dir);
-        if ($file) {
-            if (is_file($path)) {
-                return true;
-            }
-            $temp_arr = explode('/', $path);
-            array_pop($temp_arr);
-            $file = $path;
-            $path = implode('/', $temp_arr);
-        }
-        if (!is_dir($path)) {
-            @mkdir($path, $mode, true);
-        } else {
-            @chmod($path, $mode);
-        }
-        if ($file) {
-            $fh = @fopen($file, 'a');
-            if ($fh) {
-                fclose($fh);
-                return true;
-            }
-        }
-        if (is_dir($path)) {
-            return true;
-        }
-        return false;
+		if(empty($path)) return false;
+        $path = str_replace("\\", "/", $path);
+		list($dirname,$basename,$filename) = array_values(pathinfo($path));
+		if(file_exists($path)){
+			$fileperms = substr(base_convert(fileperms($path), 10, 8), 1);
+			if($fileperms!=$mode){
+				return @chmod($path, $mode);
+			}
+			return true;
+		}
+
+		$dir = $dirname.'/'.$basename;
+        return @mkdir($dir, $mode, true);
     }
 
     //写入缓存
-    protected function write_file($path, $content)
+    protected function write_file($compiled_url, $content)
     {
-        $compiled_url = $path;
-        $this->create($compiled_url, true);
+        $this->create($compiled_url);
         if (is_readable($compiled_url) == false) {
             $this->error('Warning: file generation fails, check permissions to' . $compiled_url);
         }
         $content = "<?php\r\n if(!defined('EZTPL')){\r\n die('Forbidden access');\r\n}\r\n?>\r\n" . $content;
-        file_put_contents($path, $content, LOCK_EX);
+        file_put_contents($compiled_url, $content, LOCK_EX);
     }
 
     //消息输出
