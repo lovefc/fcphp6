@@ -113,7 +113,7 @@ function input($input, $var = null)
  * @param bool $case 是否检测大小写
  * @return voidtrue
  */
-function get($key = null, $case = true)
+function get($key = null, $defalut= null, $case = true)
 {
 	if(empty($key)){
 		return Input($_GET);
@@ -121,7 +121,8 @@ function get($key = null, $case = true)
     if ($case === false) {
         $key = strtolower($key);
     }
-    return Input($key, $_GET);
+    $v = Input($key, $_GET);
+	return $v ?? $default;
 }
 
 /**
@@ -130,12 +131,13 @@ function get($key = null, $case = true)
  * @param [type] $key
  * @return void
  */
-function post($key = null)
+function post($key = null, $defalut= null)
 {
 	if(empty($key)){
 		return Input($_POST);
 	}	
-    return Input($key, $_POST);
+    $v = Input($key, $_POST);
+	return $v ?? $default;
 }
 
 
