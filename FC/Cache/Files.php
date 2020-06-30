@@ -37,7 +37,7 @@ class Files
     {
         $this->Path = $Path;
         if (!File::create($Path)) {
-            throw new \Exception('目录不可写');
+            return false;
         }
         $this->IsMd5 = $IsMd5;
         $this->Ext = $Ext;
@@ -129,7 +129,6 @@ class Files
             $key = md5($key);
         }
         $path = $this->Path.'/'.$key.$this->Ext;
-        File::create($path);
         if (file_put_contents($path, $value)) {
             return true;
         } else {
