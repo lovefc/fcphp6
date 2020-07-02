@@ -8,12 +8,17 @@
 
 直接下载源码或者使用 composer 安装
 
+composer.json
 ````
 {
     "require": {
-        "lovefc/fcphp": "6.0.4"
+        "lovefc/fcphp": "6.0.5"
     }		
 }
+````
+
+````
+composer reqiure lovefc/fcphp:6.0.5
 ````
 
 ### 使用方法
