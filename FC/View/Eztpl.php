@@ -411,7 +411,8 @@ class Eztpl
     //写入缓存
     protected function write_file($compiled_url, $content)
     {
-        $this->create($compiled_url);
+        $this->create(dirname($compiled_url));
+		file_put_contents($compiled_url,'');
         if (is_readable($compiled_url) == false) {
             $this->error('Warning: file generation fails, check permissions to' . $compiled_url);
         }
