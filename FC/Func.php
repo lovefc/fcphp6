@@ -11,8 +11,6 @@ namespace FC;
  */
 
 
-
-
 /**
  * 获取类的对象
  *
@@ -113,7 +111,7 @@ function input($input, $var = null)
  * @param bool $case 是否检测大小写
  * @return voidtrue
  */
-function get($key = null, $defalut= null, $case = true)
+function get($key = null, $default= null, $case = true)
 {
 	if(empty($key)){
 		return Input($_GET);
@@ -131,7 +129,7 @@ function get($key = null, $defalut= null, $case = true)
  * @param [type] $key
  * @return void
  */
-function post($key = null, $defalut= null)
+function post($key = null, $default= null)
 {
 	if(empty($key)){
 		return Input($_POST);
