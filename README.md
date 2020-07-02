@@ -18,7 +18,7 @@ composer.json
 ````
 
 ````
-composer reqiure lovefc/fcphp:6.0.5
+composer require lovefc/fcphp:6.0.5
 ````
 
 ### 使用方法
