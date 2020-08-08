@@ -24,7 +24,13 @@ abstract class BaseController
     // 初始化设置
     function __construct()
     {
-        if ($this->cross === true) {
+		$cross = array_reduce(headers_list(),function($k,$v){
+			if(strstr($v,'Access-Control-Allow')){
+				return 0;
+			}
+			return 1;
+		});		
+        if ((boolval($this->cross) === true) && ($cross == 1)) {
             \FC\setOrigin(false, 'POST,GET,OPTIONS,PUT,DELETE', true);
         }
 		$model_class_name = strtolower(basename(str_replace('\\', '/',get_class($this)))).'_model';
