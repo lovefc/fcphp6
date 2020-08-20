@@ -17,12 +17,16 @@ abstract class BaseController
 {
 	//当前的model类实例
 	public $Model;
+	
+	// 当前数据库句柄
+	public $db;
 
     // 初始化设置
     function __construct()
     {
 		$model_class_name = strtolower(basename(str_replace('\\', '/',get_class($this)))).'_model';
-		$this->Model = $this->$model_class_name; 
+		$this->Model = $this->$model_class_name;
+		$this->db = $this->Model->db;
     }
 	
 	// 获取model变量,并且自动实例化
