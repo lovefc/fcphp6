@@ -26,7 +26,9 @@ abstract class BaseController
     {
 		$model_class_name = strtolower(basename(str_replace('\\', '/',get_class($this)))).'_model';
 		$this->Model = $this->$model_class_name;
-		$this->db = $this->Model->db;
+		if(is_object($this->Model)){
+		    $this->db = $this->Model->db;
+		}
     }
 	
 	// 获取model变量,并且自动实例化
