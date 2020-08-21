@@ -162,9 +162,11 @@ class Main
 
         // 获取主域名
         define('HOST_DOMAIN', getHostDomain());
-
-        // 获取目录名
-        define('HOST_DIR', dirname($_SERVER['PHP_SELF']));
+        
+		// 获取目录名
+		$host_dir = dirname($_SERVER['PHP_SELF']);
+		$host_dir = ($host_dir != '/') ? $host_dir : '';
+        define('HOST_DIR', $host_dir);
 
         // 安全过滤
         obj('FC\Glue\SafeMode')->run();
