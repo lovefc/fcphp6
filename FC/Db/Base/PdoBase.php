@@ -190,11 +190,12 @@ abstract class PdoBase
      * 非缓冲查询,不会一次全部查询到内存里
      * 适合大数量的sql查询
      * 这里不适合用预处理去操作
-     * $db->table('title')->where('id=1',false)->limit($num)->uqfetch();
+     * $db->table('title')->where('id=1',false)->limit($num)->uqfetch($func);
+	 * $func 是一个回调函数
      *
      * @return array
      */
-    final public function uqfetch()
+    final public function uqfetch($func)
     {
         $this->Return = false;
         $mode = $this->Mode;
@@ -202,16 +203,12 @@ abstract class PdoBase
         $this->select();
         $db->setAttribute(\PDO::MYSQL_ATTR_USE_BUFFERED_QUERY, false);
         $uresult = $db->query($this->Sqls);
-        $re = array();
-        $i = 0;
         if ($uresult) {
             while ($row = $uresult->fetch($mode)) {
-                $re[$i] = $row;
-                $i++;
+				$func($row);
             }
         }
         $this->uset();
-        return $re;
     }
 
     /**
