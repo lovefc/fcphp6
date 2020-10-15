@@ -12,13 +12,13 @@ composer.json
 ````
 {
     "require": {
-        "lovefc/fcphp": "6.0.8"
+        "lovefc/fcphp": "6.0.9"
     }		
 }
 ````
 
 ````
-composer require lovefc/fcphp:6.0.8
+composer require lovefc/fcphp:6.0.9
 ````
 
 ### 使用方法
@@ -41,11 +41,7 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 
 ````
 
-### 交流讨论
 
-扣扣群号：572905973
-
-文档链接: https://www.kancloud.cn/lovefc/fckj
 
 
 
