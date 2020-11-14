@@ -6,8 +6,8 @@ namespace FC;
  * 框架公用函数库
  * @Author: lovefc 
  * @Date: 2016/9/09 13:29:34 
- * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 15:27:32
+ * @Last Modified by: mikey.zhaopeng
+ * @Last Modified time: 2020-11-14 16:22:56
  */
 
 
@@ -68,7 +68,7 @@ function inArray($item, $array, $status = true)
  */
 function ImpArray($config, $array)
 {
-	if(!is_array($config)) return false;
+    if (!is_array($config)) return false;
     if (is_array($array) && count($array) > 0) {
         foreach ($array as $value) {
             $config = isset($config[$value]) ? $config[$value] : null;
@@ -111,16 +111,16 @@ function input($input, $var = null)
  * @param bool $case 是否检测大小写
  * @return voidtrue
  */
-function get($key = null, $default= null, $case = true)
+function get($key = null, $default = null, $case = true)
 {
-	if(empty($key)){
-		return Input($_GET);
-	}
+    if (empty($key)) {
+        return Input($_GET);
+    }
     if ($case === false) {
         $key = strtolower($key);
     }
     $v = Input($key, $_GET);
-	return $v ?? $default;
+    return $v ?? $default;
 }
 
 /**
@@ -129,13 +129,13 @@ function get($key = null, $default= null, $case = true)
  * @param [type] $key
  * @return void
  */
-function post($key = null, $default= null)
+function post($key = null, $default = null)
 {
-	if(empty($key)){
-		return Input($_POST);
-	}	
+    if (empty($key)) {
+        return Input($_POST);
+    }
     $v = Input($key, $_POST);
-	return $v ?? $default;
+    return $v ?? $default;
 }
 
 
@@ -207,7 +207,7 @@ function getHostDomain()
 {
     return getHttpType() . (isset($_SERVER['SERVER_NAME']) ? $_SERVER['SERVER_NAME'] : '');
 }
- 
+
 /**
  * 获取 HTTPS协议类型
  *
@@ -480,4 +480,28 @@ function hide4PhoneEmail($phone)
             return preg_replace('/(1[0-9]{1}[0-9])[0-9]{4}([0-9]{4})/i', '$1****$2', $phone);
         }
     }
+}
+
+/**
+ * 生成url
+ *
+ * @param [string] $query 参数
+ * @param [int] $mode 模式,默认为1不带域名,主目录域名为2,子目录域名为3
+ * @return string
+ */
+function url($query, int $mode = 1)
+{
+    $url = '';
+    if (substr($query, 0, 1) != '/') {
+        $query = '/' . $query;
+    }
+    // 域名
+    if ($mode === 2) {
+        $url = HOST_DOMAIN;
+    }
+    // 加上当前目录
+    if ($mode === 3) {
+        $url = HOST_DOMAIN . HOST_DIR;
+    }
+    return $url . $query;
 }
