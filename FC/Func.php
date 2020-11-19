@@ -493,7 +493,9 @@ function url($query, int $mode = 1)
 {
     $url = '';
     if (substr($query, 0, 1) != '/') {
-        $query = '/' . $query;
+        $query = HOST_DIR . '/' . $query;
+    } else {
+        $query = HOST_DIR . $query;
     }
     // 域名
     if ($mode === 2) {
