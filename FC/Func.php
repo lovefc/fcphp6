@@ -492,18 +492,21 @@ function hide4PhoneEmail($phone)
 function url($query, int $mode = 1)
 {
     $url = '';
+    // 加上当前目录
     if (substr($query, 0, 1) != '/') {
-        $query = HOST_DIR . '/' . $query;
-    } else {
-        $query = HOST_DIR . $query;
-    }
+       $query = '/' . $query;
+    }	
     // 域名
     if ($mode === 2) {
         $url = HOST_DOMAIN;
-    }
-    // 加上当前目录
-    if ($mode === 3) {
-        $url = HOST_DOMAIN . HOST_DIR;
-    }
+    }elseif($mode === 3){
+		$url = HOST_DOMAIN . HOST_DIR;
+	}else{	
+        if (substr($query, 0, 1) != '/') {
+           $url = HOST_DIR . '/';
+        } else {
+           $url = HOST_DIR;
+        }
+	}
     return $url . $query;
 }
