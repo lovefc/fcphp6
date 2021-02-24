@@ -2,10 +2,11 @@
 
 /*
  * @Author: lovefc 
- * Version: 1.6.7.1
+ * Version: 1.6.9
  * @Date: 2017-8-29 09:30
  * @Last Modified by: lovefc
  * @Last Modified time: 2019-09-23 00:08:28
+ * @Last Modified time: 2021-02-24 23:28:45 (修改内部编译目录的问题)
  */
 
 namespace FC\View;
@@ -124,11 +125,11 @@ class Eztpl
                     $str = $this->TplBegin . 'include file="' . $value . '"' . $this->TplEnd;
                     $source = $this->get_sourcefile_url($value);
                     if (is_file($source)) {
-                        $compiled = $this->TempDir . '/' . $value . '.php';
+                        $compiled = $this->get_compiledfile_url($value);
                     } else {
-                        $source = $this->Dir . '/' . $value . '.' . $this->Suffix;
+                        $source = $this->get_sourcefile_url($value);
                         if (is_file($source)) {
-                            $compiled = $this->TempDir . '/' . $value . '.php';
+                            $compiled = $this->get_compiledfile_url($value);
                         } else {
                             $compiled = null;
                         }
