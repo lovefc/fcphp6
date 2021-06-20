@@ -178,7 +178,7 @@ class Check
             foreach ($preg as $k => $v) {
                 $values = $v;
                 $val = self::regularHandle($values, $str);
-                unset($values);
+				$str = $val;
             }
             return $val;
         } else {
