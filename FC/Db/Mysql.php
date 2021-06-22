@@ -341,7 +341,7 @@ class MySql extends PdoBase
      */
     final public function link()
     {
-        if (isset($this->DbObj[$this->ConfigName])) {
+        if (isset($this->DbObj[$this->ConfigName]) && !empty($this->DbObj[$this->ConfigName])) {
             return $this->DbObj[$this->ConfigName];
         }
         try {
@@ -355,6 +355,7 @@ class MySql extends PdoBase
             //设置禁止本地模拟prepare
             $db->setAttribute(\PDO::ATTR_EMULATE_PREPARES, false);
             $this->ConfigName = md5($dbh);
+			//echo $this->ConfigName.PHP_EOL;
             $this->DbObj[$this->ConfigName] = $db;
             $this->slowlog($db); //缓慢日志查询
         } catch (\PDOException $e) {

@@ -13,8 +13,12 @@ namespace FC\Model;
 
 abstract class BaseModel
 {
+    // 数据库类型
+    public $db_type = 'Mysql';
+	
     // 数据库配置名称
     public $db_config_name = '';
+	
     // 规则
     public $rules = [];
     // 数据库操作句柄
@@ -35,25 +39,39 @@ abstract class BaseModel
     // 初始化设置
     public function __construct()
     {
-        // db配置名称
-        $db_conf_name = $this->db_config_name ?? 'mysql';
-
-        // 实例化数据库基类
-        $db =  new \FC\Glue\Db();
+		$class_name = strtolower(basename(str_replace('\\', '/', get_class($this))));
 		
+        // db配置名称
+        $db_type = $this->db_type;		
+		
+        // db配置名称
+        $db_conf_name = $this->db_config_name;
+		
+		$class = "\FC\Glue\\{$db_type}";
+		
+        $db =  new $class();
+
+		if(!empty($db_conf_name)){
+		    $db->ReadConf($db_conf_name);
+		}
+
         // 缓存
         $cache = new \FC\Cache\Files();
+		
         //缓存目录
         $path = PATH['NOW'] . '/Cache';
+		
         //针对文件缓存的过期时间,redis和memcache设置这个选项无效
-        $time = 600;
+        $time = 6000;
+		
 		// 文件缓存设置
 		$cache->connect($path, true, '.cache', $time);
+		
         // 表名
-        $this->table = $db->Prefix . strtolower(basename(str_replace('\\', '/', get_class($this))));
+        $this->table = $db->Prefix . $class_name;
 		
 		// 数据库句柄
-        $this->db = $db::switch($db_conf_name)::name($this->table);
+        $this->db = $db->name($this->table);
 		
 		// 缓存名称
 		$table_name = $this->table.'_tableinfo';
@@ -70,7 +88,7 @@ abstract class BaseModel
 		$this->db->setPK($this->tableinfo);
 		$this->primary = $this->db->Primary;
 		$this->fields = $this->db->Fields;	
-      }
+    }
 	
 
     // 增加规则

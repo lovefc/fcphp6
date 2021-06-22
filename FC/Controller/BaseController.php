@@ -42,7 +42,10 @@ abstract class BaseController
 			$arr = explode('/',PATH['NOW']);
 			$str = end($arr);
 			$class = $str.'\\'.'Model'.'\\'.$classname;
-			$this->$name = \FC\obj($class);
+			if(class_exists($class)){
+			    $this->$name = \FC\obj($class);
+				return $this->$name;
+			}
 	    }
 		// 这里是加载配置中定义的类库
 		$glue = new Parts();
