@@ -10,7 +10,7 @@ use FC\Db\Base\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-11-13 14:20:24
+ * @Last Modified time: 2021-06-23 14:10:24
  */
 
 class MySql extends PdoBase
@@ -18,42 +18,7 @@ class MySql extends PdoBase
 
     // 存储所有的数据库名
     public $Dbnames = [];
-
-    /**
-     * 创建新用户,创建的用户拥有所有权限
-     * 
-     * @param $user 用户名
-     * @param $pass 用户密码
-     * @param $host 访问限制
-     * @param $Host列指定了允许用户登录所使用的IP
-     * Host=192.168.1.1。这里的意思就是说root用户只能通过192.168.1.1的客户端去访问。
-     * * %是个通配符，如果Host=192.168.1.%，那么就表示只要是IP地址前缀为192.168.1.的客户端都可以连接。
-     * 如果Host=%，表示所有IP都有连接权限。
-     * @return bool
-     */
-    public function newUser($user, $pass, $host = '127.0.0.1')
-    {
-        $re = $this->setTable('mysql.user')->where("User='" . $user . "'")->fetch();
-        if ($re) {
-            return false;
-        }
-        $sql = "insert into mysql.user values('{$host}','{$user}',password('{$pass}'),'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','','','','','','','')";
-        $this->sql($sql)->query();
-        if ($host != 'localhost') {
-            $sql = "insert into mysql.user values('localhost','{$user}',password('{$pass}'),'Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','Y','','','','','','','','','','')";
-            $this->sql($sql)->query();
-            $sql = "GRANT ALL PRIVILEGES ON *.* TO  '{$user}'@'localhost' WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0";
-            $this->sql($sql)->query();
-        }
-        $sql = "GRANT ALL PRIVILEGES ON *.* TO  '{$user}'@'{$host}' WITH GRANT OPTION MAX_QUERIES_PER_HOUR 0 MAX_CONNECTIONS_PER_HOUR 0 MAX_UPDATES_PER_HOUR 0 MAX_USER_CONNECTIONS 0";
-        if ($this->sql($sql)->query()) {
-            $this->sql('flush privileges')->query();
-            return true;
-        } else {
-            return false;
-        }
-    }
-
+	
     /**
      * 缓慢查询日志
      *
@@ -70,12 +35,12 @@ class MySql extends PdoBase
         //}
         if ($time != 0) {
             $db->query("set global log_output='TABLE'");
-            $db->query("set global log_slow_queries=ON");
+			$db->query("set global slow_query_log=ON");
             $db->query('set global long_query_time=' . $time);
         } else {
             if ($time === 0) {
                 $db->query("set global log=OFF");
-                $db->query("set global log_slow_queries=OFF");
+                $db->query("set global slow_query_log=OFF");
             }
         }
     }
@@ -111,7 +76,7 @@ class MySql extends PdoBase
     public function newDB($dbname = null)
     {
         $dbnames = $this->getAllDBName();
-        if (empty($newtable) || in_array($dbname, $dbnames)) {
+        if (empty($dbname) || in_array($dbname, $dbnames)) {
             return false;
         } else {
             $sql = 'CREATE DATABASE ' . $dbname;
@@ -212,7 +177,7 @@ class MySql extends PdoBase
     {
         $dbname = empty($dbname) ? $this->DbName : $dbname;
         $table = empty($table) ? trim($this->Table, '`') : $table;
-        $type = $this->DbType;
+        $type = 'mysql_';
         $keyname = "{$type}{$dbname}{$table}";
         //$re = $this->sql("select column_name from information_schema.columns where table_schema='" . $dbname . "' and table_name='" . $table . "'")->fetchall();
         $tableinfo = $this->sql("SHOW FULL COLUMNS FROM `{$dbname}`.`{$table}`")->fetchall();

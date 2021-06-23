@@ -7,7 +7,7 @@ namespace FC;
  * @Author: lovefc 
  * @Date: 2016/9/09 13:29:34 
  * @Last Modified by: mikey.zhaopeng
- * @Last Modified time: 2020-11-14 16:22:56
+ * @Last Modified time: 2021-06-23 14:17:23
  */
 
 
@@ -439,6 +439,7 @@ function snowFlakeID()
  */
 function pre($vars, $label = '', $return = false)
 {
+    $content = '';
     if (ini_get('html_errors')) {
         $content = "<pre>\n";
         if ($label != '') {
@@ -447,7 +448,10 @@ function pre($vars, $label = '', $return = false)
         $content .= htmlspecialchars(print_r($vars, true));
         $content .= "\n</pre>\n";
     } else {
-        $content = $label . " :\n" . print_r($vars, true);
+        if ($label != '') {
+            $content .= "{$table} :\n" ;
+        }        
+        $content .=  print_r($vars, true);
     }
     if ($return) {
         return $content;

@@ -12,13 +12,13 @@ composer.json
 ````
 {
     "require": {
-        "lovefc/fcphp": "6.1.2"
+        "lovefc/fcphp": "6.1.3"
     }		
 }
 ````
 
 ````
-composer require lovefc/fcphp:6.1.2
+composer require lovefc/fcphp:6.1.3
 ````
 
 ### 使用方法
@@ -40,6 +40,22 @@ require dirname(__DIR__) . '/vendor/autoload.php';
 \FC\Main::run();
 
 ````
+
+### 演示案例
+
+Main目录下包含了各种案例
+
+|说明|位置|
+|:-----  |-----  |
+|基本数据库操作  |Controller/db |
+|基础模型操作    |Controller/curl|
+|自带的curl操作库 |Controller/curl |
+|自带的验证码    |Controller/captcha|
+|商品下单,并发测试   |Controller/order|
+|redis操作   |Controller/redis|
+|模板引擎使用   |Controller/view|
+
+
 
 
 

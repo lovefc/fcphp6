@@ -7,7 +7,7 @@ namespace FC\Glue;
  * @Author: lovefc 
  * @Date: 2019-10-09 15:38:02 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 13:57:26
+ * @Last Modified time: 2021-06-23 14:09:26
  */
 
 class Mysql extends \FC\Db\Mysql
@@ -20,8 +20,4 @@ class Mysql extends \FC\Db\Mysql
         // 默认配置，此选项用于多配置选择
         $this->ReadConf('default');
     }
-	
-	public function _start(){
-		$this->DbType = 'mysql';
-	}
 }

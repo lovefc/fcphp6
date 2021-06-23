@@ -10,7 +10,7 @@ namespace FC\Cache;
  * 更多命令可参考 http://www.redis.net.cn/order/.
  *
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 10:43:07
+ * @Last Modified time: 2021-06-23 11:30:07
  */
 class Redis
 {
@@ -980,8 +980,8 @@ class Redis
      */
     public function llen($key)
     {
-        if($this->type($key)!='list'){
-             return 0;
+        if ($this->type($key) != 'list') {
+            return 0;
         }
         return $this->command(
             'LLEN',

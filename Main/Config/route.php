@@ -5,7 +5,7 @@
  * @Author: lovefc 
  * @Date: 2019-09-16 15:52:35 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-25 14:49:48
+ * @Last Modified time: 2021-06-23 09:23:17
  */
 
 return [
@@ -16,22 +16,22 @@ return [
     },
     
     // 这里都是绑定类库,访问方式都是/captcha/方法名/
-    'captcha' => '\Main\Test\captcha',
+    'captcha' => '\Main\Controller\captcha',
 
-    'curl' => '\Main\Test\curl',  
+    'curl' => '\Main\Controller\curl',  
 
-    'redis' => '\Main\Test\redis',
+    'redis' => '\Main\Controller\redis',
 
-    'db' => '\Main\Test\db',  
+    'db' => '\Main\Controller\db',  
 
-    'view' => '\Main\Test\view',
+    'view' => '\Main\Controller\view',
 
-    'order' => '\Main\Test\order',    
+    'order' => '\Main\Controller\order',    
     
-    'curd'  => '\Main\Test\curd',
+    'curd'  => '\Main\Controller\curd',
 
     // 正则路由,后面可以跟jquery参数
-    '#^cs.html(.*)$#' => ['\Main\Test\curd','index'],
+    '#^cs.html(.*)$#' => ['\Main\Controller\curd','index'],
 
     // 正则路由,后面可以跟jquery参数
     '#^html/([0-9]*).html(.*)$#' => function($a){

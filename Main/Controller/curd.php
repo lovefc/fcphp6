@@ -1,6 +1,6 @@
 <?php
 
-namespace Main\Test;
+namespace Main\Controller;
 
 use FC\Json;
 
@@ -12,7 +12,7 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 14:39:29
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-30 09:43:29
+ * @Last Modified time: 2021-06-23 09:23:17
  */
 
 class curd extends BaseController
@@ -66,12 +66,27 @@ class curd extends BaseController
     // 保存并更新数据，要带主键
     public function upd()
     {
-        $datas = [
+        $datas2 = [
             'id'      => 1,
             'age'     => '33',
             'name'    => 'fc'
         ];
-        if ($this->ceshi_model->checkSave($datas)) {
+		
+	    $re = $this->ceshi_model->checkInputs($datas2);		
+		
+        $datas = [
+            'goods_id'      => 1,
+            'cat_id'     => 1,
+            'goods_name'    => 'k30u至尊纪念版'
+        ];
+		
+        if ($this->goods_model->checkSave($datas)) {
+            echo '更新成功';
+        } else {
+           echo '更新失败';
+        }	
+		
+        if ($this->ceshi_model->checkSave($datas2)) {
             echo '更新成功';
         } else {
             echo '更新失败';

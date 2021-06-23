@@ -1,6 +1,6 @@
 <?php
 
-namespace Main\Test;
+namespace Main\Controller;
 
 use FC\Controller\BaseController;
 
@@ -9,7 +9,7 @@ use FC\Controller\BaseController;
  * @Author: lovefc 
  * @Date: 2019-10-12 16:55:13
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 17:00:21
+ * @Last Modified time: 2021-06-23 11:08:37
  */
 
 class captcha extends BaseController

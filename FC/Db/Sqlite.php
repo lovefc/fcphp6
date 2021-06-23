@@ -10,7 +10,7 @@ use FC\Db\Base\PdoBase;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-28 15:52:18
+ * @Last Modified time: 2021-06-23 14:10:47
  */
 
 class Sqlite extends PdoBase
@@ -67,7 +67,7 @@ class Sqlite extends PdoBase
     public function getTableInfo($table = null)
     {
         $table = empty($table) ? trim($this->Table, '`') : $table;
-        $type = $this->DbType;
+        $type = 'sqlite_';
         $keyname = "{$type}{$table}";
         $tableinfo = $this->sql("PRAGMA table_info([{$table}])")->fetchall();
         if ($tableinfo) {

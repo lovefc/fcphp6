@@ -10,7 +10,7 @@ use FC\Db\Query\SqlJoin;
  * @Author: lovefc 
  * @Date: This was written in 2017
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-11-13 14:09:29
+ * @Last Modified time: 2021-06-23 14:19:29
  */
 
 abstract class PdoBase
@@ -490,7 +490,7 @@ abstract class PdoBase
     abstract public function link();
 
     /**
-     * 子类必须实现获取所有字段名的方法
+     * 子类必须实现获取所有表信息的方法
      *
      * @return void
      */

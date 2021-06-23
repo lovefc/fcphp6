@@ -1,6 +1,6 @@
 <?php
 
-namespace Main\Test;
+namespace Main\Controller;
 
 use FC\Controller\BaseController;
 
@@ -11,7 +11,7 @@ use \FC\Tools\RedLock;
  * @Author: lovefc 
  * @Date: 2019-10-12 08:55:00 
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-10-12 10:45:43
+ * @Last Modified time: 2021-06-23 11:08:37
  */
 
 class redis extends BaseController
@@ -49,7 +49,7 @@ class redis extends BaseController
     }
 
     // 并发锁实例
-    // 可用ab测试 ab -c 1000 -n 1000 http://地址/Main/index.php/redis/lock
+    // 可用ab测试 ab -c 1000 -n 1000 http://xxx/redis/lock
     public function lock()
     {
         $redLock = new RedLock('redis');

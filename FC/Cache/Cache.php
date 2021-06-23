@@ -93,8 +93,13 @@ class Cache
         } else {
             $obj = new \FC\Cache\Redis();
         }
+         // 设置错误等级
+        \FC\log::$Level = [1, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384, 32767];       
         try {
-            $obj->connect($this->Path, $this->Port);
+            $status = $obj->connect($this->Path, $this->Port);
+            if(!$status){
+                $this->error('Redis 链接出错，请检查配置');
+            }           
         } catch (\Exception $e) {
             $this->error('Redis 链接出错，请检查配置');
         }
