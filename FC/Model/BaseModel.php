@@ -68,13 +68,13 @@ abstract class BaseModel
 		$cache->connect($path, true, '.cache', $time);
 		
         // 表名
-        $this->table = $db->Prefix . $class_name;
+        $this->table = !empty($this->table) ? $this->table : $db->Prefix . $class_name;
 		
 		// 数据库句柄
         $this->db = $db->name($this->table);
 		
 		// 缓存名称
-		$table_name = $this->table.'_tableinfo';
+		$table_name = "{$db_type}_{$db_conf_name}_".$this->table."_tableinfo";
 		
 		if(!$cache->has($table_name)){
 		   // 数据库表信息
