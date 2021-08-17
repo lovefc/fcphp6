@@ -13,7 +13,7 @@ composer.json
 {
     "require": {
         "lovefc/fcphp": "6.1.4"
-    }		
+    }
 }
 ````
 
@@ -31,7 +31,7 @@ define('DEBUG', true);
 define('LOG_DIR',__DIR__.'/Log');
 
 // 引入框架
-require dirname(__DIR__) . '/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 
 // 框架初始化
 \FC\Main::init();
