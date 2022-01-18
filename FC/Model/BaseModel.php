@@ -333,7 +333,23 @@ abstract class BaseModel
             return null;
         }
     }
-
+	
+    /**
+     * 获取数据
+     *
+     * @return void
+     */
+    public function get(array $datas = [], $getid = '*')
+    {
+        $where  = $this->filterValue($datas);
+        $res   = $this->db->getid($getid)->where($where)->fetchall();
+        if ($res) {
+            return $res;
+        } else {
+            return null;
+        }
+    }
+	
     /**
      * 分页
      *
