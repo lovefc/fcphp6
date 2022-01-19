@@ -8,17 +8,17 @@ namespace FC\Model;
  * @Author: lovefc
  * @Date: 2019-10-12 14:27:36
  * @Last Modified by: lovefc
- * @Last Modified time: 2020-04-26 17:34:49
+ * @Last Modified time: 2022-01-19 16:36:49
  */
 
 abstract class BaseModel
 {
     // 数据库类型
     public $db_type = 'Mysql';
-	
+
     // 数据库配置名称
     public $db_config_name = '';
-	
+
     // 规则
     public $rules = [];
     // 数据库操作句柄
@@ -31,65 +31,65 @@ abstract class BaseModel
     public $primary = '';
     // 表名
     public $table = '';
-	// 表信息
-	public $tableinfo = [];
-	// 字段
-	public $fields = [];
+    // 表信息
+    public $tableinfo = [];
+    // 字段
+    public $fields = [];
 
     // 初始化设置
     public function __construct()
     {
-		$class_name = strtolower(basename(str_replace('\\', '/', get_class($this))));
-		
+        $class_name = strtolower(basename(str_replace('\\', '/', get_class($this))));
+
         // db配置名称
-        $db_type = $this->db_type;		
-		
+        $db_type = $this->db_type;
+
         // db配置名称
         $db_conf_name = $this->db_config_name;
-		
-		$class = "\FC\Glue\\{$db_type}";
-		
+
+        $class = "\FC\Glue\\{$db_type}";
+
         $db =  new $class();
 
-		if(!empty($db_conf_name)){
-		    $db->ReadConf($db_conf_name);
-		}
+        if (!empty($db_conf_name)) {
+            $db->ReadConf($db_conf_name);
+        }
 
         // 缓存
         $cache = new \FC\Cache\Files();
-		
+
         //缓存目录
         $path = PATH['NOW'] . '/Cache';
-		
+
         //针对文件缓存的过期时间,redis和memcache设置这个选项无效
         $time = 6000;
-		
-		// 文件缓存设置
-		$cache->connect($path, true, '.cache', $time);
-		
+
+        // 文件缓存设置
+        $cache->connect($path, true, '.cache', $time);
+
         // 表名
         $this->table = !empty($this->table) ? $this->table : $db->Prefix . $class_name;
-		
-		// 数据库句柄
+
+        // 数据库句柄
         $this->db = $db->name($this->table);
-		
-		// 缓存名称
-		$table_name = "{$db_type}_{$db_conf_name}_".$this->table."_tableinfo";
-		
-		if(!$cache->has($table_name)){
-		   // 数据库表信息
-		   $this->tableinfo = $this->db->getTableInfo($this->table);
-		   $cache->set($table_name,$this->tableinfo);
-		}else{
-		   $this->tableinfo = $cache->get($table_name);
-		}
-		
-		// 设置主键和信息
-		$this->db->setPK($this->tableinfo);
-		$this->primary = $this->db->Primary;
-		$this->fields = $this->db->Fields;	
+
+        // 缓存名称
+        $table_name = "{$db_type}_{$db_conf_name}_" . $this->table . "_tableinfo";
+
+        if (!$cache->has($table_name)) {
+            // 数据库表信息
+            $this->tableinfo = $this->db->getTableInfo($this->table);
+            $cache->set($table_name, $this->tableinfo);
+        } else {
+            $this->tableinfo = $cache->get($table_name);
+        }
+
+        // 设置主键和信息
+        $this->db->setPK($this->tableinfo);
+        $this->primary = $this->db->Primary;
+        $this->fields = $this->db->Fields;
     }
-	
+
 
     // 增加规则
     final public function addRule($name, $array = '')
@@ -122,6 +122,7 @@ abstract class BaseModel
         $res = [];
         // 获取所有字段名
         $fields = $this->fields;
+
         foreach ($ids as $k => $kid) {
             if (in_array($kid, $this->keep)) {
                 $res[$k] = 0;
@@ -130,7 +131,7 @@ abstract class BaseModel
             if (!$field) {
                 $where[$this->primary] = $kid;
             } else {
-                if (in_array($field, $fields)) {
+                if (!in_array($field, $fields)) {
                     $res[$k] = 0;
                     continue;
                 }
@@ -181,7 +182,7 @@ abstract class BaseModel
         $value = Check::regularHandles($kes, $value);
         return $value;
     }
-	
+
 
     /**
      * 验证多个值
@@ -194,7 +195,7 @@ abstract class BaseModel
         $data = [];
         if (is_array($datas)) {
             foreach ($datas as $k => $v) {
-				$k2 = $this->handleKey($k);
+                $k2 = $this->handleKey($k);
                 if (isset($this->rules[$k2])) {
                     $preg = $this->rules[$k2];
                     $data[$k] = Check::regularHandles($preg, $v);
@@ -204,7 +205,7 @@ abstract class BaseModel
             }
         }
         return $data;
-    }	
+    }
 
     /**
      * 处理key的值
@@ -249,18 +250,18 @@ abstract class BaseModel
             return 0;
         }
         $data = $this->filterValue($datas);
-		$primary = $this->primary;
-		// 如果主键存在
-		if(isset($data[$primary])){
-			$id = $data[$primary];
-			$where[$primary] = $id;
-			unset($data[$primary]);
-			$re = $this->db->where($where)->upd($data);
-			if($re){
-				return $id;
-			}
-			return false;
-		}
+        $primary = $this->primary;
+        // 如果主键存在
+        if (isset($data[$primary])) {
+            $id = $data[$primary];
+            $where[$primary] = $id;
+            unset($data[$primary]);
+            $re = $this->db->where($where)->upd($data);
+            if ($re) {
+                return $id;
+            }
+            return false;
+        }
         $this->db->add($data);
         $id = $this->db->lastid();
         return $id;
@@ -333,7 +334,7 @@ abstract class BaseModel
             return null;
         }
     }
-	
+
     /**
      * 获取数据
      *
@@ -349,7 +350,7 @@ abstract class BaseModel
             return null;
         }
     }
-	
+
     /**
      * 分页
      *
