@@ -1,8 +1,8 @@
 <?php
 
-namespace FC;
+namespace FC\Http;
 
-use FC\GIF\GIFEncoder;
+use FC\Http\GIF\GIFEncoder;
 
 /*
  * 验证码类库

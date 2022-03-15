@@ -1,6 +1,6 @@
 <?php
 
-namespace FC\GIF;
+namespace FC\Http\GIF;
 
 /*
  * GIF 合成类库
