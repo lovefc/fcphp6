@@ -1,17 +1,18 @@
 <?php
 
-namespace FC\Http;
+namespace FC;
 
-use FC\Http\GIF\GIFEncoder;
-
+use FC\GIF\GIFEncoder;
 
 /*
  * 验证码类库
- * @Author: lovefc 
- * @Date: 2019-09-27 14:35:05 
+ * @Author: lovefc
+ * @Email：fcphp@qq.com
+ * @Date: 2019-09-27 14:35:05
  * @Last Modified by: lovefc
- * @Last Modified time: 2019-09-28 16:32:06
+ * @Last Modified time: 2022-02-28 16:43:23
  */
+
 
 class Captcha
 {
@@ -32,7 +33,7 @@ class Captcha
     public $font_size = 36;
 
     // 字体路径
-    public $font_path = __DIR__ . '/Font/zhankukuhei.ttf';
+    public $font_path = __DIR__.'/Font/zhankukuhei.ttf';
 
     // 是否为动态验证码
     public $is_gif = true;
@@ -52,12 +53,6 @@ class Captcha
 
     /**
      * 生成验证码
-     *
-     * @param integer $w 宽度
-     * @param integer $h 高度
-     * @param integer $nums 数量
-     * @param string $random 随机字符串
-     * @return void
      */
     public function doImg($code = '')
     {
@@ -77,8 +72,30 @@ class Captcha
         $gif = new GIFEncoder($imagedata);
         header('Content-type:image/gif');
         echo $gif->GetAnimation();
-        exit;
+        exit();
     }
+	
+    /**
+     * 获取图片内容
+     */
+    public function getImgContent($code = '')
+    {
+        if (!$code) {
+            return false;
+        }
+        $code = strtoupper($code);
+        $imagedata = [];
+        if ($this->is_gif) {
+            for ($i = 0; $i < $this->gif_fps; $i++) {
+                $imagedata[] = $this->creBackGIF($code);
+                ++$i;
+            }
+        } else {
+            $imagedata[] = $this->creBackGIF($code);
+        }
+        $gif = new GIFEncoder($imagedata);
+        return $gif->GetAnimation();
+    }	
 
     /**
      * 创建动态背景
