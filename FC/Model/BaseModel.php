@@ -15,10 +15,10 @@ abstract class BaseModel
 {
     // 数据库类型
     public $db_type = 'Mysql';
-
     // 数据库配置名称
     public $db_config_name = '';
-
+    // 数据库表名称
+    public $table_name = null;	
     // 规则
     public $rules = [];
     // 数据库操作句柄
@@ -39,8 +39,8 @@ abstract class BaseModel
     // 初始化设置
     public function __construct()
     {
-        $class_name = strtolower(basename(str_replace('\\', '/', get_class($this))));
-
+        $class_name = empty($this->table_name) ? strtolower(basename(str_replace('\\', '/', get_class($this)))) : $this->table_name;
+		
         // db配置名称
         $db_type = $this->db_type;
 
