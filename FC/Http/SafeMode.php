@@ -157,6 +157,6 @@ class SafeMode
                 $str[] = $val;
             }
         }
-        return implode($str);
+        return implode('',$str);
     }
 }

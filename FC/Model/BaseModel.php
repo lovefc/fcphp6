@@ -139,7 +139,7 @@ abstract class BaseModel
             }
             $res[$k] = $this->db->where($where)->del();
         }
-        $str = implode($res, '');
+        $str = implode('',$res);
         if (strpos($str, '0') === false) {
             return true;
         }
