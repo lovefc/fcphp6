@@ -12,13 +12,13 @@ composer.json
 ````
 {
     "require": {
-        "lovefc/fcphp": "6.1.8"
+        "lovefc/fcphp": "6.1.9"
     }
 }
 ````
 
 ````
-composer require lovefc/fcphp:6.1.8
+composer require lovefc/fcphp:6.1.9
 ````
 
 ### 使用方法
