@@ -100,7 +100,7 @@ class Main
         $FC_PATH = strtr(__DIR__, '\\', '/');
 
         // 获取当前目录
-        $NOW_PATH =  strtr(dirname($_SERVER['PHP_SELF']), '\\', '/');
+        $NOW_PATH =  strtr(getcwd(), '\\', '/');
 
         // 时间常量,避免多次使用函数
         define('TIME', time());
@@ -109,6 +109,7 @@ class Main
         if (PHP_SAPI === 'cli') {
             define('FC_EOL', PHP_EOL);
             define('IS_CLI', true);
+			$NOW_PATH =  strtr(dirname($_SERVER['PHP_SELF']), '\\', '/');
         } else {
             define('FC_EOL', '<br />');
             define('IS_CLI', false);
