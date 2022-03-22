@@ -93,13 +93,14 @@ class Main
         define('IS_AJAX', $IS_AJAX);
 
         // pathinfo下对于PHP_SELF的兼容，避免出现不必要的值和安全问题,如果要获取本页面地址，推荐使用$_SERVER['SCRIPT_NAME']
+		
         isset($_SERVER['PATH_INFO']) ? $_SERVER['PHP_SELF'] = $_SERVER['SCRIPT_NAME'] : '';
 
         // 获取框架目录
         $FC_PATH = strtr(__DIR__, '\\', '/');
 
         // 获取当前目录
-        $NOW_PATH =  strtr(getcwd(), '\\', '/');
+        $NOW_PATH =  strtr(dirname($_SERVER['PHP_SELF']), '\\', '/');
 
         // 时间常量,避免多次使用函数
         define('TIME', time());
