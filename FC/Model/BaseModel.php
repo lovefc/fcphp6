@@ -18,7 +18,7 @@ abstract class BaseModel
     // 数据库配置名称
     public $db_config_name = '';
     // 数据库表名称
-    public $table_name = null;	
+    public $table_name = null;
     // 规则
     public $rules = [];
     // 数据库操作句柄
@@ -40,7 +40,7 @@ abstract class BaseModel
     public function __construct()
     {
         $class_name = empty($this->table_name) ? strtolower(basename(str_replace('\\', '/', get_class($this)))) : $this->table_name;
-		
+        
         // db配置名称
         $db_type = $this->db_type;
 
@@ -105,9 +105,10 @@ abstract class BaseModel
     }
 
     // 清空数据库
-    public function checkClean()
+    public function checkClean($table_name = '')
     {
         if ($this->clean === true) {
+            $table = empty($table_name) ? $this->table : $table_name;
             $this->db->cleanTable($table);
         }
     }
@@ -139,7 +140,7 @@ abstract class BaseModel
             }
             $res[$k] = $this->db->where($where)->del();
         }
-        $str = implode('',$res);
+        $str = implode('', $res);
         if (strpos($str, '0') === false) {
             return true;
         }
@@ -340,10 +341,14 @@ abstract class BaseModel
      *
      * @return void
      */
-    public function get(array $datas = [], $getid = '*')
+    public function get(array $datas = [], $getid = '*', $limit = 'all')
     {
         $where  = $this->filterValue($datas);
-        $res   = $this->db->getid($getid)->where($where)->fetchall();
+        if ($limit != 'all') {
+            $res   = $this->db->getid($getid)->where($where)->limit($limit)->fetchall();
+        } else {
+            $res   = $this->db->getid($getid)->where($where)->fetchall();
+        }
         if ($res) {
             return $res;
         } else {
