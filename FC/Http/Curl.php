@@ -42,6 +42,7 @@ class Curl
         if (empty($header)) {
             return $this;
         }
+		$this->headers = [];
         //如果是数组的话
         if (is_array($header)) {
             foreach ($header as $k => $v) {
