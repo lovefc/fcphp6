@@ -45,7 +45,7 @@ class Log
 		}		
         if (IS_AJAX === true || IS_CLI === true) {
             if ($lasterror) {
-                ob_clean();
+                if(ob_get_length()) ob_clean();
                 $err  = PHP_EOL . 'Type:' . $lasterror['type'] . PHP_EOL;
                 $err .= 'Line:' . $lasterror['line'] . PHP_EOL;
                 $err .= 'File:' . $lasterror['file'] . PHP_EOL;
@@ -56,7 +56,7 @@ class Log
             exit;
         }
         if ($lasterror) {
-            ob_clean();
+            if(ob_get_length()) ob_clean();
             // 获取程序执行结束的时间
             $lasterror['run_time'] = round(microtime(true) - $_SERVER['REQUEST_TIME_FLOAT'], 5);
             // 获取错误行号处的代码
