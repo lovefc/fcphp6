@@ -28,7 +28,7 @@ class Curl
     // header头数组存放
     public $headers = array();
     // session名称
-    public $session_name = 'PHPSESSID';
+    //public $session_name = 'PHPSESSID';
 
 
     /**
@@ -217,7 +217,6 @@ class Curl
     public function getCookieStr()
     {
         $ck = $this->getcookie;
-        // unset($ck[$this->session_name]);
         return http_build_query($ck);
     }
 
@@ -250,9 +249,9 @@ class Curl
             $headers[] = 'X-FORWARDED-FOR:' . $ip;
             $headers[] = 'CLIENT-IP:' . $ip;
         }
-        isset($_SESSION) || session_start();
-        $headers[$this->session_name] = isset($_COOKIE[$this->session_name]) ? $_COOKIE[$this->session_name] : null;
-        session_write_close();
+        //isset($_SESSION) || session_start();
+        //$headers[$this->session_name] = isset($_COOKIE[$this->session_name]) ? $_COOKIE[$this->session_name] : null;
+        //session_write_close();
         if (!empty($headers)) {
             curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         }
