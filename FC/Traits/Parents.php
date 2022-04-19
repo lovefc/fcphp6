@@ -4,10 +4,11 @@ namespace FC\Traits;
 
 /*
  * 配置多继承父类
- * @Author: lovefc 
- * @Date: 2016/8/29 10:51:27 
+ * @Author: lovefc
+ * @Date: 2016/8/29 10:51:27
  * @Last Modified by: lovefc
  * @Last Modified time: 2019-10-12 13:59:55
+ * @Last Modified time: 2022-04-19 13:46:23
  */
 
 trait Parents
@@ -96,7 +97,7 @@ trait Parents
      * @param [type] $type
      * @return object
      */
-    final function ReadConf($type)
+    final public function ReadConf($type)
     {
         if (isset($type)) {
             $this->P_ConfigType = $type;
@@ -104,7 +105,7 @@ trait Parents
         if (empty($this->P_ConfigType)) {
             $this->P_RegVar = array_keys($this->P_Config);
         } else {
-            $this->P_RegVar = array_keys($this->P_Config[$this->P_ConfigType]);
+            $this->P_RegVar = isset($this->P_Config[$this->P_ConfigType]) ? array_keys($this->P_Config[$this->P_ConfigType]) : [];
         }
         // 初始化
         $this->P_Start();
@@ -138,22 +139,8 @@ trait Parents
         }
         return $this;
     }
-	*/
-
-    /**
-     * 获取配置，并关联
-     *
-     * @param [type] $file
-     * @param [type] $file2
-     * @return array
-     */
-    final public static function P_GetConfig($file, $file2)
-    {
-        $config = self::P_GetConfigFile($file);
-        $config2 = self::P_GetConfigFile($file2);
-        // 组合配置
-        return array_replace_recursive($config, $config2);
-    }
+    */
+    
 
     /**
      * 读取配置目录以及工作目录里的配置文件
@@ -165,12 +152,15 @@ trait Parents
     {
         $dir = PATH['FC_CONFIG'];
         $file = $dir . '/' . $conf;
+        $file2 = PATH['NOW_CONFIG'] . '/' . $conf;
+        $config = $config2 =  [];
         if (is_file($file)) {
-            $file2 = PATH['NOW_CONFIG'] . '/' . $conf;
-            $config = self::P_GetConfig($file, $file2);
-            return $config;
+            $config = self::P_GetConfigFile($file);
         }
-        return [];
+        if (is_file($file2)) {
+            $config2 = self::P_GetConfigFile($file2);
+        }
+        return array_replace_recursive($config, $config2);
     }
 
     /**
@@ -242,7 +232,6 @@ trait Parents
             $config = self::P_GetConfigFile($conf, $ckey);
             $config2 = self::P_ImpArray($config, $keys);
             $re = $config2 ? $config2 : $config;
-
             return $re;
         }
         return [];
@@ -263,7 +252,7 @@ trait Parents
 
     /**
      * 获取到多维数组的值
-     * 
+     *
      * @param $config 数组
      * @param $array 键名，多个
      * @return array
